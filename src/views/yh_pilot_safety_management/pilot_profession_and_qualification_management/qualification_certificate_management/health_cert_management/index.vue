@@ -336,7 +336,7 @@ export default {
       }
       else if(data.method === "edit") {
         const dataSource = [...this.dataSource];
-        const target = dataSource.find(item => item.key === data.modelData.key);
+        const target = dataSource.find(item => item.id === data.modelData.id);
         if (target) {
           copyObj(data.modelData,target);
           this.dataSource = dataSource;

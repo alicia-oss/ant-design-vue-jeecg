@@ -171,7 +171,6 @@ export default {
 
 
     handleOk(){
-      console.log(this.model);
       let modelData = new Object();
       copyObj(this.model,modelData);
       this.$refs.form.validate(valid=>{
