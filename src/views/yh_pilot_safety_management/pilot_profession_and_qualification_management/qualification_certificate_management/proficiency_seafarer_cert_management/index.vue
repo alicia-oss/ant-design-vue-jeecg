@@ -106,6 +106,7 @@
                    slot-scope="record"
                    :data-source="record.subList"
                    :add-contain="false"
+                   style="width: 90%;"
         ></sub-table>
 
         <span slot="action" slot-scope="text, record">

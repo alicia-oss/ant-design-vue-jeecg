@@ -1,5 +1,5 @@
 <template>
-<div class="textBorder" :style="{height:height}">
+<div class="textBorder" >
   <span class="title">
     {{title}}
   </span>
@@ -12,21 +12,21 @@ export default {
   name: 'TextBorder',
   props:{
     title:"",
-    height:{
-      type:String,
-      default:"100%"
-    }
+
   }
 }
 </script>
 
 <style scoped>
 .textBorder{
+
   position: relative;
   box-sizing: border-box;
   margin: 3px;
+  height: 100%;
   border: 0.5px solid rgba(0, 0, 0, 0.15);
-  padding: 30px 10px !important;
+  padding: 30px 10px 10px 10px !important;
+
 }
 .title{
   font-size: 20px;

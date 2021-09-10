@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus" v-if="addContain">新增</a-button>
+    <div class="table-operator" v-if="addContain">
+      <a-button @click="handleAdd" type="primary" icon="plus" >新增</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel">
@@ -18,7 +18,7 @@
     <a-table
       :pagination="false"
       :columns="defColumns"
-      :bordered="false"
+      :bordered="true"
       :rowKey="record=>record.proficiencyCertSubId"
       :data-source="dataSource"
       :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
@@ -136,7 +136,9 @@ export default {
     // 加载数据
     modalFormOk(data){
       if(data.method === "add"){
+        console.log(data.modelData);
         this.dataSource.push(data.modelData);
+        console.log(this.dataSource);
       }
       else if(data.method === "edit") {
         const dataSource = [...this.dataSource];

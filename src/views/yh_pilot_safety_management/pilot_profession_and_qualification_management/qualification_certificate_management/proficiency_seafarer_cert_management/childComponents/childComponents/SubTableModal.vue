@@ -156,6 +156,7 @@ export default {
       copyObj(this.model,modelData);
       this.$refs.form.validate(valid=>{
         if(valid) {
+          console.log(modelData)
           if(this.method === "add"){
             //更改
             modelData.proficiencyCertSubId = uuid("");

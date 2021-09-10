@@ -90,8 +90,8 @@
             </a-col>
           </a-row>
           <a-row>
-            <text-border class="cert-table" title="增添证书">
-             <sub-table v-model:data-source="model.subList"></sub-table>
+            <text-border class="cert-table" title="增加证书">
+             <sub-table :dataSource="model.subList"></sub-table>
             </text-border>
           </a-row>
         </div>
@@ -170,17 +170,15 @@ export default {
   methods: {
     add() {
       this.edit({})
-      this.model.subList = new Array();
+      this.model.subList = [];
       let myData = new Date()
       this.model.uploadDate = myData.toLocaleDateString()
       this.model.uploadUserId = this.$store.getters.userInfo.id
       this.visible = true
     },
     edit(record) {
-
       this.model = Object.assign({}, record)
       this.visible = true
-
     },
     close() {
       this.$refs.form.resetFields()
