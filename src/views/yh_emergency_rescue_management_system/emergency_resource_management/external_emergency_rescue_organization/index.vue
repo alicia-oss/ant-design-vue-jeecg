@@ -1,219 +1,129 @@
 <template>
   <a-card :bordered="false">
     <div class="table-page-search-wrapper">
-      <a-form layout="inline">
-        <a-row :gutter="48">
-          <a-col :md="8"
-                 :sm="24">
-            <a-form-item label="规则编号">
-              <a-input v-model="queryParam.id"
-                       placeholder="" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="8"
-                 :sm="24">
-            <a-form-item label="使用状态">
-              <a-select v-model="queryParam.status"
-                        placeholder="请选择"
-                        default-value="0">
-                <a-select-option value="0">全部</a-select-option>
-                <a-select-option value="1">关闭</a-select-option>
-                <a-select-option value="2">运行中</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <template v-if="advanced">
-            <a-col :md="8"
-                   :sm="24">
-              <a-form-item label="调用次数">
-                <a-input-number v-model="queryParam.callNo"
-                                style="width: 100%" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8"
-                   :sm="24">
-              <a-form-item label="更新日期">
-                <a-date-picker v-model="queryParam.date"
-                               style="width: 100%"
-                               placeholder="请输入更新日期" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8"
-                   :sm="24">
-              <a-form-item label="使用状态">
-                <a-select v-model="queryParam.useStatus"
-                          placeholder="请选择"
-                          default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8"
-                   :sm="24">
-              <a-form-item label="使用状态">
-                <a-select placeholder="请选择"
-                          default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-          </template>
-          <a-col :md="!advanced && 8 || 24"
-                 :sm="24">
-            <span class="table-page-search-submitButtons"
-                  :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-              <a-button type="primary">查询</a-button>
-              <a-button style="margin-left: 8px"
-                        @click="resetSearchForm">重置</a-button>
-              <a @click="toggleAdvanced"
-                 style="margin-left: 8px">
-                {{ advanced ? '收起' : '展开' }}
-                <a-icon :type="advanced ? 'up' : 'down'" />
-              </a>
-            </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
+    <a-form-model layout="inline">
+      <a-row :gutter="48">
+        <a-col :md="6"
+               :sm="24">
+      <a-form-model-item label="救援方式" v-model="queryParam.expertDuty">
+        <a-select default-value="0">
+          <a-select-option value="0">
+            医疗救援
+          </a-select-option>
+          <a-select-option value="1">
+            海事搜救
+          </a-select-option>
+        </a-select>
+      </a-form-model-item>
+        </a-col>
 
-    <div class="table-operator">
-      <a-button type="primary"
-                icon="plus"
-                @click="() => this.handleModalVisible(true)">新建</a-button>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1">
-            <a-icon type="delete" />删除
-          </a-menu-item>
-          <!-- lock | unlock -->
-          <a-menu-item key="2">
-            <a-icon type="lock" />锁定
-          </a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px">
-          批量操作
-          <a-icon type="down" />
+        <a-col :xl="8" :lg="8" :md="5" :sm="24">
+          <a-form-item label="有效时间">
+            <a-range-picker v-model="queryParam.issueDate"
+                            format="YYYY-MM-DD"
+                            :placeholder="['有效期起', '有效期至']"
+                            @change="onIssueDateChange" />
+          </a-form-item>
+        </a-col>
+        <a-col :md="6"
+               :sm="24">
+          <a-form-model-item label="救援单位" v-model="queryParam.externalDepartName">
+            <a-input v-model="queryParam.externalDepartName"    placeholder="请输入救援单位名称" />
+          </a-form-model-item>
+        </a-col>
+
+          <a-col :md="4"
+                 :sm="24">
+      <a-form-model-item>
+        <a-button
+          type="primary"
+          html-type="submit"
+        >
+          查询
         </a-button>
-      </a-dropdown>
+      </a-form-model-item>
+        </a-col>
+      </a-row>
+
+    </a-form-model>
+    </div>
+    <div class="table-operator">
+      <a-row>
+        <a-button type="primary" @click="handleAdd()">
+          添加
+        </a-button>
+        <a-button type="primary" @click="handleDelete()">
+          删除
+        </a-button>
+        <a-button type="primary">
+          导出
+        </a-button>
+      </a-row>
     </div>
 
-    <s-table ref="table"
-             size="default"
-             :columns="columns"
-             :data="loadData"
-             :showAlertInfo="true"
-             @onSelect="onChange">
-      <span slot="action"
-            slot-scope="text, record">
-        <a @click="handleEdit(record)">编辑</a>
-        <a-divider type="vertical" />
-        <a-dropdown>
-          <a class="ant-dropdown-link">
-            更多
-            <a-icon type="down" />
-          </a>
-          <a-menu slot="overlay">
-            <a-menu-item>
-              <a href="javascript:;"
-                 @click="submitApplication(record)">提交</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">禁用</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">删除</a>
-            </a-menu-item>
-          </a-menu>
-        </a-dropdown>
-      </span>
-    </s-table>
+    <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
+      <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{
+      selectedRowKeys.length }}</a>项
+      <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+      <span style="float:right;">
+          <a @click="loadData()"><a-icon type="sync" />刷新</a>
+          <a-divider type="vertical" />
+        <!--          <a-popover title="自定义列" trigger="click" placement="leftBottom">-->
+        <!--            <template slot="content">-->
+        <!--              <a-checkbox-group @change="onColSettingsChange" v-model="settingColumns" :defaultValue="settingColumns">-->
+        <!--                <a-row style="width: 400px">-->
+        <!--                  <template v-for="(item,index) in defColumns">-->
+        <!--                    <template v-if="item.key!='rowIndex'&& item.dataIndex!='action'">-->
+        <!--                        <a-col :span="12"><a-checkbox :value="item.dataIndex"><j-ellipsis :value="item.title" :length="10"></j-ellipsis></a-checkbox></a-col>-->
+        <!--                    </template>-->
+        <!--                  </template>-->
+        <!--                </a-row>-->
+        <!--              </a-checkbox-group>-->
+        <!--            </template>-->
+        <!--            <a><a-icon type="setting" />设置</a>-->
+        <!--          </a-popover>-->
+        </span>
+    </div>
 
-    <a-modal title="操作"
-             :width="800"
-             v-model="visible"
-             @ok="handleOk">
-      <a-form :autoFormCreate="(form)=>{this.form = form}">
+    <div>
+      <a-table
+        ref="table"
+        size="middle"
+        bordered
+        :rowKey="record=>record.id"
+        :columns="columns"
+        :dataSource="dataSource"
+        :pagination="ipagination"
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        @change="handleTableChange">
 
-        <a-form-item :labelCol="labelCol"
-                     :wrapperCol="wrapperCol"
-                     label="规则编号"
-                     hasFeedback
-                     validateStatus="success">
-          <a-input placeholder="规则编号"
-                   v-model="mdl.no"
-                   id="no" />
-        </a-form-item>
+        <!--        <div slot="filterDropdown">-->
+        <!--          <a-card>-->
+        <!--            &lt;!&ndash;            表头第一行&ndash;&gt;-->
+        <!--            <a-checkbox-group @change="onColSettingsChange" v-model="settingColumns" :defaultValue="settingColumns">-->
+        <!--              <a-row style="width: 400px">-->
+        <!--                <template v-for="(item,index) in defColumns">-->
+        <!--                  <template v-if="item.key!='rowIndex'&& item.dataIndex!='action'">-->
+        <!--                    <a-col :span="12"><a-checkbox :value="item.dataIndex"><j-ellipsis :value="item.title" :length="10"></j-ellipsis></a-checkbox></a-col>-->
+        <!--                  </template>-->
+        <!--                </template>-->
+        <!--              </a-row>-->
+        <!--            </a-checkbox-group>-->
+        <!--          </a-card>-->
+        <!--        </div>-->
+        <!--        <a-icon slot="filterIcon" type='setting' :style="{ fontSize:'16px',color:  '#108ee9' }" />-->
 
-        <a-form-item :labelCol="labelCol"
-                     :wrapperCol="wrapperCol"
-                     label="服务调用次数"
-                     hasFeedback
-                     validateStatus="success">
-          <a-input-number :min="1"
-                          id="callNo"
-                          v-model="mdl.callNo"
-                          style="width: 100%" />
-        </a-form-item>
+        <span slot="action" slot-scope="text, record">
+          <a @click="()=>handleCheak(record)">详细 </a>
+          <a @click="handleEdit(record)">修改</a>
 
-        <a-form-item :labelCol="labelCol"
-                     :wrapperCol="wrapperCol"
-                     label="状态"
-                     hasFeedback
-                     validateStatus="warning">
-          <a-select defaultValue="1"
-                    v-model="mdl.status">
-            <a-select-option value="1">Option 1</a-select-option>
-            <a-select-option value="2">Option 2</a-select-option>
-            <a-select-option value="3">Option 3</a-select-option>
-          </a-select>
-        </a-form-item>
+        </span>
 
-        <a-form-item :labelCol="labelCol"
-                     :wrapperCol="wrapperCol"
-                     label="描述"
-                     hasFeedback
-                     help="请填写一段描述">
-          <a-textarea :rows="5"
-                      v-model="mdl.description"
-                      placeholder="..."
-                      id="description" />
-        </a-form-item>
+      </a-table>
+    </div>
 
-        <a-form-item :labelCol="labelCol"
-                     :wrapperCol="wrapperCol"
-                     label="更新时间"
-                     hasFeedback
-                     validateStatus="error">
-          <a-date-picker style="width: 100%"
-                         showTime
-                         format="YYYY-MM-DD HH:mm:ss"
-                         placeholder="Select Time" />
-        </a-form-item>
-
-      </a-form>
-    </a-modal>
-
-    <a-modal title="新建规则"
-             destroyOnClose
-             :visible="visibleCreateModal"
-             @ok="handleCreateModalOk"
-             @cancel="handleCreateModalCancel">
-      <!---->
-      <a-form style="margin-top: 8px"
-              :autoFormCreate="(form)=>{this.createForm = form}">
-        <a-form-item :labelCol="{ span: 5 }"
-                     :wrapperCol="{ span: 15 }"
-                     label="描述"
-                     fieldDecoratorId="description"
-                     :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }]}">
-          <a-input placeholder="请输入" />
-        </a-form-item>
-      </a-form>
-    </a-modal>
+    <modal ref="modalForm" @ok="modalFormOk"></modal>
+    <check-modal ref="checkModal"></check-modal>
 
   </a-card>
 </template>
@@ -226,6 +136,9 @@ import moment from "moment"
 import axios from 'axios';
 import { getRoleList, getServiceList, getApplicationList } from '@/api/manage'
 import { submitApplication, getApproveTask } from '@/api/api'
+import {copyObj} from "codemirror/src/util/misc";
+import Modal from "./childComponents/Modal";
+import CheckModal from "./childComponents/CheckModal";
 export default {
   name: "TableList",
   components: {
@@ -235,6 +148,20 @@ export default {
   },
   data () {
     return {
+      toggleSearchStatus:false,
+      ipagination:{
+        current: 1,
+        pageSize: 10,
+        pageSizeOptions: ['10', '20', '30'],
+        showTotal: (total, range) => {
+          return range[0] + "-" + range[1] + " 共" + total + "条"
+        },
+        showQuickJumper: true,
+        showSizeChanger: true,
+        total: 0
+      },
+
+
       visibleCreateModal: false,
       visible: false,
       labelCol: {
@@ -255,37 +182,60 @@ export default {
       // 表头
       columns: [
         {
-          title: '申请任务id',
-          dataIndex: 'task_id'
+          title: '救援方式',
+          dataIndex: 'rescueType'
         },
         {
-          title: '标准集id',
-          dataIndex: 'standard_id'
+          title: '救援单位',
+          dataIndex: 'externalDepartName'
         },
         {
-          title: '申请人id',
-          dataIndex: 'user_id',
-          sorter: true,
-          needTotal: true,
+          title: '联系电话',
+          dataIndex: 'phone',
+          // sorter: true,
+          // needTotal: true,
           /* customRender: (text) => text + ' 次' */
         },
         {
-          title: '提交申请时间',
-          dataIndex: 'submit_time',
-          needTotal: true
+          title: '协议签订时间',
+          dataIndex: 'protocolSignTime',
+          // needTotal: true
         },
         {
-          title: '申请原因',
-          dataIndex: 'application_purose',
-          sorter: true
+          title: '有效期起',
+          dataIndex: 'validityStartTime',
+          // needTotal: true
         },
         {
-          table: '申请操作',
-          dataIndex: 'application_state',
-          width: '150px',
-          scopedSlots: { customRender: 'action' },
+          title: '有效期至',
+          dataIndex: 'validityEndTime',
+          // needTotal: true
+        },
+
+        {
+          title: '操作',
+          dataIndex: 'action',
+          align: "center",
+          scopedSlots: {
+            filterDropdown: 'filterDropdown',
+            filterIcon: 'filterIcon',
+            customRender: 'action'
+          }
         }
       ],
+
+      dataSource:[{
+        id:1,
+        rescueType:"医疗救援",
+        externalDepartName:"青岛市第一人民医院",
+        phone:"13811111",
+        protocolSignTime:"2019-5-6",
+        validityStartTime:"2020-9-10",
+        uploadFileName:"",
+        uploadPerson:"张三",
+        validityEndTime:"2021-9-11",
+        uploadTime:"2021-9-10"
+      }],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         return getApplicationList(Object.assign(parameter, this.queryParam))
@@ -295,82 +245,111 @@ export default {
       },
 
       selectedRowKeys: [],
+      settingColumns:[],
       selectedRows: []
     }
   },
   created () {
     getRoleList({ t: new Date() })
   },
+
+  components:{
+    Modal,
+    CheckModal
+  },
   methods: {
-    handleEdit (record) {
-      //this.mdl = Object.assign({}, record)
-      console.log(record)
-      getApproveTask(record).then((res) => {
-        window.alert(res.message);
-      }).catch((err) => {
-        window.alert(err);
-      });
-      //this.visible = true
-    },
-    handleOk () {
+    searchQuery(){
 
     },
 
-    //添加逻辑
-    handleModalVisible (isVisible) {
-      this.visibleCreateModal = isVisible;
+    loadData(){
+
     },
-    handleCreateModalOk () {
-      this.createForm.validateFields((err, fieldsValue) => {
-        if (err) {
-          return;
+
+    searchReset(){
+
+    },
+
+    onIssueDateChange: function (value, dateString) {
+      console.log(dateString[0],dateString[1]);
+      this.queryParam.birthday_begin=dateString[0];
+      this.queryParam.birthday_end=dateString[1];
+    },
+
+    handleToggleSearch(){
+      this.toggleSearchStatus = !this.toggleSearchStatus;
+    },
+
+    onClearSelected() {
+      this.selectedRowKeys = [];
+      this.selectionRows = [];
+    },
+
+    onColSettingsChange(){
+
+    },
+
+    handleEdit(record){
+      this.$refs.modalForm.edit(record);
+      this.$refs.modalForm.title = "编辑物资信息";
+      this.$refs.modalForm.method = "edit";
+      this.$refs.modalForm.disableSubmit = false;
+
+    },
+
+    handleAdd(){
+      this.$refs.modalForm.add();
+      this.$refs.modalForm.title = "添加应急物资信息";
+      this.$refs.modalForm.method = "add";
+      this.$refs.modalForm.disableSubmit = false;
+    },
+
+    handleDelete(id){
+      const dataSource = [...this.dataSource];
+      this.dataSource = dataSource.filter(item => item.id !== id);
+    },
+
+    handleCheak(record){
+      this.$refs.checkModal.check(record);
+      this.$refs.checkModal.title = "查看物资信息";
+      this.$refs.checkModal.confirmLoading = false;
+    },
+
+    batchDel(){
+
+    },
+
+    // 加载数据
+    modalFormOk(data){
+      if(data.method === "add"){
+        this.dataSource.push(data.modelData);
+      }
+      else if(data.method === "edit") {
+        const dataSource = [...this.dataSource];
+        const target = dataSource.find(item => item.id === data.modelData.id);
+        if (target) {
+          copyObj(data.modelData,target);
+          this.dataSource = dataSource;
+          console.log(this.dataSource);
         }
-        const description = this.createForm.getFieldValue('description');
-        axios.post('/saveRule', {
-          desc: description,
-        }).then((res) => {
-          this.createForm.resetFields();
-          this.visibleCreateModal = false;
-          this.loadRuleData();
-        });
-      });
-    },
-    handleCreateModalCancel () {
-      this.visibleCreateModal = false;
-    },
-
-    onChange (row) {
-      this.selectedRowKeys = row.selectedRowKeys
-      this.selectedRows = row.selectedRows
-
-      console.log(this.$refs.table)
-    },
-    toggleAdvanced () {
-      this.advanced = !this.advanced
-    },
-
-    resetSearchForm () {
-      this.queryParam = {
-        date: moment(new Date())
       }
     },
 
-    //提交申请
-    submitApplication (record) {
-      window.alert("点击了提交")
-      // let params = {
-      //   task_id: this.model.username,
-      //   standard_id: this.model.password,
-      //   user_id: this.model.inputCode,
-      //   checkKey: this.currdatetime,
-      //   remember_me: rememberMe,
+    handleTableChange(pagination, filters, sorter) {
+      // //分页、排序、筛选变化时触发
+      // //TODO 筛选
+      // console.log(pagination)
+      // if (Object.keys(sorter).length > 0) {
+      //   this.isorter.column = sorter.field;
+      //   this.isorter.order = "ascend" == sorter.order ? "asc" : "desc"
       // }
-      console.log(record)
-      submitApplication(record).then((res) => {
-        window.alert(res.message);
-      }).catch((err) => {
-        window.alert(err);
-      });
+      // this.ipagination = pagination;
+      // this.loadData();
+    },
+
+    onSelectChange(selectedRowKeys, selectionRows) {
+      this.selectedRowKeys = selectedRowKeys;
+      this.selectionRows = selectionRows;
     },
 
   },
