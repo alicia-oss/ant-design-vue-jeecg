@@ -2,6 +2,7 @@
   <div>
   <a-modal
     :width="800"
+    style="padding-bottom: 10px"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @cancel="handleCancel"
@@ -15,45 +16,47 @@
     </template>
     <a-spin :spinning="confirmLoading">
       <div class="table">
-      <div class="item">
-        <text-border title="基本信息" height="510px">
+        <div class="item">
+        <text-border title="基本信息">
         <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
-          <a-form-model-item label="员工编号" required prop="employeeId" hasFeedback>
-<!--            <a-input v-model="model.employeeId"    placeholder="请输入员工编号"/>-->
+          <a-form-model-item label="人员姓名" required prop="employeeName" hasFeedback>
             <a-auto-complete
               :data-source="inputData.employeeId"
-              @change="handleComplete"
-              placeholder="请输入员工编号"
-              v-model="model.employeeId"
-              ></a-auto-complete>
-
+              @change="handleCompleteName"
+              placeholder="请输入人员姓名"
+              v-model="model.employeeName"
+            ></a-auto-complete>
           </a-form-model-item>
 
-          <a-form-model-item label="部门"  prop="apartment" hasFeedback >
-<!--            <a-input  placeholder="请输入部门"  v-model="model.apartment"/>-->
-            <a-select placeholder="请输入部门" v-model="model.apartment">
+          <a-form-model-item label="人员编号" required prop="employeeId" hasFeedback>
+            <a-auto-complete
+              :data-source="inputData.employeeId"
+              @change="handleCompleteId"
+              placeholder="请输入人员编号"
+              v-model="model.employeeId"
+              ></a-auto-complete>
+          </a-form-model-item>
+
+
+          <a-form-model-item label="所属部门"  prop="departName" hasFeedback >
+            <a-select placeholder="请输入所属部门" v-model="model.departName">
               <a-select-option v-for="item in inputData.apartment" :value="item">
                 {{item}}
               </a-select-option>
             </a-select>
           </a-form-model-item>
 
-          <a-form-model-item label="证书编号" required prop="certNum" hasFeedback>
-            <a-input v-model="model.certNum"    placeholder="请输入证书编号"/>
-          </a-form-model-item>
-
-          <a-form-model-item label="签发日期"  prop="issueDate" hasFeedback>
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" />
-          </a-form-model-item>
-
-          <a-form-model-item label="发证机关"  prop="issuingAuthority" hasFeedback >
-<!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-            <a-select placeholder="请输入发证机关" v-model="model.issuingAuthority">
-              <a-select-option v-for="item in inputData.issuingAuthority" :value="item">
+          <a-form-model-item label="职责"  prop="rescuePeopleDuty" hasFeedback >
+            <a-select placeholder="请输入职责" v-model="model.rescuePeopleDuty">
+              <a-select-option v-for="item in inputData.rescuePeopleDuty" :value="item">
                 {{item}}
               </a-select-option>
             </a-select>
+          </a-form-model-item>
+
+          <a-form-model-item label="电话号码"  prop="phone" hasFeedback >
+            <a-input  placeholder="请输入电话号码"  v-model="model.phone"/>
           </a-form-model-item>
 
           <a-form-model-item label="上传人"  prop="uploadUserId" hasFeedback >
@@ -64,19 +67,6 @@
             <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.uploadDate" :disabled="true" />
           </a-form-model-item>
 
-
-          <!--        <a-form-model-item label="个人简介"  prop="content" hasFeedback>-->
-          <!--          <a-input  type="textarea" placeholder="请输入个人简介"  v-model="model.content"/>-->
-          <!--        </a-form-model-item>-->
-
-        </a-form-model>
-        </text-border>
-      </div>
-      <div class="item">
-        <text-border title="证件上传" height="510px">
-        <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
-<!--            <file-upload ref="yhFileUpload" :url = "url.addFile"></file-upload>-->
-            <file style="width: 100%" v-model="model.uploadFileName"></file>
         </a-form-model>
         </text-border>
       </div>
@@ -90,7 +80,6 @@
 <script>
 import { httpAction } from '@/api/manage'
 import  File from './File'
-import FileUpload from './FileUpload'
 import TextBorder from './TextBorder'
 import { uuid } from '@tinymce/tinymce-vue/lib/es2015/Utils'
 import { copyObj } from 'codemirror/src/util/misc'
@@ -105,7 +94,7 @@ export default {
       inputData: {
         employeeId:["0441-张三","0442-王五","0443-赵四"],
         apartment:["测试部门01","测试部门02","测试部门03","测试部门04"],
-        issuingAuthority:["测试机关01","测试机关02","测试机关03"]
+        rescuePeopleDuty:["总指挥","副总指挥","成员"]
       },
       // inputData:[{id:"0441",name:"张三"},{id:"0442",name:"王五"}],
       model: {},
@@ -144,7 +133,6 @@ export default {
     }
   },
   components:{
-    FileUpload,
     TextBorder,
     File
   },
@@ -157,18 +145,16 @@ export default {
       this.model.uploadUserId = this.$store.getters.userInfo.id;
       this.visible = true;
     },
-
     edit (record) {
-      console.log(this.model.uploadFileName);
       this.model = Object.assign({}, record);
       this.visible = true;
     },
-
     close () {
       this.$refs.form.resetFields();
       this.$emit('close');
       this.visible = false;
     },
+
 
     handleOk(){
       let modelData = new Object();
@@ -176,8 +162,7 @@ export default {
       this.$refs.form.validate(valid=>{
         if(valid) {
           if(this.method === "add"){
-            this.model.id = uuid("");
-            console.log(this.model);
+            this.model.serviceBookId = uuid("");
             this.$emit("ok",{method:"add",modelData:modelData})
           }
           else if(this.method === "edit"){
@@ -186,12 +171,19 @@ export default {
           this.close();
         }
       })
+
+    },
+    handleCompleteName(){
+      let temp = this.model.employeeName.split("-");
+      this.model.employeeId = temp[0];
+      this.model.employeeName = temp[1];
+      // this.model.apartment = "测试部门01";
     },
 
-    handleComplete(){
+    handleCompleteId(){
       let temp = this.model.employeeId.split("-");
       this.model.employeeId = temp[0];
-      // this.model.apartment = "测试部门01";
+      this.model.employeeName = temp[1];
     },
 
     handleCancel () {
@@ -209,7 +201,11 @@ export default {
 
  .item{
    flex: 1 ;
+ }
 
+ .item-right{
+   flex: 1 ;
+   height: auto;
  }
 
  .title{

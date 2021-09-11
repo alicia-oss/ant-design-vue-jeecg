@@ -9,78 +9,66 @@
     cancelText="关闭">
 
     <a-spin :spinning="confirmLoading">
-      <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
-        <a-form-model-item label="员工编号" required prop="employeeId" hasFeedback>
-          <a-input v-model="model.employeeId"    placeholder="请输入员工编号"/>
-        </a-form-model-item>
-        <a-form-model-item label="证书编号" required prop="certNum" hasFeedback>
-          <a-input v-model="model.certNum"    placeholder="请输入证书编号"/>
-        </a-form-model-item>
+      <div class="table">
+        <div class="item">
+          <text-border title="基本信息">
+          <a-form-model ref="form" :label-col="labelCol" :wrapper-col="wrapperCol" :model="model"
+                        :rules="validatorRules">
+            <a-form-model-item label="员工编号" required prop="employeeId" hasFeedback>
+              <a-input v-model="model.employeeId" placeholder="请输入员工编号" />
+            </a-form-model-item>
+            <a-form-model-item label="证书编号" required prop="certNum" hasFeedback>
+              <a-input v-model="model.certNum" placeholder="请输入证书编号" />
+            </a-form-model-item>
+            <a-form-model-item label="证书类别">
+              <a-select v-model="model.cert_type" placeholder="请选择证书类别">
+                <a-select-option value="海港引航员">海港引航员</a-select-option>
+                <a-select-option value="内河引航员">内河引航员</a-select-option>
+              </a-select>
+            </a-form-model-item>
+            <a-form-model-item label="证书等级">
+              <a-select v-model="model.cert_class" placeholder="请选择证书等级">
+                <a-select-option value="一级">一级</a-select-option>
+                <a-select-option value="二级">二级</a-select-option>
+                <a-select-option value="三级">三级</a-select-option>
+              </a-select>
+            </a-form-model-item>
+            <a-form-model-item label="签发日期" prop="issuingDate" hasFeedback>
+              <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" />
+            </a-form-model-item>
+            <a-form-model-item label="发证机关" prop="issuingAuthority" hasFeedback>
+              <a-input placeholder="请输入发证机关" v-model="model.issuingAuthority" />
+            </a-form-model-item>
+            <a-form-model-item label="上传人">
+              <a-input placeholder="王五" v-model="model.uploadUserId" disabled />
+            </a-form-model-item>
+            <a-form-model-item label="上传日期">
+              <a-input placeholder="2021-9-11" v-model="model.uploadDate" disabled />
+            </a-form-model-item>
+          </a-form-model>
+          </text-border>
 
-        <a-form-model-item label="证书类别">
-          <a-select v-model="model.cert_type" placeholder="请选择证书类别">
-            <a-select-option value="shanghai">
-              海港引航员
-            </a-select-option>
-            <a-select-option value="beijing">
-              内河引航员
-            </a-select-option>
-          </a-select>
-        </a-form-model-item>
-
-        <a-form-model-item label="证书等级">
-          <a-select v-model="model.cert_class" placeholder="请选择证书等级">
-            <a-select-option value="shanghai">
-              一级
-            </a-select-option>
-            <a-select-option value="beijing">
-              二级
-            </a-select-option>
-            <a-select-option value="beijing">
-              三级
-            </a-select-option>
-          </a-select>
-        </a-form-model-item>
-
-
-
-        <a-form-model-item label="签发日期"  prop="issuingDate" hasFeedback>
-          <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" />
-        </a-form-model-item>
-
-
-        <a-form-model-item label="发证机关"  prop="issuingAuthority" hasFeedback >
-          <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>
-        </a-form-model-item>
-
-        <a-form-model-item label="上传人" >
-          <a-input  placeholder="王五"  v-model="model.upload_user" disabled/>
-        </a-form-model-item>
-        <a-form-model-item label="上传日期" >
-          <a-input  placeholder="2021-9-11"  v-model="model.upload_date" disabled/>
-        </a-form-model-item>
-
-        <a-form-model-item label="证件上传"  hasFeedback >
-          <file-upload ref="yhFileUpload" :url = "url.addFile"></file-upload>
-        </a-form-model-item>
-
-        <a-form-model-item label="证件上传"  hasFeedback v-show="false">
-          <a-input  placeholder="请输入发证机关"  v-model="model.uploadFileName"/>
-        </a-form-model-item>
-
-
-<!--        <a-form-model-item label="个人简介"  prop="content" hasFeedback>-->
-<!--          <a-input  type="textarea" placeholder="请输入个人简介"  v-model="model.content"/>-->
-<!--        </a-form-model-item>-->
-
-      </a-form-model>
+        </div>
+        <div class="item-right">
+          <text-border title="证件上传">
+            <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
+              <!--            <file-upload ref="yhFileUpload" :url = "url.addFile"></file-upload>-->
+              <file style="width: 100%" v-model="model.uploadFileName"></file>
+            </a-form-model>
+          </text-border>
+      </div>
+      </div>
     </a-spin>
   </a-modal>
 </template>
 
 <script>
 import { httpAction } from '@/api/manage'
-import FileUpload from './FileUpload'
+import TextBorder from './TextBorder'
+import File from './File'
+import FileList from './FileList'
+import { copyObj } from 'codemirror/src/util/misc'
+import { uuid } from '@tinymce/tinymce-vue/lib/es2015/Utils'
 export default {
   name: "Modal",
   data () {
@@ -94,8 +82,8 @@ export default {
         wrapperCol: { span: 14 },
       },
       labelCol: {
-        xs: { span: 24 },
-        sm: { span: 3 },
+        xs: { span: 10 },
+        sm: { span: 6 },
       },
       wrapperCol: {
         xs: { span: 24 },
@@ -124,66 +112,56 @@ export default {
     }
   },
   components:{
-    FileUpload
+    File,
+    FileList,
+    TextBorder
   },
-  created () {
-  },
+
   methods: {
     add () {
       this.edit({});
+      let myData = new Date();
+      this.model.uploadDate = myData.toLocaleDateString();
+      this.model.uploadUserId = this.$store.getters.userInfo.id;
+      this.visible = true;
     },
+
     edit (record) {
+      console.log(this.model.uploadFileName);
       this.model = Object.assign({}, record);
       this.visible = true;
-
-      // 生成默认文件上传数据
-      if(this.model.uploadFileName === undefined){
-        console.log(1);
-        let t = new Array();
-        this.$refs.yhFileUpload.getDefaultData(t);
-      }
-      else{
-        this.$refs.yhFileUpload.getDefaultData(this.model.uploadFileName);
-      }
     },
+
     close () {
       this.$refs.form.resetFields();
       this.$emit('close');
       this.visible = false;
     },
-    handleOk () {
-      console.log(this.model);
-      this.model.uploadUserId="";
-      this.model.uploadFileName = this.$refs.yhFileUpload.uploadFileName;
-      this.loading = true;
-      const that = this;
-      // 触发表单验证
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          that.confirmLoading = true;
-          let httpurl = '';
-          let method = '';
-          if(!this.model.id){
-            httpurl+=this.url.add;
-            method = 'post';
-          }else{
-            httpurl+=this.url.edit;
-            method = 'put';
+
+    handleOk(){
+      let modelData = new Object();
+      copyObj(this.model,modelData);
+      this.$refs.form.validate(valid=>{
+        if(valid) {
+          if(this.method === "add"){
+            this.model.id = uuid("");
+            console.log(this.model);
+            this.$emit("ok",{method:"add",modelData:modelData})
           }
-          httpAction(httpurl,this.model,method).then((res)=>{
-            if(res.success){
-              that.$message.success(res.message);
-              that.$emit('ok');
-            }else{
-              that.$message.warning(res.message);
-            }
-          }).finally(() => {
-            that.confirmLoading = false;
-            that.close();
-          })
+          else if(this.method === "edit"){
+            this.$emit("ok",{method:"edit",modelData:modelData})
+          }
+          this.close();
         }
       })
     },
+
+    handleComplete(){
+      let temp = this.model.employeeId.split("-");
+      this.model.employeeId = temp[0];
+      // this.model.apartment = "测试部门01";
+    },
+
     handleCancel () {
       this.close()
     }
@@ -192,5 +170,22 @@ export default {
 </script>
 
 <style scoped>
+.table{
+  display: flex ;
+  width: 100%;
+}
+
+.item{
+  flex: 1 ;
+}
+
+.item-right{
+  flex: 1 ;
+  height: auto;
+}
+
+.title{
+  font-size: 20px;
+}
 
 </style>

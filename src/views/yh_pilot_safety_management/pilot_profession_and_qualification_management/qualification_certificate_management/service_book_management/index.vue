@@ -85,20 +85,6 @@
         <span style="float:right;">
           <a @click="loadData()"><a-icon type="sync" />刷新</a>
           <a-divider type="vertical" />
-          <!--          <a-popover title="自定义列" trigger="click" placement="leftBottom">-->
-          <!--            <template slot="content">-->
-          <!--              <a-checkbox-group @change="onColSettingsChange" v-model="settingColumns" :defaultValue="settingColumns">-->
-          <!--                <a-row style="width: 400px">-->
-          <!--                  <template v-for="(item,index) in defColumns">-->
-          <!--                    <template v-if="item.key!='rowIndex'&& item.dataIndex!='action'">-->
-          <!--                        <a-col :span="12"><a-checkbox :value="item.dataIndex"><j-ellipsis :value="item.title" :length="10"></j-ellipsis></a-checkbox></a-col>-->
-          <!--                    </template>-->
-          <!--                  </template>-->
-          <!--                </a-row>-->
-          <!--              </a-checkbox-group>-->
-          <!--            </template>-->
-          <!--            <a><a-icon type="setting" />设置</a>-->
-          <!--          </a-popover>-->
         </span>
       </div>
 

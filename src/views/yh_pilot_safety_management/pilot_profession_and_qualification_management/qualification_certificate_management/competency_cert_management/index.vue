@@ -54,7 +54,7 @@
       <!--        <a-button type="primary" icon="import">导入</a-button>-->
       <!--      </a-upload>-->
       <!-- 高级查询区域 -->
-      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>
+<!--      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
 
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
@@ -73,25 +73,11 @@
     <div>
       <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
         <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{
-        selectedRowKeys.length }}</a>项
+          selectedRowKeys.length }}</a>项
         <a style="margin-left: 24px" @click="onClearSelected">清空</a>
         <span style="float:right;">
           <a @click="loadData()"><a-icon type="sync" />刷新</a>
           <a-divider type="vertical" />
-          <a-popover title="自定义列" trigger="click" placement="leftBottom">
-            <template slot="content">
-              <a-checkbox-group @change="onColSettingsChange" v-model="settingColumns" :defaultValue="settingColumns">
-                <a-row style="width: 400px">
-                  <template v-for="(item,index) in defColumns">
-                    <template v-if="item.key!='rowIndex'&& item.dataIndex!='action'">
-                        <a-col :span="12"><a-checkbox :value="item.dataIndex"><j-ellipsis :value="item.title" :length="10"></j-ellipsis></a-checkbox></a-col>
-                    </template>
-                  </template>
-                </a-row>
-              </a-checkbox-group>
-            </template>
-            <a><a-icon type="setting" />设置</a>
-          </a-popover>
         </span>
       </div>
 
@@ -99,8 +85,8 @@
         ref="table"
         size="middle"
         bordered
-        rowKey="id"
-        :columns="columns"
+        :rowKey="record=>record.certNum"
+        :columns="defColumns"
         :dataSource="dataSource"
         :pagination="ipagination"
         :loading="loading"
@@ -131,7 +117,7 @@
             <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
             <a-menu slot="overlay">
               <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.certNum)">
                   <a>删除</a>
                 </a-popconfirm>
               </a-menu-item>
@@ -167,6 +153,7 @@
   import { JeecgListMixin } from '@/mixins/JeecgListMixin'
   import Vue from 'vue'
   import { filterObj } from '@/utils/util';
+  import { copyObj } from 'codemirror/src/util/misc'
 
   //高级查询modal需要参数
   const superQueryFieldList=[
@@ -297,139 +284,100 @@
       }
     },
     methods: {
-      getQueryParams(){
-        //高级查询器
-        let sqp = {}
-        if(this.superQueryParams){
-          sqp['superQueryParams']=encodeURI(this.superQueryParams)
-          sqp['superQueryMatchType'] = this.superQueryMatchType
-        }
-        this.isorter = null;
-        let param = Object.assign(sqp, this.queryParam, this.isorter ,this.filters);
+      searchQuery(){
 
-        param.field = this.getQueryField();
-        param.pageNo = this.ipagination.current;
-        param.pageSize = this.ipagination.pageSize;
-        delete param.birthdayRange; //范围参数不传递后台
-        return filterObj(param);
       },
-      initDictConfig() {
-        // //初始化字典 - 性别
-        // initDictOptions('sex').then((res) => {
-        //   if (res.success) {
-        //     this.sexDictOptions = res.result;
-        //   }
-        // });
+
+      loadData(){
+
       },
-      // onetomany: function () {
-      //   this.$refs.jeecgDemoTabsModal.add();
-      //   this.$refs.jeecgDemoTabsModal.title = "编辑";
-      // },
-      //跳转单据页面
-      // jump() {
-      //   this.$router.push({path: '/jeecg/helloworld'})
-      // },
-      onBirthdayChange: function (value, dateString) {
+
+      searchReset(){
+
+      },
+
+      onIssueDateChange: function (value, dateString) {
         console.log(dateString[0],dateString[1]);
         this.queryParam.birthday_begin=dateString[0];
         this.queryParam.birthday_end=dateString[1];
       },
-      //列设置更改事件
-      onColSettingsChange (checkedValues) {
-        var key = this.$route.name+":colsettings";
-        Vue.ls.set(key, checkedValues, 7 * 24 * 60 * 60 * 1000)
-        this.settingColumns = checkedValues;
-        const cols = this.defColumns.filter(item => {
-          if(item.key =='rowIndex'|| item.dataIndex=='action'){
-            return true
-          }
-          if (this.settingColumns.includes(item.dataIndex)) {
-            return true
-          }
-          return false
-        })
-        this.columns =  cols;
-      },
-      initColumns(){
-        //权限过滤（列权限控制时打开，修改第二个参数为授权码前缀）
-        //this.defColumns = colAuthFilter(this.defColumns,'testdemo:');
 
-        var key = this.$route.name+":colsettings";
-        let colSettings= Vue.ls.get(key);
-        if(colSettings==null||colSettings==undefined){
-          let allSettingColumns = [];
-          this.defColumns.forEach(function (item,i,array ) {
-            allSettingColumns.push(item.dataIndex);
-          })
-          this.settingColumns = allSettingColumns;
-          this.columns = this.defColumns;
-        }else{
-          this.settingColumns = colSettings;
-          const cols = this.defColumns.filter(item => {
-            if(item.key =='rowIndex'|| item.dataIndex=='action'){
-              return true;
-            }
-            if (colSettings.includes(item.dataIndex)) {
-              return true;
-            }
-            return false;
-          })
-          this.columns =  cols;
-        }
+      handleToggleSearch(){
+        this.toggleSearchStatus = !this.toggleSearchStatus;
       },
 
+      onClearSelected() {
+        this.selectedRowKeys = [];
+        this.selectionRows = [];
+      },
 
-      //demo
+      onColSettingsChange(){
+
+      },
+
+      handleEdit(record){
+        this.$refs.modalForm.edit(record);
+        this.$refs.modalForm.title = "编辑船员服务簿";
+        this.$refs.modalForm.method = "edit";
+        this.$refs.modalForm.disableSubmit = false;
+
+      },
+
+      handleAdd(){
+        this.$refs.modalForm.add();
+        this.$refs.modalForm.title = "新增船员服务簿";
+        this.$refs.modalForm.method = "add";
+        this.$refs.modalForm.disableSubmit = false;
+      },
+
+      handleDelete(id){
+        const dataSource = [...this.dataSource];
+        this.dataSource = dataSource.filter(item => item.certNum !== id);
+      },
 
       handleCheak(record){
-        this.$refs.checkModal.edit(record);
-        this.$refs.checkModal.title = "适任证详情";
+        this.$refs.checkModal.check(record);
+        this.$refs.checkModal.title = "查看船员服务簿";
         this.$refs.checkModal.confirmLoading = false;
       },
 
-      getDemoData(){
-        // this.dataSource = [
-        //   {
-        //     healthCertId,
-        //     employeeId,
-        //     certNum,
-        //     issuingDate,
-        //     issuingAuthority,
-        //     apartment,
-        //     validity,
-        //     uploadFileName,
-        //     uploadUserId,
-        //     uploadDate
-        //
-        //   }
-        // ]
-        if(this.dataSource.length != 0){
-          for (const dataSourceKey in this.dataSource) {
-            dataSourceKey.uploadFileName = dataSourceKey.uploadFileName.split("?");
-          }
+      batchDel(){
 
+      },
+
+      // 加载数据
+      modalFormOk(data){
+        if(data.method === "add"){
+          this.dataSource.push(data.modelData);
         }
-
+        else if(data.method === "edit") {
+          const dataSource = [...this.dataSource];
+          const target = dataSource.find(item => item.id === data.modelData.id);
+          if (target) {
+            copyObj(data.modelData,target);
+            this.dataSource = dataSource;
+          }
+        }
       },
 
-      getQueryField() {
-        //TODO 字段权限控制
-        var str = "";
-        this.columns.forEach(function (value) {
-          str += "," + value.dataIndex;
-        });
-        return str;
+      handleTableChange(pagination, filters, sorter) {
+        // //分页、排序、筛选变化时触发
+        // //TODO 筛选
+        // console.log(pagination)
+        // if (Object.keys(sorter).length > 0) {
+        //   this.isorter.column = sorter.field;
+        //   this.isorter.order = "ascend" == sorter.order ? "asc" : "desc"
+        // }
+        // this.ipagination = pagination;
+        // this.loadData();
       },
 
+      onSelectChange(selectedRowKeys, selectionRows) {
+        this.selectedRowKeys = selectedRowKeys;
+        this.selectionRows = selectionRows;
+      },
 
-
-
-
-    },
-    created() {
-      this.initColumns();
-      this.getDemoData();
-    },
+    }
   }
 </script>
 <style scoped>
