@@ -1,7 +1,7 @@
 <template>
   <div>
   <a-modal
-    :width="800"
+    :width="900"
     style="padding-bottom: 10px"
     :visible="visible"
     :confirmLoading="confirmLoading"
@@ -9,20 +9,19 @@
     @ok="handleOk"
     cancelText="关闭">
 
-        <template slot="footer">
-          <a-button style="margin: 10px" key="back" @click="handleCancel" >
-            取消
-          </a-button>
+    <template slot="footer">
+      <a-button style="margin: 10px" key="reset"  @click="handleReset" >
+        重置
+      </a-button>
 
-          <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
-            提交审批
-          </a-button>
+      <a-button style="margin: 10px" key="back"  @click="handleCancel" >
+        取消
+      </a-button>
 
-          <a-button style="margin: 10px" key="submitNow" type="danger" :loading="loading" @click="handleNow" >
-            立即发布
-          </a-button>
-
-        </template>
+      <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
+        保存
+      </a-button>
+    </template>
 
     <template slot="title">
       <div class="title">
@@ -32,16 +31,15 @@
     <a-spin :spinning="confirmLoading">
       <div class="table">
       <div class="item">
-        <text-border title="基本信息">
+        <text-border >
         <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
-
-          <a-form-model-item label="预案名称" required prop="emergencyPlanName" hasFeedback>
+          <a-form-model-item label="应急信息名称" required prop="emergencyPlanName" hasFeedback>
             <a-input v-model="model.emergencyPlanName"    placeholder="请输入应急预案名称"/>
           </a-form-model-item>
 
 
-          <a-form-item label='预案种类'>
+          <a-form-item label='船舶/设施名称'>
             <a-select placeholder="请选择预案种类" v-model="model.emergencyPlanCategory">
               <a-select-option v-for="item in inputData.emergencyPlanCategory" :value="item">
                 {{item}}
@@ -49,15 +47,31 @@
             </a-select>
           </a-form-item>
 
-          <a-form-model-item label="制定日期"  prop="specifiedTime" hasFeedback>
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.specifiedTime" />
+          <a-form-model-item label="发生时间"  prop="specifiedTime" hasFeedback>
+            <a-date-picker valueFormat="YYYY-MM-DD" style="width: 100%;" v-model="model.specifiedTime" />
           </a-form-model-item>
 
-          <a-form-model-item label="版本号" required prop="version" hasFeedback>
+          <a-form-model-item label="发生地点"  prop="specifiedTime" hasFeedback>
+            <a-date-picker valueFormat="YYYY-MM-DD" style="width: 100%;" v-model="model.specifiedTime" />
+          </a-form-model-item>
+
+          <a-form-model-item label="海况" required prop="version" hasFeedback>
             <a-input v-model="model.version"    placeholder="请输入版本号"/>
           </a-form-model-item>
 
-          <a-form-item label='部门'>
+          <a-form-model-item label="呼号" required prop="version" hasFeedback>
+            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          </a-form-model-item>
+
+          <a-form-model-item label="事故概况" required prop="version" hasFeedback>
+            <a-textarea
+            placeholder="输入事故概况"
+            :auto-size="{ minRows: 2, maxRows: 6 }"
+            v-model="model.version"
+          />
+          </a-form-model-item>
+
+          <a-form-item label='国际'>
             <a-select placeholder="请选择部门" v-model="model.departName">
               <a-select-option v-for="item in inputData.departName" :value="item">
                 {{item}}
@@ -65,22 +79,49 @@
             </a-select>
           </a-form-item>
 
-
-          <a-form-model-item label="填写人"  prop="version" hasFeedback>
-            <a-input v-model="model.fillPerson"  :disabled="true"   placeholder="请输入填写人"/>
+          <a-form-model-item label="起迄港" required prop="version" hasFeedback>
+            <a-input v-model="model.version"    placeholder="请输入版本号"/>
           </a-form-model-item>
 
-          <a-form-model-item label="修改日期"  prop="uploadDate" hasFeedback >
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.updateTime" :disabled="true" />
-          </a-form-model-item>
 
         </a-form-model>
         </text-border>
       </div>
       <div class="item-right">
-        <text-border title="证件上传">
+        <text-border >
         <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
-            <file style="width: 100%" v-model="model.uploadFileName"></file>
+
+          <a-form-model-item label="船舶/设施所有者" required prop="version" hasFeedback>
+            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          </a-form-model-item>
+
+          <a-form-model-item label="受伤人数" required prop="version" hasFeedback>
+            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          </a-form-model-item>
+
+          <a-form-model-item label="死亡人数" required prop="version" hasFeedback>
+            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          </a-form-model-item>
+
+          <a-form-model-item label="损害情况" required prop="version" hasFeedback>
+            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          </a-form-model-item>
+
+          <a-form-model-item label="求助要求" required prop="version" hasFeedback>
+            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          </a-form-model-item>
+
+          <a-form-model-item label="报告人"  prop="version" hasFeedback>
+            <a-input v-model="model.fillPerson"  :disabled="true"   placeholder="请输入填写人"/>
+          </a-form-model-item>
+
+          <a-form-model-item label="处理状态" required prop="version" hasFeedback>
+            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          </a-form-model-item>
+
+          <a-form-model-item label="修改日期"  prop="uploadDate" hasFeedback >
+            <a-date-picker valueFormat="YYYY-MM-DD" style="width: 100%;" v-model="model.updateTime" :disabled="true" />
+          </a-form-model-item>
         </a-form-model>
         </text-border>
       </div>
@@ -119,11 +160,11 @@ export default {
       },
       labelCol: {
         xs: { span: 10 },
-        sm: { span: 6 },
+        sm: { span: 8 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 14 },
       },
       confirmLoading: false,
       // form: this.$form.createForm(this),
@@ -219,6 +260,10 @@ export default {
         }
       })
     },
+    handleReset(){
+
+    }
+
   }
 }
 </script>

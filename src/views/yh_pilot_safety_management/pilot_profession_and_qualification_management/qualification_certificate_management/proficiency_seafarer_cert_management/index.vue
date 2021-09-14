@@ -1,55 +1,61 @@
 <template>
-  <a-card :bordered="false">
+  <div>
+  <a-card :bordered="false" class="item">
 
     <!--     查询区域 -->
     <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="30">
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="员工编号">
-              <j-input placeholder="请输入名称模糊查询" v-model="queryParam.employeeId"></j-input>
-            </a-form-item>
-          </a-col>
+      <a-row :gutter="30">
+        <a-col :span="18">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="30">
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="员工名称">
+                  <j-input placeholder="请输入名称模糊查询" v-model="queryParam.employeeName"></j-input>
+                </a-form-item>
+              </a-col>
 
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="证书编号">
-              <j-input placeholder="请输入名称模糊查询" v-model="queryParam.certNum"></j-input>
-            </a-form-item>
-          </a-col>
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="证书编号">
+                  <j-input placeholder="请输入证书编号模糊查询" v-model="queryParam.certNum"></j-input>
+                </a-form-item>
+              </a-col>
 
-<!--          <template v-if="toggleSearchStatus">-->
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="签发机关">
+                  <j-input placeholder="请输入签发机关名称模糊查询" v-model="queryParam.issuingAuthority"></j-input>
+                </a-form-item>
+              </a-col>
 
-<!--            <a-col :xl="6" :lg="7" :md="8" :sm="24">-->
-<!--              <a-form-item label="部门">-->
-<!--                <j-input placeholder="请输入名称模糊查询" v-model="queryParam.apartment"></j-input>-->
-<!--              </a-form-item>-->
-<!--            </a-col>-->
+<!--              <template v-if="toggleSearchStatus">-->
+<!--                <a-col :xl="8" :lg="9" :md="10" :sm="24">-->
+<!--                  <a-form-item label="签发日期">-->
+<!--                    <a-range-picker v-model="queryParam.issueDate"-->
+<!--                                    format="YYYY-MM-DD"-->
+<!--                                    :placeholder="['开始时间', '结束时间']"-->
+<!--                                    @change="onIssueDateChange" />-->
+<!--                  </a-form-item>-->
+<!--                </a-col>-->
+<!--              </template>-->
 
-<!--            <a-col :xl="10" :lg="12" :md="14" :sm="24">-->
-<!--              <a-form-item label="签发日期">-->
-<!--                <a-range-picker v-model="queryParam.issueDate"-->
-<!--                                format="YYYY-MM-DD"-->
-<!--                                :placeholder="['开始时间', '结束时间']"-->
-<!--                                @change="onIssueDateChange" />-->
-<!--              </a-form-item>-->
-<!--            </a-col>-->
+            </a-row>
+          </a-form>
+        </a-col>
 
-
-<!--          </template>-->
-
-
-          <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+        <a-col :span="6">
+           <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
 <!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
 <!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
 <!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
 <!--              </a>-->
             </a-col>
           </span>
-        </a-row>
-      </a-form>
+
+        </a-col>
+
+      </a-row>
     </div>
 
     <!--     操作按钮区域 -->
@@ -58,9 +64,7 @@
       <!--      <a-button type="primary" icon="plus" @click="jump">创建单据</a-button>-->
       <!--      <a-button type="primary" icon="plus" @click="onetomany">一对多</a-button>-->
       <a-button type="primary" icon="download" >导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" >
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
+
       <!-- 高级查询区域 -->
       <!--      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
 
@@ -77,69 +81,59 @@
       </a-dropdown>
     </div>
 
-    <!--     table区域-begin-->
-    <div>
-      <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
-        <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{
-          selectedRowKeys.length }}</a>项
-        <a style="margin-left: 24px" @click="onClearSelected">清空</a>
-        <span style="float:right;">
+    <div class="ant-alert ant-alert-info" style="margin-bottom: -25px;">
+      <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{
+        checkedKeys.length }}</a>项
+      <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+      <span style="float:right;">
           <a @click="loadData()"><a-icon type="sync" />刷新</a>
           <a-divider type="vertical" />
+           <i class="anticon anticon-info-circle ant-alert-icon"></i> 共 <a style="font-weight: 600">{{
+          dataSource.length }}</a>项
         </span>
-      </div>
-
-      <a-table
-        ref="table"
-        size="middle"
-        :bordered="false"
-        @expand="onExpand"
-        :expandedRowKeys="expendKeys"
-        :rowKey="record=>record.proficiencyCertMainId"
-        :columns="defColumns"
-        :dataSource="dataSource"
-        :pagination="ipagination"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        @change="handleTableChange">
-
-        <sub-table slot="expandedRowRender"
-                   slot-scope="record"
-                   :data-source="record.subList"
-                   :add-contain="false"
-                   style="width: 90%;"
-        ></sub-table>
-
-        <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">编辑</a>
-
-          <a-divider type="vertical"/>
-          <a-dropdown>
-            <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
-            <a-menu slot="overlay">
-              <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.proficiencyCertMainId)">
-                  <a>删除</a>
-                </a-popconfirm>
-              </a-menu-item>
-
-              <a-menu-item>
-                  <a @click="()=>handleCheak(record)">详情</a>
-              </a-menu-item>
-            </a-menu>
-          </a-dropdown>
-        </span>
-
-      </a-table>
     </div>
-    <!-- table区域-end -->
+
+  </a-card>
+    <a-row  class="table">
+
+        <a-card :bordered="false"  class="item tree">
+          <template slot="title" >
+            <div style="font-size: 20px">列表</div>
+          </template>
+          <div style="height: 100%">
+        <a-tree
+                :showLine="true"
+          checkable
+          :checkedKeys="checkedKeys"
+          :autoExpandParent="true"
+          :tree-data="treeData"
+          @select="onTreeSelect"
+          @check="onTreeCheck"
+        />
+          </div>
+        </a-card>
+
+        <a-card :bordered="false" class="item detail">
+          <template slot="title">
+            <div style="font-size: 20px;">
+              <a-icon type="form" style="color: #1890ff;margin-right: 10px"></a-icon>合格证详情
+              <a-button v-if="selectedKeys.length !== 0" style="margin-left: 80%" type="primary" @click="handleEdit(dataSource[0])">编辑</a-button>
+            </div>
+          </template>
+
+        <info-table v-if="selectedKeys.length !== 0" ref="infoTable" :model="dataSource[0]"></info-table>
+          <a-empty v-else></a-empty>
+        </a-card>
+
+    </a-row>
 
     <!-- 表单区域 -->
     <modal ref="modalForm" @ok="modalFormOk"></modal>
-    <check-modal ref="checkModal"></check-modal>
-    <!-- 一对多表单区域 -->
-    <!--    <JeecgDemoTabsModal ref="jeecgDemoTabsModal" @ok="modalFormOk"></JeecgDemoTabsModal>-->
 
-  </a-card>
+
+
+
+  </div>
 </template>
 
 <script>
@@ -147,14 +141,44 @@ import Modal from './childComponents/Modal'
 import { copyObj } from 'codemirror/src/util/misc'
 import CheckModal from './childComponents/CheckModal'
 import SubTable  from './childComponents/SubTable'
- // ?nagement/proficiency_seafarer_cert_management/childComponents/SubTable'
+import InfoTable from './childComponents/InfoTable'
+
 
 export default {
   name: 'index.vue',
   data(){
     return{
       //控制只有一个展开项
-      expendKeys:[],
+      expendedKeys:[],
+      checkedKeys:[],
+      selectedKeys:[],
+      treeData:[
+        {
+          title:"合格证列表",
+          key:'0-0',
+          children: [
+            {
+              title:'海清风',
+              key:'0-0-1'
+            },
+            {
+              title:'海起飞',
+              key:'0-0-2'
+            },
+            {
+              title:'海清风',
+              key:'0-0-3'
+            },
+            {
+              title:'海清风',
+              key:'0-0-4'
+            }
+
+          ]
+        },
+
+      ],
+
 
       selectedRowKeys:[],
       /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
@@ -164,6 +188,7 @@ export default {
         {
           proficiencyCertMainId:"123213",
           employeeId:"1",
+          employeeName:"海清风",
           certNum:"0001",
           issuingAuthority:"海事局",
           uploadFileName:"",
@@ -205,6 +230,7 @@ export default {
       },
 
       //
+
 
       // 默认列
       defColumns: [
@@ -261,9 +287,11 @@ export default {
     }
   },
   components:{
+
     Modal,
     CheckModal,
-    SubTable
+    SubTable,
+    InfoTable
   },
   methods:{
     //搜索方法
@@ -276,15 +304,24 @@ export default {
     },
 
     //点击展开图标触发
-    onExpand(expanded,record){
-      console.log(record);
+    onTreeExpand(expandedKeys) {
+      console.log('onExpand', expandedKeys);
+      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+      // or, you can remove all expanded children keys.
+      this.expandedKeys = expandedKeys;
+      this.autoExpandParent = false;
+    },
 
-      if(expanded){
-        this.expendKeys = [];
-        this.expendKeys.push(record.proficiencyCertMainId);
-      }else{
-        this.expendKeys = [];
-      }
+
+    onTreeCheck(checkedKeys) {
+      console.log('onCheck', checkedKeys);
+      this.checkedKeys = checkedKeys;
+    },
+
+
+    onTreeSelect(selectedKeys, info) {
+      this.selectedKeys = selectedKeys;
+      // this.$refs.infoTable.check(this.dataSource[0]);
 
     },
 
@@ -331,11 +368,6 @@ export default {
       this.dataSource = dataSource.filter(item => item.proficiencyCertMainId !== id);
     },
 
-    handleCheak(record){
-      this.$refs.checkModal.check(record);
-      this.$refs.checkModal.title = "查看引航员健康证";
-      this.$refs.checkModal.confirmLoading = false;
-    },
 
     batchDel(){
 
@@ -369,16 +401,34 @@ export default {
       // this.loadData();
     },
 
-    onSelectChange(selectedRowKeys, selectionRows) {
-      this.selectedRowKeys = selectedRowKeys;
-      this.selectionRows = selectionRows;
-    },
-
   }
 
 }
 </script>
 
 <style scoped>
+
+.table{
+  display: flex ;
+}
+
+.tree{
+  flex: 1 auto;
+  box-sizing: border-box;
+  margin-right: 4px;
+  margin-top: 7px;
+}
+
+/*.item{*/
+/*  padding: 10px 24px !important;*/
+/*}*/
+
+.detail{
+  flex: 10 auto;
+  box-sizing: border-box;
+  margin-left: 4px;
+  margin-top: 7px;
+}
+
 
 </style>

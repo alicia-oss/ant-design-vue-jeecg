@@ -1,6 +1,6 @@
 <template>
 <div class="textBorder" >
-  <span class="title">
+  <span class="title" v-if="title !=='null'">
     {{title}}
   </span>
   <slot></slot>
@@ -11,8 +11,10 @@
 export default {
   name: 'TextBorder',
   props:{
-    title:"",
-
+    title:{
+      type:String,
+      default:"null"
+    },
   }
 }
 </script>
@@ -32,9 +34,9 @@ export default {
   font-size: 20px;
   display:block;
   padding: 10px 5px;
+  /*居中*/
   /*left: 37%;*/
   top:-25px;
-  align-self: center;
   position:absolute;
   background: white;
 }

@@ -3,62 +3,66 @@
 
     <!--     查询区域 -->
     <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="30">
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="员工编号">
-              <j-input placeholder="请输入名称模糊查询" v-model="queryParam.employeeId"></j-input>
-            </a-form-item>
-          </a-col>
+      <a-row :gutter="30">
+        <a-col :span="18">
+         <a-form layout="inline" @keyup.enter.native="searchQuery">
+         <a-row :gutter="30">
+           <a-col :xl="8" :lg="9" :md="10" :sm="24">
+             <a-form-item label="员工编号">
+               <j-input placeholder="请输入名称模糊查询" v-model="queryParam.employeeId"></j-input>
+             </a-form-item>
+           </a-col>
 
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="注册号码">
-              <j-input placeholder="请输入注册号码模糊查询" v-model="queryParam.registerNum"></j-input>
-            </a-form-item>
-          </a-col>
+           <a-col :xl="8" :lg="9" :md="10" :sm="24">
+             <a-form-item label="注册号码">
+               <j-input placeholder="请输入注册号码模糊查询" v-model="queryParam.registerNum"></j-input>
+             </a-form-item>
+           </a-col>
 
-          <template v-if="toggleSearchStatus">
-            <a-col :xl="6" :lg="7" :md="8" :sm="24">
-              <a-form-item label="签发机关">
-                <j-input placeholder="请输入签发机关名称模糊查询" v-model="queryParam.issuingAuthority"></j-input>
-              </a-form-item>
-            </a-col>
+           <a-col :xl="8" :lg="9" :md="10" :sm="24">
+             <a-form-item label="签发机关">
+               <j-input placeholder="请输入签发机关名称模糊查询" v-model="queryParam.issuingAuthority"></j-input>
+             </a-form-item>
+           </a-col>
 
-            <a-col :xl="10" :lg="12" :md="14" :sm="24">
-              <a-form-item label="签发日期">
-                <a-range-picker v-model="queryParam.issueDate"
-                                format="YYYY-MM-DD"
-                                :placeholder="['开始时间', '结束时间']"
-                                @change="onIssueDateChange" />
-              </a-form-item>
-            </a-col>
+           <template v-if="toggleSearchStatus">
+             <a-col :xl="8" :lg="9" :md="10" :sm="24">
+               <a-form-item label="签发日期">
+                 <a-range-picker v-model="queryParam.issueDate"
+                                 format="YYYY-MM-DD"
+                                 :placeholder="['开始时间', '结束时间']"
+                                 @change="onIssueDateChange" />
+               </a-form-item>
+             </a-col>
 
+           </template>
 
-          </template>
+         </a-row>
+       </a-form>
+     </a-col>
 
-
-          <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+        <a-col :span="6">
+           <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
               <a @click="handleToggleSearch" style="margin-left: 8px">
                 {{ toggleSearchStatus ? '收起' : '展开' }}
                 <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
               </a>
             </a-col>
           </span>
-        </a-row>
-      </a-form>
+
+        </a-col>
+
+      </a-row>
     </div>
 
     <!--     操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <!--      <a-button type="primary" icon="plus" @click="jump">创建单据</a-button>-->
-      <!--      <a-button type="primary" icon="plus" @click="onetomany">一对多</a-button>-->
       <a-button type="primary" icon="download" >导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" >
-        <a-button type="primary" icon="import">导入</a-button>
       </a-upload>
       <!-- 高级查询区域 -->
       <!--      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
@@ -85,6 +89,8 @@
         <span style="float:right;">
           <a @click="loadData()"><a-icon type="sync" />刷新</a>
           <a-divider type="vertical" />
+           <i class="anticon anticon-info-circle ant-alert-icon"></i> 共 <a style="font-weight: 600">{{
+            dataSource.length }}</a>项
         </span>
       </div>
 
@@ -101,6 +107,8 @@
 
 
         <span slot="action" slot-scope="text, record">
+          <a @click="()=>handleCheak(record)">详情</a>
+                 <a-divider type="vertical"/>
           <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical"/>
@@ -111,10 +119,6 @@
                 <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.serviceBookId)">
                   <a>删除</a>
                 </a-popconfirm>
-              </a-menu-item>
-
-              <a-menu-item>
-                  <a @click="()=>handleCheak(record)">详情</a>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -127,8 +131,7 @@
     <!-- 表单区域 -->
     <modal ref="modalForm" @ok="modalFormOk"></modal>
     <check-modal ref="checkModal"></check-modal>
-    <!-- 一对多表单区域 -->
-    <!--    <JeecgDemoTabsModal ref="jeecgDemoTabsModal" @ok="modalFormOk"></JeecgDemoTabsModal>-->
+
 
   </a-card>
 </template>
@@ -208,7 +211,6 @@ export default {
           align: "center",
           dataIndex: 'issueDate'
         },
-
         {
           title: '操作',
           dataIndex: 'action',
@@ -300,7 +302,7 @@ export default {
       }
       else if(data.method === "edit") {
         const dataSource = [...this.dataSource];
-        const target = dataSource.find(item => item.id === data.modelData.id);
+        const target = dataSource.find(item => item.serviceBookId === data.modelData.serviceBookId);
         if (target) {
           copyObj(data.modelData,target);
           this.dataSource = dataSource;

@@ -14,59 +14,54 @@
         <a-icon type="form" style="color: #1890ff;margin-right: 10px"></a-icon>{{title}}
       </div>
     </template>
+    <template slot="footer">
+      <a-button style="margin: 10px" key="reset"  @click="handleReset" >
+        重置
+      </a-button>
+
+      <a-button style="margin: 10px" key="back"  @click="handleCancel" >
+        取消
+      </a-button>
+
+      <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
+        保存
+      </a-button>
+    </template>
+
     <a-spin :spinning="confirmLoading">
       <div class="table">
       <div class="item">
         <text-border title="基本信息">
         <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
-          <a-form-model-item label="员工编号" required prop="employeeId" hasFeedback>
-            <a-auto-complete
-              :data-source="inputData.employeeId"
-              @change="handleComplete"
-              placeholder="请输入员工编号"
-              v-model="model.employeeId"
-              ></a-auto-complete>
-          </a-form-model-item>
-
           <a-form-model-item label="员工姓名" required prop="employeeName" hasFeedback>
             <a-auto-complete
-              :data-source="inputData.employeeName"
+              :data-source="inputData.employeeId"
               @change="handleComplete"
               placeholder="请输入员工姓名"
               v-model="model.employeeName"
             ></a-auto-complete>
           </a-form-model-item>
 
-
           <a-form-model-item label="注册号码" required prop="registerNum" hasFeedback>
             <a-input v-model="model.registerNum"    placeholder="请输入注册号码"/>
           </a-form-model-item>
 
           <a-form-model-item label="签发日期"  prop="issueDate" hasFeedback>
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" />
+            <a-date-picker style="width: 100%"  valueFormat="YYYY-MM-DD" v-model="model.issueDate" />
           </a-form-model-item>
 
-          <a-form-model-item label="发证机关"  prop="issuingAuthority" hasFeedback >
-            <a-select placeholder="请输入发证机关" v-model="model.issuingAuthority">
-              <a-select-option v-for="item in inputData.issuingAuthority" :value="item">
-                {{item}}
-              </a-select-option>
-            </a-select>
+          <a-form-model-item label="发证机关" required prop="issuingAuthority" hasFeedback>
+            <a-input v-model="model.issuingAuthority"    placeholder="请输入发证机关"/>
           </a-form-model-item>
 
           <a-form-model-item label="上传人"  prop="uploadUserId" hasFeedback >
-            <a-input  placeholder="请输入上传人"  v-model="model.uploadUserId" :disabled="true"/>
+            <a-input  placeholder="请输入上传人"  v-model="model.uploadUserId" :read-only="true"/>
           </a-form-model-item>
 
           <a-form-model-item label="上传日期"  prop="uploadDate" hasFeedback >
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.uploadDate" :disabled="true" />
+            <a-date-picker  style="width: 100%" valueFormat="YYYY-MM-DD" v-model="model.uploadDate" :disabled="true"  />
           </a-form-model-item>
-
-
-          <!--        <a-form-model-item label="个人简介"  prop="content" hasFeedback>-->
-          <!--          <a-input  type="textarea" placeholder="请输入个人简介"  v-model="model.content"/>-->
-          <!--        </a-form-model-item>-->
 
         </a-form-model>
         </text-border>
@@ -74,8 +69,7 @@
       <div class="item-right">
         <text-border title="证件上传">
         <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
-<!--            <file-upload ref="yhFileUpload" :url = "url.addFile"></file-upload>-->
-            <file style="width: 100%" v-model="model.uploadFileName"></file>
+            <file-upload style="width: 100%" v-model="model.uploadFileName"></file-upload>
         </a-form-model>
         </text-border>
       </div>
@@ -88,7 +82,7 @@
 
 <script>
 import { httpAction } from '@/api/manage'
-import  File from './File'
+import  FileUpload from './FileUpload'
 import TextBorder from './TextBorder'
 import { uuid } from '@tinymce/tinymce-vue/lib/es2015/Utils'
 import { copyObj } from 'codemirror/src/util/misc'
@@ -101,9 +95,8 @@ export default {
       title:"操作",
       visible: false,
       inputData: {
-        employeeId:["0441-张三","0442-王五","0443-赵四"],
+        employeeId:["张三-0441","王五-0442","赵四-0443"],
         apartment:["测试部门01","测试部门02","测试部门03","测试部门04"],
-        issuingAuthority:["测试机关01","测试机关02","测试机关03"]
       },
       // inputData:[{id:"0441",name:"张三"},{id:"0442",name:"王五"}],
       model: {},
@@ -112,12 +105,12 @@ export default {
         wrapperCol: { span: 14 },
       },
       labelCol: {
-        xs: { span: 10 },
+        xs: { span: 24 },
         sm: { span: 6 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 15 },
       },
       confirmLoading: false,
       // form: this.$form.createForm(this),
@@ -143,7 +136,7 @@ export default {
   },
   components:{
     TextBorder,
-    File
+    FileUpload
   },
 
   methods: {
@@ -151,7 +144,7 @@ export default {
       this.edit({});
       let myData = new Date();
       this.model.uploadDate = myData.toLocaleDateString();
-      this.model.uploadUserId = this.$store.getters.userInfo.id;
+      this.model.uploadUserId = this.$store.getters.userInfo.realname;
       this.visible = true;
     },
     edit (record) {
@@ -183,15 +176,21 @@ export default {
 
     },
     handleComplete(){
-      let temp = this.model.employeeId.split("-");
-      this.model.employeeId = temp[0];
-      this.model.employeeName = temp[1];
-      // this.model.apartment = "测试部门01";
+      let tempName = this.model.employeeName;
+      let temp = this.model.employeeName.split("-");
+      this.model.employeeName = temp[0];
+      this.model.employeeId = temp[1];
+
     },
 
     handleCancel () {
       this.close()
+    },
+
+    handleReset(){
+      this.add();
     }
+
   }
 }
 </script>

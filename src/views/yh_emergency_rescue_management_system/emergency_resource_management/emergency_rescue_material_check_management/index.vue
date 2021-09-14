@@ -62,20 +62,6 @@
       <span style="float:right;">
           <a @click="loadData()"><a-icon type="sync" />刷新</a>
           <a-divider type="vertical" />
-        <!--          <a-popover title="自定义列" trigger="click" placement="leftBottom">-->
-        <!--            <template slot="content">-->
-        <!--              <a-checkbox-group @change="onColSettingsChange" v-model="settingColumns" :defaultValue="settingColumns">-->
-        <!--                <a-row style="width: 400px">-->
-        <!--                  <template v-for="(item,index) in defColumns">-->
-        <!--                    <template v-if="item.key!='rowIndex'&& item.dataIndex!='action'">-->
-        <!--                        <a-col :span="12"><a-checkbox :value="item.dataIndex"><j-ellipsis :value="item.title" :length="10"></j-ellipsis></a-checkbox></a-col>-->
-        <!--                    </template>-->
-        <!--                  </template>-->
-        <!--                </a-row>-->
-        <!--              </a-checkbox-group>-->
-        <!--            </template>-->
-        <!--            <a><a-icon type="setting" />设置</a>-->
-        <!--          </a-popover>-->
         </span>
     </div>
 
@@ -90,22 +76,6 @@
         :pagination="ipagination"
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange">
-
-        <!--        <div slot="filterDropdown">-->
-        <!--          <a-card>-->
-        <!--            &lt;!&ndash;            表头第一行&ndash;&gt;-->
-        <!--            <a-checkbox-group @change="onColSettingsChange" v-model="settingColumns" :defaultValue="settingColumns">-->
-        <!--              <a-row style="width: 400px">-->
-        <!--                <template v-for="(item,index) in defColumns">-->
-        <!--                  <template v-if="item.key!='rowIndex'&& item.dataIndex!='action'">-->
-        <!--                    <a-col :span="12"><a-checkbox :value="item.dataIndex"><j-ellipsis :value="item.title" :length="10"></j-ellipsis></a-checkbox></a-col>-->
-        <!--                  </template>-->
-        <!--                </template>-->
-        <!--              </a-row>-->
-        <!--            </a-checkbox-group>-->
-        <!--          </a-card>-->
-        <!--        </div>-->
-        <!--        <a-icon slot="filterIcon" type='setting' :style="{ fontSize:'16px',color:  '#108ee9' }" />-->
 
         <span slot="action" slot-scope="text, record">
           <a @click="()=>handleCheak(record)">详细 </a>
