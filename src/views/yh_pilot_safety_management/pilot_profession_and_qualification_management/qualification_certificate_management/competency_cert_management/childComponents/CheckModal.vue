@@ -14,52 +14,32 @@
           <text-border title="基本信息">
           <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" >
             <a-form-model-item label="员工姓名" required prop="employeeName" hasFeedback>
-              <!--          <a-input v-model="model.employeeId"    placeholder="请输入员工编号"/>-->
-              {{model.employeeName}}
-            </a-form-model-item>
-            <a-form-model-item label="员工编号" required prop="employeeId" hasFeedback>
-              <!--          <a-input v-model="model.employeeId"    placeholder="请输入员工编号"/>-->
-              {{model.employeeId}}
+              <a-input v-model="model.employeeName" placeholder="请输入员工编号"  :read-only="true"/>
             </a-form-model-item>
             <a-form-model-item label="证书编号" required prop="certNum" hasFeedback>
-              <!--          <a-input v-model="model.certNum"    placeholder="请输入证书编号"/>-->
-              {{model.certNum}}
+              <a-input v-model="model.certNum" placeholder="请输入证书编号"  :read-only="true"/>
             </a-form-model-item>
-
-            <a-form-model-item label="证书类别" required prop="cert_type" hasFeedback>
-              <!--          <a-input v-model="model.employeeId"    placeholder="请输入员工编号"/>-->
-              {{model.cert_type}}
+            <a-form-model-item label="证书类别">
+              <a-input v-model="model.cert_type" placeholder="请输入证书编号"  :read-only="true"/>
             </a-form-model-item>
-
-            <a-form-model-item label="证书等级" required prop="cert_class" hasFeedback>
-              <!--          <a-input v-model="model.employeeId"    placeholder="请输入员工编号"/>-->
-              {{model.cert_class}}
+            <a-form-model-item label="证书等级">
+              <a-select v-model="model.cert_class" placeholder="请选择证书等级" :read-only="true">
+                <a-select-option value="一级">一级</a-select-option>
+                <a-select-option value="二级">二级</a-select-option>
+                <a-select-option value="三级">三级</a-select-option>
+              </a-select>
             </a-form-model-item>
-
-            <a-form-model-item label="发证机关"  prop="issuingAuthority" hasFeedback >
-              <!--          <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-              {{model.issuingAuthority}}
+            <a-form-model-item label="签发日期" prop="issuingDate" hasFeedback>
+              <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" disabled/>
             </a-form-model-item>
-
-
-            <a-form-model-item label="签发日期"  prop="issuingDate" hasFeedback>
-              <a-date-picker showTime valueFormat="YYYY-MM-DD" v-model="model.issueDate" disabled/>
+            <a-form-model-item label="发证机关" prop="issuingAuthority" hasFeedback>
+              <a-input placeholder="请输入发证机关" v-model="model.issuingAuthority"  :read-only="true"/>
             </a-form-model-item>
-
-            <!--        <a-form-model-item label="生日"  prop="age" hasFeedback>-->
-            <!--          <a-date-picker valueFormat="YYYY-MM-DD"  v-model="model.birthday"/>-->
-            <!--        </a-form-model-item>-->
-            <a-form-model-item label="有效期至"  prop="validity" hasFeedback>
-              <a-date-picker showTime valueFormat="YYYY-MM-DD" v-model="model.validity" disabled/>
+            <a-form-model-item label="上传人">
+              <a-input placeholder="王五" v-model="model.uploadUserId"  :read-only="true"/>
             </a-form-model-item>
-
-            <a-form-model-item label="上传人"  prop="uploadUserId" hasFeedback >
-              <!--          <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-              {{model.uploadUserId}}
-            </a-form-model-item>
-            <a-form-model-item label="上传日期"  prop="uploadDate" hasFeedback >
-              <!--          <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-              {{model.uploadDate}}
+            <a-form-model-item label="上传日期">
+              <a-input placeholder="2021-9-11" v-model="model.uploadDate" disabled />
             </a-form-model-item>
           </a-form-model>
           </text-border>

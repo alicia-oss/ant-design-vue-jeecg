@@ -14,8 +14,8 @@
           <text-border title="基本信息">
           <a-form-model ref="form" :label-col="labelCol" :wrapper-col="wrapperCol" :model="model"
                         :rules="validatorRules">
-            <a-form-model-item label="员工编号" required prop="employeeId" hasFeedback>
-              <a-input v-model="model.employeeId" placeholder="请输入员工编号" />
+            <a-form-model-item label="员工姓名" required prop="employeeName" hasFeedback>
+              <a-input v-model="model.employeeName" placeholder="请输入员工编号" />
             </a-form-model-item>
             <a-form-model-item label="证书编号" required prop="certNum" hasFeedback>
               <a-input v-model="model.certNum" placeholder="请输入证书编号" />
@@ -82,12 +82,12 @@ export default {
         wrapperCol: { span: 14 },
       },
       labelCol: {
-        xs: { span: 10 },
+        xs: { span: 24 },
         sm: { span: 6 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 15 },
       },
       confirmLoading: false,
       form: this.$form.createForm(this),
@@ -170,22 +170,23 @@ export default {
 </script>
 
 <style scoped>
-.table{
-  display: flex ;
-  width: 100%;
-}
+  .table{
+    display: flex ;
+    width: 100%;
+  }
 
-.item{
-  flex: 1 ;
-}
+  .item{
+    flex: 1 ;
+  }
 
-.item-right{
-  flex: 1 ;
-  height: auto;
-}
+  .item-right{
+    flex: 1 ;
+    height: auto;
+  }
 
-.title{
-  font-size: 20px;
-}
+  .title{
+    font-size: 20px;
+  }
+
 
 </style>
