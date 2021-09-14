@@ -1,8 +1,8 @@
 <template>
   <div>
   <a-modal
-    :width="800"
-    style="padding-bottom: 10px"
+
+    style="padding-bottom: 10px;width: 35%"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @cancel="handleCancel"
@@ -31,47 +31,30 @@
     <a-spin :spinning="confirmLoading">
       <div class="table">
       <div class="item">
-        <text-border title="基本信息">
+
         <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
-          <a-form-model-item label="员工姓名" required prop="employeeName" hasFeedback>
-            <a-auto-complete
-              :data-source="inputData.employeeId"
-              @change="handleComplete"
-              placeholder="请输入员工姓名"
-              v-model="model.employeeName"
-            ></a-auto-complete>
+          <a-form-model-item label="应急事故名称" required prop="employeeName" hasFeedback>
+            <a-input v-model="model.emergencInfoName"    placeholder="请输入应急事故名称"/>
           </a-form-model-item>
 
-          <a-form-model-item label="注册号码" required prop="registerNum" hasFeedback>
-            <a-input v-model="model.registerNum"    placeholder="请输入注册号码"/>
-          </a-form-model-item>
+          <a-form-item label='处置方式'>
+            <a-select placeholder="请选择处置方式" v-model="model.processType">
+              <a-select-option v-for="item in inputData.processType" :value="item">
+                {{item}}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
 
-          <a-form-model-item label="签发日期"  prop="issueDate" hasFeedback>
-            <a-date-picker style="width: 100%"  valueFormat="YYYY-MM-DD" v-model="model.issueDate" />
-          </a-form-model-item>
-
-          <a-form-model-item label="发证机关" required prop="issuingAuthority" hasFeedback>
-            <a-input v-model="model.issuingAuthority"    placeholder="请输入发证机关"/>
-          </a-form-model-item>
-
-          <a-form-model-item label="上传人"  prop="uploadUserId" hasFeedback >
-            <a-input  placeholder="请输入上传人"  v-model="model.uploadUserId" :read-only="true"/>
-          </a-form-model-item>
-
-          <a-form-model-item label="上传日期"  prop="uploadDate" hasFeedback >
-            <a-date-picker  style="width: 100%" valueFormat="YYYY-MM-DD" v-model="model.uploadDate" :disabled="true"  />
+          <a-form-model-item label="具体措施"  prop="processDetail" hasFeedback>
+            <a-textarea
+              placeholder="输入具体措施"
+              :auto-size="{ minRows: 2, maxRows: 6 }"
+              v-model="model.processDetail"
+            />
           </a-form-model-item>
 
         </a-form-model>
-        </text-border>
-      </div>
-      <div class="item-right">
-        <text-border title="证件上传">
-        <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
-            <file-upload style="width: 100%" v-model="model.uploadFileName"></file-upload>
-        </a-form-model>
-        </text-border>
       </div>
       </div>
 
@@ -95,8 +78,8 @@ export default {
       title:"操作",
       visible: false,
       inputData: {
-        employeeId:["张三-0441","王五-0442","赵四-0443"],
-        apartment:["测试部门01","测试部门02","测试部门03","测试部门04"],
+
+        processType:["启动应急预案","与相关部门联系"]
       },
       // inputData:[{id:"0441",name:"张三"},{id:"0442",name:"王五"}],
       model: {},

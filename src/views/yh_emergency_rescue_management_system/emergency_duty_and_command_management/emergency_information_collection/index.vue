@@ -3,77 +3,73 @@
 
     <!--     查询区域 -->
     <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="30">
-          <a-col :xl="6" :lg="10" :md="12" :sm="24">
-            <a-form-item label="应急信息名称">
-              <j-input placeholder="请输入名称模糊查询" v-model="queryParam.emergencInfoName"></j-input>
-            </a-form-item>
-          </a-col>
-
-          <a-col :xl="6" :lg="10" :md="12" :sm="24">
-            <a-form-item label="发生地点">
-              <j-input placeholder="请输入" v-model="queryParam.occurSite"></j-input>
-            </a-form-item>
-          </a-col>
-
-          <a-col ::xl="6" :lg="10" :md="12" :sm="24">
-            <a-form-item label='处理状态'>
-              <!--              <j-input placeholder="请输入预案种类" v-model="queryParam.emergencyPlanCategory"></j-input>-->
-              <a-select placeholder="请选择处理状态" v-model="queryParam.emergencyInfoProcessStatus">
-                <a-select-option v-for="item in inputData.emergencyInfoProcessStatus" :value="item">
-                  {{item}}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-
-<!--          <a-col :xl="7" :lg="10" :md="12" :sm="24">-->
-<!--            <a-form-item label="发布状态">-->
-<!--              <a-select placeholder="请选择发布状态" v-model="queryParam.isReleased">-->
-<!--                <a-select-option v-for="item in inputData.isReleased" :value="item">-->
-<!--                  {{item}}-->
-<!--                </a-select-option>-->
-<!--              </a-select>-->
-<!--            </a-form-item>-->
-<!--          </a-col>-->
-
-          <template v-if="toggleSearchStatus">
-            <a-col :xl="7" :lg="10" :md="12"  :sm="24">
-                <a-form-item label="发生时间">
-                  <a-range-picker v-model="queryParam.occurTime"
-                                  format="YYYY-MM-DD"
-                                  :placeholder="['开始时间', '结束时间']"
-                                  @change="onIssueDateChange" />
+      <a-row :gutter="30">
+        <a-col :span="18">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="30">
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="应急信息名称">
+                  <j-input placeholder="请输入名称模糊查询" v-model="queryParam.emergencInfoName"></j-input>
                 </a-form-item>
-            </a-col>
+              </a-col>
 
-<!--            <a-col :xl="7" :lg="10" :md="12" :sm="24">-->
-<!--              <a-form-item label="审批状态">-->
-<!--                <a-select placeholder="请选择审批状态" v-model="queryParam.applicationState">-->
-<!--                  <a-select-option v-for="item in inputData.applicationState" :value="item">-->
-<!--                    {{item}}-->
-<!--                  </a-select-option>-->
-<!--                </a-select>-->
-<!--              </a-form-item>-->
-<!--            </a-col>-->
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="发生地点">
+                  <j-input placeholder="请输入" v-model="queryParam.occurSite"></j-input>
+                </a-form-item>
+              </a-col>
 
-          </template>
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label='处理状态'>
+                  <a-select placeholder="请选择处理状态" v-model="queryParam.emergencyInfoProcessStatus">
+                    <a-select-option v-for="item in inputData.emergencyInfoProcessStatus" :value="item">
+                      {{item}}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
 
 
-          <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+              <template v-if="toggleSearchStatus">
+                <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                  <a-form-item label="发生时间">
+                    <a-range-picker v-model="queryParam.occurTime"
+                                    format="YYYY-MM-DD"
+                                    :placeholder="['开始时间', '结束时间']"
+                                    @change="onIssueDateChange" />
+                  </a-form-item>
+                </a-col>
+                <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                  <a-form-item label="审批状态">
+                    <a-select placeholder="请选择审批状态" v-model="queryParam.applicationState">
+                      <a-select-option v-for="item in inputData.applicationState" :value="item">
+                        {{ item }}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+              </template>
+            </a-row>
+          </a-form>
+        </a-col>
+
+        <a-col :span="6">
+           <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
               <a @click="handleToggleSearch" style="margin-left: 8px">
                 {{ toggleSearchStatus ? '收起' : '展开' }}
                 <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
               </a>
             </a-col>
           </span>
-        </a-row>
-      </a-form>
+
+        </a-col>
+
+      </a-row>
     </div>
+
 
     <!--     操作按钮区域 -->
     <div class="table-operator">
@@ -81,9 +77,6 @@
       <!--      <a-button type="primary" icon="plus" @click="jump">创建单据</a-button>-->
       <!--      <a-button type="primary" icon="plus" @click="onetomany">一对多</a-button>-->
       <a-button type="primary" icon="download" >导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" >
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
       <!-- 高级查询区域 -->
       <!--      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
 
@@ -124,7 +117,10 @@
         @change="handleTableChange">
 
 
+
         <span slot="action" slot-scope="text, record">
+          <a @click="()=>handleCheak(record)">详情</a>
+                 <a-divider type="vertical"/>
           <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical"/>
@@ -132,17 +128,12 @@
             <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
             <a-menu slot="overlay">
               <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.emergencyPlanId)">
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.serviceBookId)">
                   <a>删除</a>
                 </a-popconfirm>
               </a-menu-item>
-
-               <a-menu-item>
-                  <a @click="()=>handleHandle(record)">处理</a>
-              </a-menu-item>
-
               <a-menu-item>
-                  <a @click="()=>handleCheak(record)">详情</a>
+                  <a @click="handleReport(record)">填写报告</a>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -155,6 +146,7 @@
     <!-- 表单区域 -->
     <modal ref="modalForm" @ok="modalFormOk"></modal>
     <check-modal ref="checkModal"></check-modal>
+    <report-modal ref="reportModal" @ok="modalFormOk"></report-modal>
     <!-- 一对多表单区域 -->
     <!--    <JeecgDemoTabsModal ref="jeecgDemoTabsModal" @ok="modalFormOk"></JeecgDemoTabsModal>-->
 
@@ -165,6 +157,7 @@
 import Modal from './childComponents/Modal'
 import { copyObj } from 'codemirror/src/util/misc'
 import CheckModal from './childComponents/CheckModal'
+import ReportModal from './childComponents/ReportModal'
 export default {
   name: 'index.vue',
   data(){
@@ -197,9 +190,28 @@ export default {
           damage:"",
           salvageRequest:"",
           reporter:"",
-          emergencyInfoProcessStatus:""
+          emergencyInfoProcessStatus:"",
+          report:{
+            accidentReportId:"",
+            emergencyInfoId:'',
+            facilityOverview:'',
+            processDetail:'',
+            owner:"",
+            address:'',
+            occurTime:"",
+            occurSite:"",
+            weatherAndSeaState:'',
+            detail:'',
+            damage:'',
+            sinkingPosition:'',
+            otherSituation:'',
+            fillPerson:'',
+            uploadFileName:'',
+            uploadTime:''
+          }
         },
       ],
+
       /* 分页参数 */
       ipagination:{
         current: 1,
@@ -269,7 +281,8 @@ export default {
   },
   components:{
     Modal,
-    CheckModal
+    CheckModal,
+    ReportModal
   },
   methods:{
     //搜索方法
@@ -366,9 +379,11 @@ export default {
       this.selectionRows = selectionRows;
     },
 
-    handleHandle(){
-
+    handleReport(record){
+      this.$refs.reportModal.add();
     }
+
+
 
   }
 

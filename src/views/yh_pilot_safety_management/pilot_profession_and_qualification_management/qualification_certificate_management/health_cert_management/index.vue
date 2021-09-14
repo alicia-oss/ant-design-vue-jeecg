@@ -25,7 +25,7 @@
               </a-form-item>
             </a-col>
 
-            <a-col :xl="10" :lg="12" :md="14" :sm="24">
+            <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-form-item label="签发日期">
                 <a-range-picker v-model="queryParam.issueDate"
                                 format="YYYY-MM-DD"

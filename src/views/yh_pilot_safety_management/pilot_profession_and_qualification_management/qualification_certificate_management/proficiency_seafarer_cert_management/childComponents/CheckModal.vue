@@ -99,7 +99,7 @@ export default {
     return {
       loading:false,
       title:"操作",
-      visible: false,
+      visible: true,
       model: {},
       layout: {
         labelCol: { span: 3 },
@@ -155,9 +155,7 @@ export default {
 .item{
 
 }
-.title{
-  font-size: 20px;
-}
+
 
 .cert-table{
   margin-top: 30px;

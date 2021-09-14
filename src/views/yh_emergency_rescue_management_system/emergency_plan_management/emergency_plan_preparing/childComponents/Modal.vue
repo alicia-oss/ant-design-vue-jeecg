@@ -14,6 +14,10 @@
             取消
           </a-button>
 
+          <a-button style="margin: 10px" key="back" @click="handleReset" >
+            重置
+          </a-button>
+
           <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
             提交审批
           </a-button>
@@ -219,6 +223,10 @@ export default {
         }
       })
     },
+
+    handleReset(){
+      this.model = add();
+    }
   }
 }
 </script>

@@ -69,7 +69,7 @@ const getFileName=(path)=>{
   return path.substring(path.lastIndexOf("/")+1);
 }
 export default {
-  name: 'JUpload',
+  name: 'FileUpload',
   data(){
     return {
       uploadAction:window._CONFIG['domianURL']+"/sys/common/upload",
@@ -283,7 +283,7 @@ export default {
             return file;
           });
         }
-        //this.$message.success(`${info.file.name} 上传成功!`);
+        this.$message.success(`${info.file.name} 上传成功!`);
       }else if (info.file.status === 'error') {
         this.$message.error(`${info.file.name} 上传失败.`);
       }else if(info.file.status === 'removed'){

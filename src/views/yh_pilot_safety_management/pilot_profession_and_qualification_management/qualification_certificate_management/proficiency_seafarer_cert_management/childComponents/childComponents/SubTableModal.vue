@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-modal
-      :width="800"
+      style="width: 35%"
       :visible="visible"
       :confirmLoading="confirmLoading"
       @cancel="handleCancel"
@@ -13,10 +13,25 @@
           <a-icon type="form" style="color: #1890ff;margin-right: 10px"></a-icon>{{title}}
         </div>
       </template>
+
+      <template slot="footer">
+        <a-button style="margin: 10px" key="reset"  @click="handleReset" >
+          重置
+        </a-button>
+
+        <a-button style="margin: 10px" key="back"  @click="handleCancel" >
+          取消
+        </a-button>
+
+        <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
+          保存
+        </a-button>
+      </template>
+
       <a-spin :spinning="confirmLoading">
         <div class="table">
           <div class="item">
-            <text-border title="证书信息" height="510px">
+
               <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
                 <a-form-model-item label="证书种类" required prop="certProficiencyCate" hasFeedback>
@@ -31,35 +46,14 @@
                   <a-input v-model="model.clause"    placeholder="请输入公约条款"/>
                 </a-form-model-item>
 
-<!--                <a-form-model-item label="证书编号" required prop="certNum" hasFeedback>-->
-<!--                  <a-input v-model="model.certNum"    placeholder="请输入证书编号"/>-->
-<!--                </a-form-model-item>-->
-
-                <a-form-model-item label="签发日期"  prop="issueDate" hasFeedback>
-                  <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" />
+                <a-form-model-item label="签发日期" prop="issueDate" hasFeedback>
+                  <a-date-picker valueFormat="YYYY-MM-DD"  style="width: 100%;" v-model="model.issueDate" />
                 </a-form-model-item>
 
-<!--                <a-form-model-item label="发证机关"  prop="issuingAuthority" hasFeedback >-->
-<!--                  &lt;!&ndash;            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>&ndash;&gt;-->
-<!--                  <a-select placeholder="请输入发证机关" v-model="model.issuingAuthority">-->
-<!--                    <a-select-option v-for="item in inputData.issuingAuthority" :value="item">-->
-<!--                      {{item}}-->
-<!--                    </a-select-option>-->
-<!--                  </a-select>-->
-<!--                </a-form-model-item>-->
-
-
-                <a-form-model-item label="有效日期"  prop="uploadDate" hasFeedback >
-                  <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.validity"  />
+                <a-form-model-item label="有效期至"   prop="a" hasFeedback>
+                  <a-date-picker valueFormat="YYYY-MM-DD"  style="width: 100%;" v-model="model.validity" />
                 </a-form-model-item>
-
-
-                <!--        <a-form-model-item label="个人简介"  prop="content" hasFeedback>-->
-                <!--          <a-input  type="textarea" placeholder="请输入个人简介"  v-model="model.content"/>-->
-                <!--        </a-form-model-item>-->
-
               </a-form-model>
-            </text-border>
          </div>
         </div>
       </a-spin>
@@ -178,7 +172,11 @@ export default {
 
     handleCancel () {
       this.close()
-    }
+    },
+
+    handleReset(){
+
+    },
   }
 }
 </script>

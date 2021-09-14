@@ -18,7 +18,7 @@
     <a-table
       :pagination="false"
       :columns="defColumns"
-      :bordered="true"
+      :bordered="false"
       :rowKey="record=>record.proficiencyCertSubId"
       :data-source="dataSource"
       :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
@@ -31,8 +31,6 @@
     </a-table>
 
     <sub-table-modal ref="subModal" @ok="modalFormOk"></sub-table-modal>
-
-
   </div>
 
 </template>
