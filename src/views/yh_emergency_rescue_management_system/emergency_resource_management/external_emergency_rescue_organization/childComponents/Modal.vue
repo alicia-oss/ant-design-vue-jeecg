@@ -13,6 +13,19 @@
         <a-icon type="form" style="color: #1890ff;margin-right: 10px"></a-icon>{{title}}
       </div>
     </template>
+    <template slot="footer">
+      <a-button style="margin: 10px" key="reset"  @click="handleReset" >
+        重置
+      </a-button>
+
+      <a-button style="margin: 10px" key="back"  @click="handleCancel" >
+        取消
+      </a-button>
+
+      <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
+        保存
+      </a-button>
+    </template>
     <a-spin :spinning="confirmLoading">
       <div class="table">
       <div class="item" >
@@ -54,7 +67,7 @@
           </a-form-model-item>
 
           <a-form-model-item label="上传人" prop="uploadPerson" hasFeedback>
-            <a-input v-model="model.uploadPerson"    placeholder="王五" disabled/>
+            <a-input v-model="model.uploadPerson"    placeholder="王五" read-only="true"/>
           </a-form-model-item>
 
           <a-form-model-item label="上传时间"  prop="uploadTime" hasFeedback >
@@ -70,6 +83,13 @@
         </a-form-model>
         </text-border>
       </div>
+        <div class="item-right">
+          <text-border title="证件上传">
+            <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
+              <file-upload style="width: 100%" v-model="model.uploadFileName"></file-upload>
+            </a-form-model>
+          </text-border>
+        </div>
 <!--      <div class="item">-->
 <!--        <text-border title="证件上传" height="510px">-->
 <!--        <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">-->
@@ -112,12 +132,12 @@ export default {
         wrapperCol: { span: 14 },
       },
       labelCol: {
-        xs: { span: 10 },
+        xs: { span: 24 },
         sm: { span: 6 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 15 },
       },
       confirmLoading: false,
       // form: this.$form.createForm(this),

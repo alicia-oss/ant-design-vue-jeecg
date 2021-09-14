@@ -32,68 +32,83 @@
         <text-border title="基本信息">
         <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
-          <a-form-model-item label="计划名称" required prop="drillPlanName" hasFeedback>
+          <a-form-model-item label="计划名称" required prop="drillPlan" hasFeedback>
 <!--            <a-input v-model="model.employeeId"    placeholder="请输入员工编号"/>-->
-            <a-input v-model="model.drillPlanName"    placeholder="请输入计划名称"/>
+            <a-input v-model="model.drillPlan"    placeholder="请输入计划名称"/>
 
           </a-form-model-item>
 
-          <a-form-model-item label="年度" required prop="drillYear" hasFeedback >
+          <a-form-model-item label="演练名称" required prop="drillName" hasFeedback >
 <!--            <a-input  placeholder="请输入部门"  v-model="model.apartment"/>-->
-            <a-input v-model="model.drillYear"    placeholder="" />
+            <a-input v-model="model.drillName"    placeholder="请输入演练名称" />
           </a-form-model-item>
 
-          <a-form-model-item label="填报时间" required prop="fillInTime" hasFeedback>
-            <a-input v-model="model.fillInTime"    placeholder="请输入填报时间"/>
+          <a-form-model-item label="组织部门" required prop="organizeDepart" hasFeedback>
+            <a-input v-model="model.organizeDepart"    placeholder="请输入填报时间"/>
           </a-form-model-item>
 
           <a-form-model-item label="负责人" prop="personInCharge" hasFeedback>
             <a-input v-model="model.personInCharge"    placeholder="请输入负责人姓名"/>
           </a-form-model-item>
 
-          <a-form-model-item label="联系电话" prop="phone" hasFeedback>
-            <a-input v-model="model.phone"    placeholder="请输入联系电话"/>
+          <a-form-model-item label="开始时间" prop="startTime" hasFeedback>
+            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.startTime" placeholder=""/>
           </a-form-model-item>
 
-          <a-form-model-item label="填写人"  prop="fillPerson" hasFeedback >
-            <a-input v-model="model.fillPerson"    placeholder="李四" disabled/>
+          <a-form-model-item label="结束时间"  prop="endTime" hasFeedback >
+            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.endTime" placeholder=""/>
           </a-form-model-item>
 
-          <a-form-model-item label="申请时间"  prop="applyTime" hasFeedback>
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.applyTime" placeholder="2020-9-11" disabled/>
+          <a-form-model-item label="演练方式"  prop="drillMethod" hasFeedback>
+            <a-input v-model="model.drillMethod"    placeholder="请输入演练方式"/>
           </a-form-model-item>
 
-          <a-form-model-item label="申请状态" required  prop="applicationState" hasFeedback >
-<!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-            <a-input v-model="model.applicationState"    placeholder="编辑中" disabled/>
+          <a-form-model-item label="演练地点"  prop="drillSite" hasFeedback>
+            <a-input v-model="model.drillSite"    placeholder="请输入演练地点"/>
           </a-form-model-item>
 
-          <a-form-model-item label="发布状态" required  prop="isReleased" hasFeedback >
-            <a-popconfirm v-if="isReleased=='未发布'" title="确定发布吗?" @confirm="onChange" @cancel="onCancel">
 
-            <!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-            <a-switch v-model="isClose" checked-children="发布" un-checked-children="未发布" default-unchecked/>
-            </a-popconfirm>
-            <a-popconfirm v-if="isReleased=='发布'" title="确定取消发布吗?" @confirm="onChange" @cancel="onCancel">
 
-              <!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-              <a-switch  v-model="isClose" checked-children="发布" un-checked-children="未发布" default-unchecked/>
-            </a-popconfirm>
-          </a-form-model-item>
+
           <!--        <a-form-model-item label="个人简介"  prop="content" hasFeedback>-->
           <!--          <a-input  type="textarea" placeholder="请输入个人简介"  v-model="model.content"/>-->
           <!--        </a-form-model-item>-->
 
         </a-form-model>
         </text-border>
+
+
       </div>
-        <div class="item-right">
-          <text-border title="证件上传">
+        <div class="item">
+          <text-border>
             <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
-              <file-upload style="width: 100%" v-model="model.uploadFileName"></file-upload>
+              <a-form-model-item label="演练内容"  prop="drillContent" hasFeedback>
+                <a-input v-model="model.drillContent"    placeholder="请输入演练内容"/>
+              </a-form-model-item>
+
+              <a-form-model-item label="参与人员"  prop="participants" hasFeedback>
+                <a-input v-model="model.participants"    placeholder="请输入参与人员"/>
+              </a-form-model-item>
+
+              <a-form-model-item label="演练上传时间"  prop="uploadPlanTime" hasFeedback>
+                <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.uploadPlanTime" placeholder="2021-9-11" disabled/>
+              </a-form-model-item>
+
+              <a-form-model-item label="评估效果"  prop="evaluation" hasFeedback>
+                <a-input v-model="model.evaluation"    placeholder="请输入演练评估效果"/>
+              </a-form-model-item>
+
+              <a-form-model-item label="文件上传人"  prop="uploadEvaluationPerson" hasFeedback>
+                <a-input v-model="model.uploadEvaluationPerson"    placeholder="请输入评估文件上传人"/>
+              </a-form-model-item>
+
+              <a-form-model-item label="评估上传时间"  prop="uploadEvaluationTime" hasFeedback>
+                <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.uploadEvaluationTime" placeholder="2021-9-11" disabled/>
+              </a-form-model-item>
             </a-form-model>
           </text-border>
         </div>
+
 <!--      <div class="item">-->
 <!--        <text-border title="证件上传" height="510px">-->
 <!--        <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">-->
@@ -103,7 +118,20 @@
 <!--        </text-border>-->
 <!--      </div>-->
       </div>
-
+      <div class="item-bottom">
+        <text-border title="演练文件上传" style="position: relative">
+          <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
+            <file-upload style="width: 100%" v-model="model.uploadFileName"></file-upload>
+          </a-form-model>
+        </text-border>
+      </div>
+      <div class="item-bottom">
+        <text-border title="评估文件上传" style="position: relative">
+          <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
+            <file-upload style="width: 100%" v-model="model.uploadEvaluationFileName"></file-upload>
+          </a-form-model>
+        </text-border>
+      </div>
     </a-spin>
   </a-modal>
   </div>
@@ -120,7 +148,6 @@ export default {
   name: "Modal",
   data () {
     return {
-      isClose: false,
       isReleased:"未发布",
       method:"",
       loading:false,
@@ -174,22 +201,16 @@ export default {
   },
 
   methods: {
-    onCancel(){
-      if(this.isReleased=="发布"){
-        this.isClose=true;
-      }
-      else if(this.isReleased=="未发布"){
-        this.isClose=false;
-      }
-    },
     onChange(checked) {
       if(this.isReleased=="未发布"){
         this.isReleased="发布";
         this.model.isReleased="发布";
+        console.log(this.model.isReleased)
       }
       else if(this.isReleased=="发布"){
         this.isReleased="未发布";
         this.model.isReleased="未发布";
+        console.log(this.model.isReleased)
       }
 
     },
@@ -272,9 +293,8 @@ export default {
       this.close()
     },
     handleReset(){
-      this.add();
-    },
 
+    }
   }
 }
 </script>

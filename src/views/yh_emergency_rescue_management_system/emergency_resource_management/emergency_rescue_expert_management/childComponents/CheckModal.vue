@@ -1,6 +1,5 @@
 <template>
   <a-modal
-    :footer="null"
     :width="800"
     :visible="visible"
     :confirmLoading="confirmLoading"
@@ -13,61 +12,82 @@
       </div>
     </template>
 
+    <template slot="footer">
+      <a-button  style="margin: 10px" key="last"  @click="handleLast" >
+        上一条
+      </a-button>
+
+      <a-button  style="margin: 10px" key="next"  @click="handleNext" >
+        下一条
+      </a-button>
+
+      <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleCancel">
+        关闭
+      </a-button>
+    </template>
+
     <a-spin :spinning="confirmLoading">
-      <div class="table" style="overflow: scroll">
+      <div class="table">
         <div class="item">
-          <text-border title="基本信息" height="510px">
+          <text-border title="基本信息">
           <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" >
 
             <a-form-model-item label="姓名" required prop="expertName" hasFeedback>
 <!--              <a-input v-model="model.employeeId"    placeholder="请输入员工编号"/>-->
-              {{model.expertName}}
+              <a-input v-model="model.expertName"    placeholder="请输入员工姓名" :read-only="true" />
             </a-form-model-item>
 
             <a-form-model-item label="职责" required prop="expertDuty" hasFeedback >
 <!--              <a-input  placeholder="请输入部门"  v-model="model.apartment"/>-->
-              {{model.expertDuty}}
+              <a-input v-model="model.expertDuty"    placeholder="请输入员工姓名" :read-only="true" />
+
             </a-form-model-item>
 
             <a-form-model-item label="所在部门" required prop="departName" hasFeedback>
 <!--              <a-input v-model="model.certNum"    placeholder="请输入证书编号"/>-->
-              {{model.departName}}
+              <a-input v-model="model.departName"    placeholder="请输入员工姓名" :read-only="true" />
+
             </a-form-model-item>
 
             <a-form-model-item label="联系方式" prop="phone" hasFeedback>
               <!--              <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" />-->
-              {{model.phone}}
+              <a-input v-model="model.phone"    placeholder="请输入员工姓名" :read-only="true" />
+
             </a-form-model-item>
 
             <a-form-model-item label="备注" prop="memo" hasFeedback>
 <!--              <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" />-->
-              {{model.memo}}
+              <a-input v-model="model.memo"    placeholder="请输入员工姓名" :read-only="true" />
+
             </a-form-model-item>
 
             <a-form-model-item label="是否本单位"  prop="isCompany" hasFeedback>
               <!--              <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" />-->
-              {{model.isCompany}}
+              <a-input v-model="model.isCompany"    placeholder="请输入员工姓名" :read-only="true" />
+
             </a-form-model-item>
 
             <a-form-model-item label="上传人"  prop="uploadPerson" hasFeedback>
               <!--              <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" />-->
-              {{model.uploadPerson}}
+              <a-input v-model="model.uploadPerson"    placeholder="请输入员工姓名" :read-only="true" />
+
             </a-form-model-item>
 
             <a-form-model-item label="上传时间"  prop="uploadTime" hasFeedback >
 <!--              <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-              {{model.uploadTime}}
+              <a-input v-model="model.uploadTime"    placeholder="请输入员工姓名" disabled/>
+
             </a-form-model-item>
 
 
            </a-form-model>
           </text-border>
         </div>
-<!--        <div class="item">-->
-<!--          <text-border title="相关证件" height="510px">-->
-<!--          <file-list :value="model.uploadFileName" ref="fileList"></file-list>-->
-<!--          </text-border>-->
-<!--        </div>-->
+        <div class="item">
+          <text-border title="相关证件">
+            <file-list :value="model.uploadFileName" ref="fileList"></file-list>
+          </text-border>
+        </div>
       </div>
 
     </a-spin>
@@ -95,11 +115,11 @@ export default {
       },
       labelCol: {
         xs: { span: 10 },
-        sm: { span: 6 },
+        sm: { span:6 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 15 },
       },
       confirmLoading: false,
       form: this.$form.createForm(this),
@@ -107,7 +127,7 @@ export default {
     }
   },
    components:{
-  //   FileList,
+     FileList,
      TextBorder
    },
   created () {
@@ -127,6 +147,12 @@ export default {
 
     handleCancel () {
       this.close()
+    },
+    handleLast(){
+
+    },
+    handleNext(){
+
     }
   }
 }

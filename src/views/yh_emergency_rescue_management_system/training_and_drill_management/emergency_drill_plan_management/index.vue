@@ -1,57 +1,64 @@
 <template>
   <a-card :bordered="false">
     <div class="table-page-search-wrapper">
-    <a-form-model layout="inline">
-      <a-row :gutter="48">
-        <a-col :md="6"
-               :sm="24">
-      <a-form-model-item label="计划名称" v-model="queryParam.drillPlanName">
-        <a-input v-model="queryParam.drillPlanName"    placeholder="请输入计划名称" />
-      </a-form-model-item>
+      <a-row :gutter="30">
+        <a-col :span="18">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="30">
+              <a-col  :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="计划名称" v-model="queryParam.drillPlanName">
+                  <a-input v-model="queryParam.drillPlanName"    placeholder="请输入计划名称" />
+                </a-form-item>
+
+              </a-col>
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="填报时间">
+                  <a-range-picker v-model="queryParam.issueDate"
+                                  format="YYYY-MM-DD"
+                                  :placeholder="['开始时间', '结束时间']"
+                                  @change="onIssueDateChange" />
+                </a-form-item>
+
+              </a-col>
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-model-item label="负责人" v-model="queryParam.fillPerson">
+                  <a-input v-model="queryParam.fillPerson"    placeholder="请输入负责人姓名" />
+                </a-form-model-item>
+              </a-col>
+            </a-row>
+          </a-form>
         </a-col>
 
-        <a-col :xl="8" :lg="8" :md="5" :sm="24">
-          <a-form-item label="填报时间">
-            <a-range-picker v-model="queryParam.issueDate"
-                            format="YYYY-MM-DD"
-                            :placeholder="['开始时间', '结束时间']"
-                            @change="onIssueDateChange" />
-          </a-form-item>
-        </a-col>
-        <a-col :md="6"
-               :sm="24">
-          <a-form-model-item label="负责人" v-model="queryParam.fillPerson">
-            <a-input v-model="queryParam.fillPerson"    placeholder="请输入负责人姓名" />
-          </a-form-model-item>
-        </a-col>
-
-          <a-col :md="4"
-                 :sm="24">
-      <a-form-model-item>
-        <a-button
-          type="primary"
-          html-type="submit"
-        >
-          查询
-        </a-button>
-      </a-form-model-item>
+        <a-col :span="6">
+        <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+          <a-col  :xl="6" :lg="7" :md="8" :sm="24">
+            <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+            <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+          </a-col>
+        </span>
         </a-col>
       </a-row>
-
-    </a-form-model>
     </div>
     <div class="table-operator">
-      <a-row>
-        <a-button type="primary" @click="handleAdd()">
-          添加
+      <a-button type="primary" @click="handleAdd()" icon="plus">新增</a-button>
+      <a-dropdown v-if="selectedRowKeys.length > 0">
+        <a-menu slot="overlay">
+
+          <a-menu-item key="1" @click="batchDel">
+            <a-icon type="delete"/>删除
+          </a-menu-item>
+          <a-menu-item key="2">
+            <a-icon type="download"/>导出
+          </a-menu-item>
+          <a-menu-item key="3">
+           申请审批
+          </a-menu-item>
+
+        </a-menu>
+        <a-button style="margin-left: 8px"> 批量操作
+          <a-icon type="down"/>
         </a-button>
-        <a-button type="primary" @click="handleDelete()">
-          删除
-        </a-button>
-        <a-button type="primary">
-          导出
-        </a-button>
-      </a-row>
+      </a-dropdown>
     </div>
 
     <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
@@ -82,6 +89,7 @@
       <a-table
         ref="table"
         size="middle"
+        class="j-table-force-nowrap"
         bordered
         :rowKey="record=>record.id"
         :columns="columns"
@@ -107,8 +115,28 @@
         <!--        <a-icon slot="filterIcon" type='setting' :style="{ fontSize:'16px',color:  '#108ee9' }" />-->
 
         <span slot="action" slot-scope="text, record">
-          <a @click="()=>handleCheak(record)">详细 </a>
-          <a @click="handleEdit(record)">修改</a>
+          <a @click="()=>handleCheak(record)" style="margin-right: 8px">详情 </a>
+          <a @click="handleEdit(record)" style="margin-right: 8px">编辑</a>
+          <a-dropdown>
+            <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <a>浏览</a>
+              </a-menu-item>
+              <a-menu-item>
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                  <a>删除</a>
+                </a-popconfirm>
+              </a-menu-item>
+
+              <a-menu-item>
+                  <a>下载</a>
+              </a-menu-item>
+              <a-menu-item>
+                申请审批
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
 
         </span>
 
@@ -132,6 +160,7 @@ import { submitApplication, getApproveTask } from '@/api/api'
 import {copyObj} from "codemirror/src/util/misc";
 import Modal from "./childComponents/Modal";
 import CheckModal from "./childComponents/CheckModal";
+import '@/assets/less/TableExpand.less';
 export default {
   name: "TableList",
   components: {
@@ -176,37 +205,34 @@ export default {
       columns: [
         {
           title: '计划名称',
-          dataIndex: 'drillPlanName'
-        },
-        {
-          title: '年度',
-          dataIndex: 'drillYear'
-        },
-        {
-          title: '填报时间',
-          dataIndex: 'fillInTime',
-          // sorter: true,
-          // needTotal: true,
-          /* customRender: (text) => text + ' 次' */
+          dataIndex: 'drillPlanName',
+          ellipsis: true,
         },
         {
           title: '负责人',
           dataIndex: 'personInCharge',
+          ellipsis: true,
           // needTotal: true
         },
         {
           title: '联系电话',
           dataIndex: 'phone',
-          // needTotal: true
-        },
-        {
-          title: '填写人',
-          dataIndex: 'fillPerson',
+          ellipsis: true,
           // needTotal: true
         },
         {
           title: '申请时间',
           dataIndex: 'applyTime',
+          // needTotal: true
+        },
+        {
+          title: '申请状态',
+          dataIndex: 'applicationState',
+          // needTotal: true
+        },
+        {
+          title: '发布状态',
+          dataIndex: 'isReleased',
           // needTotal: true
         },
         {
@@ -233,7 +259,33 @@ export default {
         uploadFileName:"",
         applicationState:"审批中",
         isReleased:"已发布"
-      }],
+      },
+        {
+          id:2,
+          drillPlanName:"2020年应急演练",
+          drillYear:"2021",
+          fillInTime:"2021-9-11",
+          personInCharge:"李四",
+          phone:"138123123",
+          fillPerson:"小红",
+          applyTime:"2021-9-11",
+          uploadFileName:"",
+          applicationState:"通过",
+          isReleased:"未发布"
+        },
+        {
+          id:3,
+          drillPlanName:"2019年应急演练",
+          drillYear:"2021",
+          fillInTime:"2021-9-11",
+          personInCharge:"小刚",
+          phone:"138126665",
+          fillPerson:"小明",
+          applyTime:"2021-9-11",
+          uploadFileName:"",
+          applicationState:"通过",
+          isReleased:"已发布"
+        }],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         return getApplicationList(Object.assign(parameter, this.queryParam))
@@ -256,11 +308,12 @@ export default {
     CheckModal
   },
   methods: {
-    searchQuery(){
-
+    resetSearchForm () {
+      this.queryParam = {
+        date: moment(new Date())
+      }
     },
-
-    loadData(){
+    searchQuery(){
 
     },
 
@@ -292,6 +345,7 @@ export default {
       this.$refs.modalForm.title = "编辑演练计划信息";
       this.$refs.modalForm.method = "edit";
       this.$refs.modalForm.disableSubmit = false;
+      this.$refs.modalForm.isReleased=record.isReleased;
 
     },
 

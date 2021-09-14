@@ -1,58 +1,64 @@
 <template>
   <a-card :bordered="false">
     <div class="table-page-search-wrapper">
-      <a-form layout="inline">
-        <a-row :gutter="48">
-          <a-col :md="6"
-                 :sm="24">
-            <a-form-item label="物资名称">
-              <a-input v-model="queryParam.id"
-                       placeholder="" />
-            </a-form-item>
-          </a-col>
-          <a-col :xl="10" :lg="10" :md="8" :sm="24">
-            <a-form-item label="有效期至">
-              <a-range-picker v-model="queryParam.issueDate"
-                              format="YYYY-MM-DD"
-                              :placeholder="['开始时间', '结束时间']"
-                              @change="onIssueDateChange" />
-            </a-form-item>
-          </a-col>
-          <a-col :md="6"
-                 :sm="24">
-            <a-form-item label="机构名称">
-              <a-input v-model="queryParam.id"
-                       placeholder="" />
-            </a-form-item>
-          </a-col>
-          <a-col>
-            <a-form-model-item>
-              <a-button
-                type="primary"
-                html-type="submit"
-              >
-                搜索
-              </a-button>
-            </a-form-model-item>
-          </a-col>
+      <a-row :gutter="30">
+        <a-col :span="18">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="30">
+              <a-col  :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="物资名称">
+                  <a-input v-model="queryParam.materialName"
+                           placeholder="">
+                  </a-input>
+                </a-form-item>
 
+              </a-col>
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="有效期至">
+                  <a-range-picker v-model="queryParam.issueDate"
+                                  format="YYYY-MM-DD"
+                                  :placeholder="['开始时间', '结束时间']"
+                                  @change="onIssueDateChange" >
+                  </a-range-picker>
+                </a-form-item>
+              </a-col>
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="部门名称">
+                  <a-input v-model="queryParam.department"
+                           placeholder="" />
+                </a-form-item>
 
-        </a-row>
-      </a-form>
-    </div>
+              </a-col>
+            </a-row>
+          </a-form>
+        </a-col>
 
-    <div class="table-operator">
-      <a-row>
-        <a-button type="primary" @click="handleAdd()">
-          添加
-        </a-button>
-        <a-button type="primary" @click="handleDelete()">
-          删除
-        </a-button>
-        <a-button type="primary">
-          导出
-        </a-button>
+        <a-col :span="6">
+        <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+          <a-col  :xl="6" :lg="7" :md="8" :sm="24">
+            <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+            <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+          </a-col>
+        </span>
+        </a-col>
       </a-row>
+    </div>
+    <div class="table-operator">
+      <a-button type="primary" @click="handleAdd()" icon="plus">新增</a-button>
+
+      <a-dropdown v-if="selectedRowKeys.length > 0">
+        <a-menu slot="overlay">
+          <a-menu-item key="1" @click="batchDel">
+            <a-icon type="delete"/>删除
+          </a-menu-item>
+          <a-menu-item key="2">
+            <a-icon type="download"/>导出
+          </a-menu-item>
+        </a-menu>
+        <a-button style="margin-left: 8px"> 批量操作
+          <a-icon type="down"/>
+        </a-button>
+      </a-dropdown>
     </div>
 
     <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
@@ -78,9 +84,22 @@
         @change="handleTableChange">
 
         <span slot="action" slot-scope="text, record">
-          <a @click="()=>handleCheak(record)">详细 </a>
-          <a @click="handleEdit(record)">修改</a>
+          <a @click="()=>handleCheak(record)" style="margin-right: 8px">详情</a>
+          <a @click="handleEdit(record)" style="margin-right: 8px">编辑</a>
+         <a-dropdown>
+            <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                  <a>删除</a>
+                </a-popconfirm>
+              </a-menu-item>
 
+              <a-menu-item>
+                  <a>下载</a>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
         </span>
 
       </a-table>
@@ -145,16 +164,29 @@ export default {
       // 表头
       columns: [
         {
+          title: '#',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: "center",
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1;
+          }
+        },
+        {
           title: '物资名称',
-          dataIndex: 'materialName'
+          dataIndex: 'materialName',
+          ellipsis: true,
         },
         {
           title: '物资型号',
-          dataIndex: 'materialModel'
+          dataIndex: 'materialModel',
+          ellipsis: true,
         },
         {
           title: '物资数量',
           dataIndex: 'materialQuantity',
+          ellipsis: true,
           // sorter: true,
           // needTotal: true,
           /* customRender: (text) => text + ' 次' */
@@ -167,6 +199,7 @@ export default {
         {
           title: '部门名称',
           dataIndex: 'department',
+          ellipsis: true,
           // sorter: true
         },
         {
@@ -182,7 +215,7 @@ export default {
       ],
 
       dataSource:[{
-        materialId:1,
+        id:1,
         materialName:"灭火器",
         materialModel:"BJ432",
         materialQuantity:50,
@@ -190,7 +223,27 @@ export default {
         memo:"备注",
         storageAddress:"保卫科",
         validityUntilTime:"2021-9-11"
-      }],
+      },
+        {
+          id:2,
+          materialName:"救生圈",
+          materialModel:"BJ543",
+          materialQuantity:100,
+          department:"青岛海事局",
+          memo:"备注",
+          storageAddress:"保卫科",
+          validityUntilTime:"2021-9-11"
+        },
+        {
+          id:3,
+          materialName:"救生艇",
+          materialModel:"BJ666",
+          materialQuantity:10,
+          department:"青岛海事局",
+          memo:"备注",
+          storageAddress:"保卫科",
+          validityUntilTime:"2021-9-11"
+        }],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         return getApplicationList(Object.assign(parameter, this.queryParam))
@@ -213,13 +266,11 @@ export default {
     CheckModal
   },
   methods: {
+
     searchQuery(){
 
     },
 
-    loadData(){
-
-    },
 
     searchReset(){
 

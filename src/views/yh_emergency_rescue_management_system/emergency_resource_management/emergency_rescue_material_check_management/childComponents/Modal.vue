@@ -13,10 +13,24 @@
         <a-icon type="form" style="color: #1890ff;margin-right: 10px"></a-icon>{{title}}
       </div>
     </template>
+    <template slot="footer">
+      <a-button style="margin: 10px" key="reset"  @click="handleReset" >
+        重置
+      </a-button>
+
+      <a-button style="margin: 10px" key="back"  @click="handleCancel" >
+        取消
+      </a-button>
+
+      <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
+        保存
+      </a-button>
+    </template>
+
     <a-spin :spinning="confirmLoading">
       <div class="table">
       <div class="item">
-        <text-border title="基本信息" height="510px">
+        <text-border>
         <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
           <a-form-model-item label="物资名称" required prop="materialName" hasFeedback>
@@ -106,12 +120,12 @@ export default {
         wrapperCol: { span: 14 },
       },
       labelCol: {
-        xs: { span: 10 },
+        xs: { span: 24 },
         sm: { span: 6 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 15 },
       },
       confirmLoading: false,
       // form: this.$form.createForm(this),
@@ -142,6 +156,13 @@ export default {
   },
 
   methods: {
+    handleCancel () {
+      this.close()
+    },
+
+    handleReset(){
+      this.add();
+    },
     add () {
       this.edit({});
       let myData = new Date();
@@ -217,9 +238,6 @@ export default {
     //     }
     //   })
     // },
-    handleCancel () {
-      this.close()
-    }
   }
 }
 </script>

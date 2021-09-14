@@ -3,58 +3,52 @@
 
     <!-- 查询区域 -->
     <div class="table-page-search-wrapper">
+      <a-row :gutter="30">
+        <a-col :span="18">
       <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="24">
+        <a-row :gutter="30">
 
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+          <a-col :xl="8" :lg="9" :md="10" :sm="24">
             <a-form-item label="员工编号">
               <j-input placeholder="请输入名称模糊查询" v-model="queryParam.employeeId"></j-input>
             </a-form-item>
           </a-col>
 
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
+          <a-col :xl="8" :lg="9" :md="10" :sm="24">
             <a-form-item label="证书编号">
               <j-input placeholder="请输入名称模糊查询" v-model="queryParam.certNum"></j-input>
             </a-form-item>
           </a-col>
 
-          <template v-if="toggleSearchStatus">
-            <a-col :xl="6" :lg="7" :md="8" :sm="24">
+            <a-col :xl="8" :lg="9" :md="10" :sm="24">
               <a-form-item label="签发日期">
                 <a-range-picker v-model="queryParam.issueDate"
                                 format="YYYY-MM-DD"
-                                :placeholder="['开始时间', '结束时间']"
-                                @change="onBirthdayChange" />
+                                :placeholder="['开始时间', '结束时间']"/>
               </a-form-item>
             </a-col>
 
-          </template>
 
-          <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+        </a-row>
+      </a-form>
+    </a-col>
+        <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <a @click="handleToggleSearch" style="margin-left: 8px">
-                {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
-              </a>
             </a-col>
           </span>
-        </a-row>
-      </a-form>
-    </div>
+  </a-row>
+</div>
 
     <!-- 操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
       <!--      <a-button type="primary" icon="plus" @click="jump">创建单据</a-button>-->
       <!--      <a-button type="primary" icon="plus" @click="onetomany">一对多</a-button>-->
-      <!--      <a-button type="primary" icon="download" @click="handleExportXls('单表示例')">导出</a-button>-->
-      <!--      <a-upload name="file" :showUploadList="false" :multiple="false" :headers="tokenHeader" :action="importExcelUrl" @change="handleImportExcel">-->
-      <!--        <a-button type="primary" icon="import">导入</a-button>-->
-      <!--      </a-upload>-->
+      <a-button type="primary" icon="download" >导出</a-button>
       <!-- 高级查询区域 -->
-<!--      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
+      <!--      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
 
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
@@ -110,7 +104,8 @@
         <a-icon slot="filterIcon" type='setting' :style="{ fontSize:'16px',color:  '#108ee9' }" />
 
         <span slot="action" slot-scope="text, record">
-          <a @click="handleEdit(record)">编辑</a>
+          <a @click="()=>handleCheak(record)">详情</a>
+          <a @click="handleEdit(record)"style="margin-left: 8px">编辑</a>
 
           <a-divider type="vertical"/>
           <a-dropdown>
@@ -123,7 +118,7 @@
               </a-menu-item>
 
               <a-menu-item>
-                  <a @click="()=>handleCheak(record)">详情</a>
+                  <a>下载</a>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -182,6 +177,17 @@
         columns:[],
         //列设置
         settingColumns:[],
+        ipagination:{
+          current: 1,
+          pageSize: 10,
+          pageSizeOptions: ['10', '20', '30'],
+          showTotal: (total, range) => {
+            return range[0] + "-" + range[1] + " 共" + total + "条"
+          },
+          showQuickJumper: true,
+          showSizeChanger: true,
+          total: 0
+        },
         //列定义
         defColumns: [
           {
@@ -197,22 +203,26 @@
           {
             title: '员工姓名',
             align: "center",
-            dataIndex: 'employeeName'
+            dataIndex: 'employeeName',
+            ellipsis: true,
           },
           {
             title: '员工编号',
             align: "center",
-            dataIndex: 'employeeId'
+            dataIndex: 'employeeId',
+            ellipsis: true,
+            ellipsis: true,
           },
           {
             title: '证书编号',
             align: "center",
-            dataIndex: 'certNum'
+            dataIndex: 'certNum',
+            ellipsis: true,
           },
           {
             title: '证书等级',
             align: "center",
-            dataIndex: 'cert_class'
+            dataIndex: 'cert_class',
           },
           // {
           //   title: '性别',

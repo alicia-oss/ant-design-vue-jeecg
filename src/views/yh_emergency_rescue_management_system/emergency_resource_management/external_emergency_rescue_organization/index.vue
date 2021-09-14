@@ -1,64 +1,64 @@
 <template>
   <a-card :bordered="false">
     <div class="table-page-search-wrapper">
-    <a-form-model layout="inline">
-      <a-row :gutter="48">
-        <a-col :md="6"
-               :sm="24">
-      <a-form-model-item label="救援方式" v-model="queryParam.expertDuty">
-        <a-select default-value="0">
-          <a-select-option value="0">
-            医疗救援
-          </a-select-option>
-          <a-select-option value="1">
-            海事搜救
-          </a-select-option>
-        </a-select>
-      </a-form-model-item>
+      <a-row :gutter="30">
+        <a-col :span="18">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="30">
+              <a-col  :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="救援方式" v-model="queryParam.expertDuty">
+                  <a-select default-value="0">
+                    <a-select-option value="0">
+                      医疗救援
+                    </a-select-option>
+                    <a-select-option value="1">
+                      海事搜救
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="有效时间">
+                  <a-range-picker v-model="queryParam.issueDate"
+                                  format="YYYY-MM-DD"
+                                  :placeholder="['有效期起', '有效期至']"
+                                  @change="onIssueDateChange" />
+                </a-form-item>
+              </a-col>
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="救援单位" v-model="queryParam.externalDepartName">
+                  <a-input v-model="queryParam.externalDepartName"    placeholder="请输入救援单位名称" />
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-form>
         </a-col>
 
-        <a-col :xl="8" :lg="8" :md="5" :sm="24">
-          <a-form-item label="有效时间">
-            <a-range-picker v-model="queryParam.issueDate"
-                            format="YYYY-MM-DD"
-                            :placeholder="['有效期起', '有效期至']"
-                            @change="onIssueDateChange" />
-          </a-form-item>
-        </a-col>
-        <a-col :md="6"
-               :sm="24">
-          <a-form-model-item label="救援单位" v-model="queryParam.externalDepartName">
-            <a-input v-model="queryParam.externalDepartName"    placeholder="请输入救援单位名称" />
-          </a-form-model-item>
-        </a-col>
-
-          <a-col :md="4"
-                 :sm="24">
-      <a-form-model-item>
-        <a-button
-          type="primary"
-          html-type="submit"
-        >
-          查询
-        </a-button>
-      </a-form-model-item>
+        <a-col :span="6">
+        <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+          <a-col  :xl="6" :lg="7" :md="8" :sm="24">
+            <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+            <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+          </a-col>
+        </span>
         </a-col>
       </a-row>
-
-    </a-form-model>
     </div>
     <div class="table-operator">
-      <a-row>
-        <a-button type="primary" @click="handleAdd()">
-          添加
+      <a-button type="primary" @click="handleAdd()" icon="plus">新增</a-button>
+      <a-dropdown v-if="selectedRowKeys.length > 0">
+        <a-menu slot="overlay">
+          <a-menu-item key="1" @click="batchDel">
+            <a-icon type="delete"/>删除
+          </a-menu-item>
+          <a-menu-item key="2">
+            <a-icon type="download"/>导出
+          </a-menu-item>
+        </a-menu>
+        <a-button style="margin-left: 8px"> 批量操作
+          <a-icon type="down"/>
         </a-button>
-        <a-button type="primary" @click="handleDelete()">
-          删除
-        </a-button>
-        <a-button type="primary">
-          导出
-        </a-button>
-      </a-row>
+      </a-dropdown>
     </div>
 
     <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
@@ -114,8 +114,25 @@
         <!--        <a-icon slot="filterIcon" type='setting' :style="{ fontSize:'16px',color:  '#108ee9' }" />-->
 
         <span slot="action" slot-scope="text, record">
-          <a @click="()=>handleCheak(record)">详细 </a>
-          <a @click="handleEdit(record)">修改</a>
+          <a @click="()=>handleCheak(record)" style="margin-right: 8px">详情 </a>
+          <a @click="handleEdit(record)" style="margin-right: 8px">编辑</a>
+          <a-dropdown>
+            <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <a>浏览</a>
+              </a-menu-item>
+              <a-menu-item>
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                  <a>删除</a>
+                </a-popconfirm>
+              </a-menu-item>
+
+              <a-menu-item>
+                  <a>下载</a>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
 
         </span>
 
@@ -182,16 +199,29 @@ export default {
       // 表头
       columns: [
         {
+          title: '#',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: "center",
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1;
+          }
+        },
+        {
           title: '救援方式',
-          dataIndex: 'rescueType'
+          dataIndex: 'rescueType',
+          ellipsis: true,
         },
         {
           title: '救援单位',
-          dataIndex: 'externalDepartName'
+          dataIndex: 'externalDepartName',
+          ellipsis: true,
         },
         {
           title: '联系电话',
           dataIndex: 'phone',
+          ellipsis: true,
           // sorter: true,
           // needTotal: true,
           /* customRender: (text) => text + ' 次' */
@@ -208,7 +238,7 @@ export default {
         },
         {
           title: '有效期至',
-          dataIndex: 'validityEndTime',
+          dataIndex: 'validityEndTime'
           // needTotal: true
         },
 
@@ -235,7 +265,43 @@ export default {
         uploadPerson:"张三",
         validityEndTime:"2021-9-11",
         uploadTime:"2021-9-10"
-      }],
+      },
+        {
+          id:2,
+          rescueType:"海事救援",
+          externalDepartName:"青岛引航站",
+          phone:"13812222",
+          protocolSignTime:"2019-5-6",
+          validityStartTime:"2020-9-10",
+          uploadFileName:"",
+          uploadPerson:"张三",
+          validityEndTime:"2021-9-11",
+          uploadTime:"2021-9-10"
+        },
+        {
+          id:3,
+          rescueType:"医疗救援",
+          externalDepartName:"青岛市第一人民医院",
+          phone:"138232323",
+          protocolSignTime:"2019-5-6",
+          validityStartTime:"2020-9-10",
+          uploadFileName:"",
+          uploadPerson:"张三",
+          validityEndTime:"2021-9-11",
+          uploadTime:"2021-9-10"
+        },
+        {
+          id:4,
+          rescueType:"海事救援",
+          externalDepartName:"青岛引航站",
+          phone:"138155555",
+          protocolSignTime:"2019-5-6",
+          validityStartTime:"2020-9-10",
+          uploadFileName:"",
+          uploadPerson:"张三",
+          validityEndTime:"2021-9-11",
+          uploadTime:"2021-9-10"
+        },],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         return getApplicationList(Object.assign(parameter, this.queryParam))
@@ -262,9 +328,6 @@ export default {
 
     },
 
-    loadData(){
-
-    },
 
     searchReset(){
 

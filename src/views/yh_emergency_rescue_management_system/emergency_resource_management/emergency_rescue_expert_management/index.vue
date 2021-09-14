@@ -1,68 +1,63 @@
 <template>
   <a-card :bordered="false">
     <div class="table-page-search-wrapper">
-    <a-form-model layout="inline">
-      <a-row :gutter="48">
-        <a-col :md="6"
-               :sm="24">
-      <a-form-model-item label="职务" v-model="queryParam.expertDuty">
-        <a-select default-value="11">
-          <a-select-option value="11">
-            11
-          </a-select-option>
-          <a-select-option value="22">
-            22
-          </a-select-option>
-        </a-select>
-      </a-form-model-item>
+      <a-row :gutter="30">
+        <a-col :span="18">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="30">
+              <a-col  :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="职务" v-model="queryParam.expertDuty">
+                  <a-select default-value="1">
+                    <a-select-option value="1">专家组组长</a-select-option>
+                    <a-select-option value="2">引航站保安</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+        <a-col :xl="8" :lg="9" :md="10" :sm="24">
+          <a-form-item label="是否为本单位" v-model="queryParam.isCompany">
+            <a-select default-value="1">
+              <a-select-option value="1">是</a-select-option>
+              <a-select-option value="0">否</a-select-option>
+            </a-select>
+          </a-form-item>
         </a-col>
-        <a-col :md="6"
-               :sm="24">
-      <a-form-model-item label="是否为本单位" v-model="queryParam.isCompany">
-        <a-select default-value="1">
-          <a-select-option value="1">
-            是
-          </a-select-option>
-          <a-select-option value="0">
-            否
-          </a-select-option>
-        </a-select>
-      </a-form-model-item>
-        </a-col>
-        <a-col :md="6"
-               :sm="24">
-      <a-form-model-item label="姓名">
-        <a-input v-model="queryParam.name" placeholder="请输入姓名">
+        <a-col :xl="8" :lg="9" :md="10" :sm="24">
+          <a-form-item label="姓名">
+            <a-input v-model="queryParam.name" placeholder="请输入姓名">
 
-        </a-input>
-      </a-form-model-item>
+            </a-input>
+          </a-form-item>
         </a-col>
-          <a-col :md="4"
-                 :sm="24">
-      <a-form-model-item>
-        <a-button
-          type="primary"
-          html-type="submit"
-        >
-          查询
-        </a-button>
-      </a-form-model-item>
-        </a-col>
+       </a-row>
+      </a-form>
+     </a-col>
+
+       <a-col :span="6">
+        <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+          <a-col  :xl="6" :lg="7" :md="8" :sm="24">
+            <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+            <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+          </a-col>
+        </span>
+       </a-col>
       </a-row>
-    </a-form-model>
     </div>
     <div class="table-operator">
-      <a-row>
-        <a-button type="primary" @click="handleAdd()">
-          添加
+      <a-button type="primary" @click="handleAdd()" icon="plus">新增</a-button>
+
+      <a-dropdown v-if="selectedRowKeys.length > 0">
+        <a-menu slot="overlay">
+          <a-menu-item key="1" @click="batchDel">
+            <a-icon type="delete"/>删除
+          </a-menu-item>
+          <a-menu-item key="2">
+            <a-icon type="download"/>导出
+          </a-menu-item>
+        </a-menu>
+        <a-button style="margin-left: 8px"> 批量操作
+          <a-icon type="down"/>
         </a-button>
-        <a-button type="primary" @click="handleDelete()">
-          删除
-        </a-button>
-        <a-button type="primary">
-          导出
-        </a-button>
-      </a-row>
+      </a-dropdown>
     </div>
 
     <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
@@ -118,8 +113,25 @@
         <!--        <a-icon slot="filterIcon" type='setting' :style="{ fontSize:'16px',color:  '#108ee9' }" />-->
 
         <span slot="action" slot-scope="text, record">
-          <a @click="()=>handleCheak(record)">详细 </a>
-          <a @click="handleEdit(record)">修改</a>
+          <a @click="()=>handleCheck(record)" style="margin-right: 8px">详情</a>
+          <a @click="handleEdit(record)" style="margin-right: 8px">编辑</a>
+          <a-dropdown>
+            <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <a>浏览</a>
+              </a-menu-item>
+              <a-menu-item>
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                  <a>删除</a>
+                </a-popconfirm>
+              </a-menu-item>
+
+              <a-menu-item>
+                  <a>下载</a>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
 
         </span>
 
@@ -186,12 +198,24 @@ export default {
       // 表头
       columns: [
         {
+          title: '#',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: "center",
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1;
+          }
+        },
+        {
           title: '职责',
-          dataIndex: 'expertDuty'
+          dataIndex: 'expertDuty',
+          ellipsis: true,
         },
         {
           title: '姓名',
-          dataIndex: 'expertName'
+          dataIndex: 'expertName',
+          ellipsis: true,
         },
         {
           title: '是否本单位',
@@ -203,6 +227,7 @@ export default {
         {
           title: '联系方式',
           dataIndex: 'phone',
+          ellipsis: true,
           // needTotal: true
         },
         {
@@ -228,7 +253,43 @@ export default {
         uploadFileName:"",
         uploadPerson:"张三",
         uploadTime:"2021-9-11"
-      }],
+      },
+        {
+          id:2,
+          expertDuty:"引航站保安",
+          expertName:"李四",
+          departName:"保卫科",
+          phone:"1385435411",
+          memo:"备注",
+          isCompany:"是",
+          uploadFileName:"",
+          uploadPerson:"张三",
+          uploadTime:"2021-9-11"
+        },
+        {
+          id:3,
+          expertDuty:"专家组组长",
+          expertName:"小明",
+          departName:"保卫科",
+          phone:"138123231",
+          memo:"备注",
+          isCompany:"否",
+          uploadFileName:"",
+          uploadPerson:"张三",
+          uploadTime:"2021-9-11"
+        },
+        {
+          id:4,
+          expertDuty:"引航站保安",
+          expertName:"王五",
+          departName:"保卫科",
+          phone:"1385435411",
+          memo:"备注",
+          isCompany:"是",
+          uploadFileName:"",
+          uploadPerson:"张三",
+          uploadTime:"2021-9-11"
+        }],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         return getApplicationList(Object.assign(parameter, this.queryParam))
@@ -252,10 +313,6 @@ export default {
   },
   methods: {
     searchQuery(){
-
-    },
-
-    loadData(){
 
     },
 
@@ -302,7 +359,7 @@ export default {
       this.dataSource = dataSource.filter(item => item.id !== id);
     },
 
-    handleCheak(record){
+    handleCheck(record){
       this.$refs.checkModal.check(record);
       this.$refs.checkModal.title = "查看物资信息";
       this.$refs.checkModal.confirmLoading = false;
