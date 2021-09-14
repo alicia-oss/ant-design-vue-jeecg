@@ -39,7 +39,7 @@
 
          </a-row>
        </a-form>
-     </a-col>
+        </a-col>
 
         <a-col :span="6">
            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">

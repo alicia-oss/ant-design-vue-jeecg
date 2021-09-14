@@ -3,73 +3,68 @@
 
     <!--     查询区域 -->
     <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="30">
-          <a-col :xl="7" :lg="10" :md="12" :sm="24">
-            <a-form-item label="预案名称">
-              <j-input placeholder="请输入名称模糊查询" v-model="queryParam.emergencyPlanName"></j-input>
-            </a-form-item>
-          </a-col>
+      <a-row :gutter="30">
+        <a-col :span="18">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="30">
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="应急预案名称">
+                  <j-input placeholder="请输入应急预案名称模糊查询" v-model="queryParam.emergencInfoName"></j-input>
+                </a-form-item>
+              </a-col>
 
-          <a-col ::xl="7" :lg="10" :md="12" :sm="24">
-            <a-form-item label='预案种类'>
-              <!--              <j-input placeholder="请输入预案种类" v-model="queryParam.emergencyPlanCategory"></j-input>-->
-              <a-select placeholder="请选择预案种类" v-model="queryParam.emergencyPlanCategory">
-                <a-select-option v-for="item in inputData.emergencyPlanCategory" :value="item">
-                  {{item}}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="评审标准">
+                  <j-input placeholder="请输入评审标准模糊查询" v-model="queryParam.planReviewName"></j-input>
+                </a-form-item>
+              </a-col>
 
-          <a-col :xl="7" :lg="10" :md="12" :sm="24">
-            <a-form-item label="发布状态">
-              <a-select placeholder="请选择发布状态" v-model="queryParam.isReleased">
-                <a-select-option v-for="item in inputData.isReleased" :value="item">
-                  {{item}}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-
-          <template v-if="toggleSearchStatus">
-            <a-col :xl="7" :lg="10" :md="12"  :sm="24">
-              <a-form-item label="">
-                <a-form-item label="发布时间">
-                  <a-range-picker v-model="queryParam.applyTime"
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="评审时间">
+                  <a-range-picker v-model="queryParam.reviewTime"
                                   format="YYYY-MM-DD"
                                   :placeholder="['开始时间', '结束时间']"
                                   @change="onIssueDateChange" />
                 </a-form-item>
-              </a-form-item>
-            </a-col>
+              </a-col>
 
-            <a-col :xl="7" :lg="10" :md="12" :sm="24">
-              <a-form-item label="审批状态">
-                <a-select placeholder="请选择审批状态" v-model="queryParam.applicationState">
-                  <a-select-option v-for="item in inputData.applicationState" :value="item">
-                    {{item}}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-
-          </template>
+              <template v-if="toggleSearchStatus">
+                <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                  <a-form-item label="预览类别">
+                    <j-input placeholder="请输入预览类别模糊查询" v-model="queryParam.emergencyPlanCategory"></j-input>
+                  </a-form-item>
+                </a-col>
 
 
-          <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+                <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                  <a-form-item label="评审单位">
+                    <j-input placeholder="请输入评审单位模糊查询" v-model="queryParam.reviewInstitution"></j-input>
+                  </a-form-item>
+                </a-col>
+
+              </template>
+
+            </a-row>
+          </a-form>
+        </a-col>
+
+        <a-col :span="6">
+           <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
               <a @click="handleToggleSearch" style="margin-left: 8px">
                 {{ toggleSearchStatus ? '收起' : '展开' }}
                 <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
               </a>
             </a-col>
           </span>
-        </a-row>
-      </a-form>
+
+        </a-col>
+
+      </a-row>
     </div>
+
 
     <!--     操作按钮区域 -->
     <div class="table-operator">
@@ -150,6 +145,8 @@
     <!-- 一对多表单区域 -->
     <!--    <JeecgDemoTabsModal ref="jeecgDemoTabsModal" @ok="modalFormOk"></JeecgDemoTabsModal>-->
 
+
+
   </a-card>
 </template>
 
@@ -172,48 +169,15 @@ export default {
       },
       dataSource:[
         {
-          emergencyPlanId:"12323",
-          emergencyPlanName:"测试应急预案01",
-          version:"1.0",
-          emergencyPlanCategory:"综合应急预案",
-          specifiedTime:"2020-9-10",
-          updateTime:"2020-9-10",
-          departName:"测试部",
-          fillPerson:"管理员张",
-          applyTime:"2020-9-10",
-          uploadFileName:"",
-          applicationState:"通过",
-          isReleased:"已发布",
+          planReviewResultId:'',
+          emergencyPlanId:'',
+          emergencyPlanName:'',
+          planReviewId:'',
+          planReviewName:'',
+          emergencyPlanCategory:'',
+          reviewTime:'',
+          reviewInstitution:''
         },
-        {
-          emergencyPlanId:"12423",
-          emergencyPlanName:"测试应急预案01",
-          version:"1.0",
-          emergencyPlanCategory:"综合应急预案",
-          specifiedTime:"2020-9-10",
-          updateTime:"2020-9-10",
-          departName:"测试部",
-          fillPerson:"管理员张",
-          applyTime:"2020-9-10",
-          uploadFileName:"",
-          applicationState:"通过",
-          isReleased:"已发布",
-        },
-        {
-          emergencyPlanId:"15323",
-          emergencyPlanName:"测试应急预案01",
-          version:"1.0",
-          emergencyPlanCategory:"综合应急预案",
-          specifiedTime:"2020-9-10",
-          updateTime:"2020-9-10",
-          departName:"测试部",
-          fillPerson:"管理员张",
-          applyTime:"2020-9-10",
-          uploadFileName:"",
-          applicationState:"通过",
-          isReleased:"已发布",
-        },
-
       ],
       /* 分页参数 */
       ipagination:{
@@ -246,34 +210,24 @@ export default {
           dataIndex: 'emergencyPlanName'
         },
         {
-          title: '版本号',
-          align: "center",
-          dataIndex: 'version'
-        },
-        {
-          title: '预案类别',
+          title: '应急预案类别',
           align: "center",
           dataIndex: 'emergencyPlanCategory'
         },
         {
-          title: '制定时间',
+          title: '评审标准',
           align: 'center',
-          dataIndex: 'specifiedTime'
+          dataIndex: 'planReviewName'
         },
         {
-          title: '申请时间',
+          title: '评审时间',
           align: "center",
-          dataIndex: 'applyTime'
+          dataIndex: 'reviewTime'
         },
         {
-          title: '申请状态',
+          title: '评审单位',
           align: "center",
-          dataIndex: 'applicationState'
-        },
-        {
-          title: '发布状态',
-          align: "center",
-          dataIndex: 'isReleased'
+          dataIndex: 'reviewInstitution'
         },
         {
           title: '操作',

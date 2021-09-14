@@ -2,73 +2,84 @@
   <a-card :bordered="false">
 
     <!--     查询区域 -->
+
     <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="30">
-          <a-col :xl="7" :lg="10" :md="12" :sm="24">
-            <a-form-item label="预案名称">
-              <j-input placeholder="请输入名称模糊查询" v-model="queryParam.emergencyPlanName"></j-input>
-            </a-form-item>
-          </a-col>
+      <a-row :gutter="30">
+        <a-col :span="18">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="30">
 
-          <a-col ::xl="7" :lg="10" :md="12" :sm="24">
-            <a-form-item label='预案种类'>
-<!--              <j-input placeholder="请输入预案种类" v-model="queryParam.emergencyPlanCategory"></j-input>-->
-              <a-select placeholder="请选择预案种类" v-model="queryParam.emergencyPlanCategory">
-                <a-select-option v-for="item in inputData.emergencyPlanCategory" :value="item">
-                  {{item}}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-
-          <a-col :xl="7" :lg="10" :md="12" :sm="24">
-            <a-form-item label="发布状态">
-              <a-select placeholder="请选择发布状态" v-model="queryParam.isReleased">
-                <a-select-option v-for="item in inputData.isReleased" :value="item">
-                  {{item}}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-
-          <template v-if="toggleSearchStatus">
-            <a-col :xl="7" :lg="10" :md="12"  :sm="24">
-              <a-form-item label="">
-                <a-form-item label="发布时间">
-                  <a-range-picker v-model="queryParam.applyTime"
-                                  format="YYYY-MM-DD"
-                                  :placeholder="['开始时间', '结束时间']"
-                                  @change="onIssueDateChange" />
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="预案名称">
+                  <j-input placeholder="请输入名称模糊查询" v-model="queryParam.emergencyPlanName"></j-input>
                 </a-form-item>
-              </a-form-item>
-            </a-col>
+              </a-col>
 
-            <a-col :xl="7" :lg="10" :md="12" :sm="24">
-              <a-form-item label="审批状态">
-                <a-select placeholder="请选择审批状态" v-model="queryParam.applicationState">
-                  <a-select-option v-for="item in inputData.applicationState" :value="item">
-                    {{item}}
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label='预案种类'>
+                  <!--              <j-input placeholder="请输入预案种类" v-model="queryParam.emergencyPlanCategory"></j-input>-->
+                  <a-select placeholder="请选择预案种类" v-model="queryParam.emergencyPlanCategory">
+                    <a-select-option v-for="item in inputData.emergencyPlanCategory" :value="item">
+                      {{item}}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
 
-          </template>
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="发布状态">
+                  <a-select placeholder="请选择发布状态" v-model="queryParam.isReleased">
+                    <a-select-option v-for="item in inputData.isReleased" :value="item">
+                      {{item}}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+
+              <template v-if="toggleSearchStatus">
+                <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                  <a-form-item label="">
+                    <a-form-item label="发布时间">
+                      <a-range-picker v-model="queryParam.applyTime"
+                                      format="YYYY-MM-DD"
+                                      :placeholder="['开始时间', '结束时间']"
+                                      @change="onIssueDateChange" />
+                    </a-form-item>
+                  </a-form-item>
+                </a-col>
+
+                <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                  <a-form-item label="审批状态">
+                    <a-select placeholder="请选择审批状态" v-model="queryParam.applicationState">
+                      <a-select-option v-for="item in inputData.applicationState" :value="item">
+                        {{item}}
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
+
+              </template>
 
 
-          <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+            </a-row>
+          </a-form>
+        </a-col>
+
+        <a-col :span="6">
+           <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
               <a @click="handleToggleSearch" style="margin-left: 8px">
                 {{ toggleSearchStatus ? '收起' : '展开' }}
                 <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
               </a>
             </a-col>
           </span>
-        </a-row>
-      </a-form>
+
+        </a-col>
+
+      </a-row>
     </div>
 
     <!--     操作按钮区域 -->

@@ -7,7 +7,7 @@
     :confirmLoading="confirmLoading"
     @cancel="handleCancel"
     @ok="handleOk"
-    cancelText="关闭">
+    >
 
     <template slot="footer">
       <a-button style="margin: 10px" key="reset"  @click="handleReset" >
@@ -39,48 +39,56 @@
           </a-form-model-item>
 
 
-          <a-form-item label='船舶/设施名称'>
-            <a-select placeholder="请选择预案种类" v-model="model.emergencyPlanCategory">
-              <a-select-option v-for="item in inputData.emergencyPlanCategory" :value="item">
-                {{item}}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
+<!--          <a-form-item label='预案种类'>-->
+<!--            <a-select placeholder="请选择预案种类" required v-model="model.emergencyPlanCategory">-->
+<!--              <a-select-option v-for="item in inputData.emergencyPlanCategory" :value="item">-->
+<!--                {{item}}-->
+<!--              </a-select-option>-->
+<!--            </a-select>-->
+<!--          </a-form-item>-->
 
-          <a-form-model-item label="发生时间"  prop="specifiedTime" hasFeedback>
-            <a-date-picker valueFormat="YYYY-MM-DD" style="width: 100%;" v-model="model.specifiedTime" />
+          <a-form-model-item label="发生时间" required prop="occurTime" hasFeedback>
+            <a-date-picker valueFormat="YYYY-MM-DD" style="width: 100%;" v-model="model.occurTime" />
           </a-form-model-item>
 
-          <a-form-model-item label="发生地点"  prop="specifiedTime" hasFeedback>
-            <a-date-picker valueFormat="YYYY-MM-DD" style="width: 100%;" v-model="model.specifiedTime" />
+          <a-form-model-item label="发生地点" required prop="occurSite" hasFeedback>
+            <a-textarea
+              placeholder="输入发生地点"
+              :auto-size="{ minRows: 2, maxRows: 6 }"
+              v-model="model.occurSite"
+            />
           </a-form-model-item>
 
-          <a-form-model-item label="海况" required prop="version" hasFeedback>
-            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          <a-form-model-item label="海况"  prop="seaState" hasFeedback>
+            <a-textarea
+              placeholder="请输入海况"
+              :auto-size="{ minRows: 2, maxRows: 6 }"
+              v-model="model.seaState"
+            />
           </a-form-model-item>
 
-          <a-form-model-item label="呼号" required prop="version" hasFeedback>
-            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          <a-form-model-item label="呼号" required prop="callSign" hasFeedback>
+            <a-input v-model="model.callSign"    placeholder="呼号"/>
           </a-form-model-item>
 
-          <a-form-model-item label="事故概况" required prop="version" hasFeedback>
+          <a-form-model-item label="事故概况"  prop="accidentOverview" hasFeedback>
             <a-textarea
             placeholder="输入事故概况"
             :auto-size="{ minRows: 2, maxRows: 6 }"
-            v-model="model.version"
+            v-model="model.accidentOverview"
           />
           </a-form-model-item>
 
-          <a-form-item label='国际'>
-            <a-select placeholder="请选择部门" v-model="model.departName">
-              <a-select-option v-for="item in inputData.departName" :value="item">
+          <a-form-item label='国籍'>
+            <a-select placeholder="请选择国籍" v-model="model.nationality">
+              <a-select-option v-for="item in inputData.nationality" :value="item">
                 {{item}}
               </a-select-option>
             </a-select>
           </a-form-item>
 
-          <a-form-model-item label="起迄港" required prop="version" hasFeedback>
-            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          <a-form-model-item label="起迄港"  prop="port" hasFeedback>
+            <a-input v-model="model.port"    placeholder="请输入起迄港"/>
           </a-form-model-item>
 
 
@@ -89,39 +97,45 @@
       </div>
       <div class="item-right">
         <text-border >
-        <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
+        <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" >
 
-          <a-form-model-item label="船舶/设施所有者" required prop="version" hasFeedback>
-            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          <a-form-model-item label="船舶/设施所有者"  prop="owner" hasFeedback>
+            <a-input v-model="model.owner"    placeholder="船舶/设施所有者"/>
           </a-form-model-item>
 
-          <a-form-model-item label="受伤人数" required prop="version" hasFeedback>
-            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          <a-form-model-item label="受伤人数"  prop="injury" hasFeedback>
+            <a-input v-model="model.injury"    placeholder="请输入受伤人数"/>
           </a-form-model-item>
 
-          <a-form-model-item label="死亡人数" required prop="version" hasFeedback>
-            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          <a-form-model-item label="死亡人数"  prop="death" hasFeedback>
+            <a-input v-model="model.death"    placeholder="请输入死亡人数"/>
           </a-form-model-item>
 
-          <a-form-model-item label="损害情况" required prop="version" hasFeedback>
-            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          <a-form-model-item label="损害情况"  prop="damage" hasFeedback>
+            <a-textarea
+              placeholder="输入损害情况"
+              :auto-size="{ minRows: 2, maxRows: 6 }"
+              v-model="model.damage"
+            />
           </a-form-model-item>
 
-          <a-form-model-item label="求助要求" required prop="version" hasFeedback>
-            <a-input v-model="model.version"    placeholder="请输入版本号"/>
+          <a-form-model-item label="求助要求"  prop="salvageRequest" hasFeedback>
+            <a-textarea
+              placeholder="输入求助要求"
+              :auto-size="{ minRows: 2, maxRows: 6 }"
+              v-model="model.salvageRequest"
+            />
           </a-form-model-item>
 
           <a-form-model-item label="报告人"  prop="version" hasFeedback>
-            <a-input v-model="model.fillPerson"  :disabled="true"   placeholder="请输入填写人"/>
+            <a-input v-model="model.reporter"  :disabled="true"   placeholder="请输入填写人"/>
           </a-form-model-item>
 
-          <a-form-model-item label="处理状态" required prop="version" hasFeedback>
-            <a-input v-model="model.version"    placeholder="请输入版本号"/>
-          </a-form-model-item>
+<!--          <a-form-model-item label="处理状态" required prop="version" hasFeedback>-->
+<!--            <a-input v-model="model.emergencyInfoProcessStatus"  :disabled="true"  placeholder="请输入版本号"/>-->
+<!--          </a-form-model-item>-->
 
-          <a-form-model-item label="修改日期"  prop="uploadDate" hasFeedback >
-            <a-date-picker valueFormat="YYYY-MM-DD" style="width: 100%;" v-model="model.updateTime" :disabled="true" />
-          </a-form-model-item>
+
         </a-form-model>
         </text-border>
       </div>
@@ -134,7 +148,7 @@
 
 <script>
 import { httpAction } from '@/api/manage'
-import  File from './File'
+import  FileUpload from './FileUpload'
 import TextBorder from './TextBorder'
 import { uuid } from '@tinymce/tinymce-vue/lib/es2015/Utils'
 import { copyObj } from 'codemirror/src/util/misc'
@@ -188,7 +202,7 @@ export default {
   },
   components:{
     TextBorder,
-    File
+    FileUpload
   },
 
   methods: {
@@ -196,7 +210,7 @@ export default {
       this.edit({});
       let myData = new Date();
       this.model.updateTime = myData.toLocaleDateString();
-      this.model.fillPerson = this.$store.getters.userInfo.realname;
+      this.model.reporter = this.$store.getters.userInfo.realname;
       this.visible = true;
     },
     edit (record) {
@@ -208,7 +222,6 @@ export default {
       this.$emit('close');
       this.visible = false;
     },
-
 
     handleOk(){
       let modelData = new Object();
@@ -228,8 +241,8 @@ export default {
           this.close();
         }
       })
-
     },
+
     handleComplete(){
       let temp = this.model.employeeId.split("-");
       this.model.employeeId = temp[0];
@@ -246,9 +259,8 @@ export default {
       this.$refs.form.validate(valid=>{
         if(valid) {
           if(this.method === "add"){
-            this.model.emergencyPlanId = uuid("");
-            this.model.isReleased = "已发布";
-            this.model.applicationState='通过';
+            this.model.emergencyInfoId = uuid("");
+            this.model.emergencyInfoProcessStatus='未处理';
             copyObj(this.model,modelData);
             this.$emit("ok",{method:"add",modelData:modelData})
           }
