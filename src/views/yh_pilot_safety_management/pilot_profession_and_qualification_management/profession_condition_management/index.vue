@@ -1,392 +1,450 @@
 <template>
-  <a-card :bordered="false">
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline">
-        <a-row :gutter="48">
-          <a-col :md="8"
-                 :sm="24">
-            <a-form-item label="规则编号">
-              <a-input v-model="queryParam.id"
-                       placeholder="" />
-            </a-form-item>
+  <div>
+    <a-card :bordered="false" class="item">
+
+      <!--     查询区域 -->
+      <div class="table-page-search-wrapper">
+        <a-row :gutter="30">
+          <a-col :span="18">
+            <a-form layout="inline" @keyup.enter.native="searchQuery">
+              <a-row :gutter="30">
+                <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                  <a-form-item label="员工名称">
+                    <j-input placeholder="请输入名称模糊查询" v-model="queryParam.employeeName"></j-input>
+                  </a-form-item>
+                </a-col>
+
+                <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                  <a-form-item label="证书编号">
+                    <j-input placeholder="请输入证书编号模糊查询" v-model="queryParam.certNum"></j-input>
+                  </a-form-item>
+                </a-col>
+
+                <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                  <a-form-item label="签发机关">
+                    <j-input placeholder="请输入签发机关名称模糊查询" v-model="queryParam.issuingAuthority"></j-input>
+                  </a-form-item>
+                </a-col>
+
+                <!--              <template v-if="toggleSearchStatus">-->
+                <!--                <a-col :xl="8" :lg="9" :md="10" :sm="24">-->
+                <!--                  <a-form-item label="签发日期">-->
+                <!--                    <a-range-picker v-model="queryParam.issueDate"-->
+                <!--                                    format="YYYY-MM-DD"-->
+                <!--                                    :placeholder="['开始时间', '结束时间']"-->
+                <!--                                    @change="onIssueDateChange" />-->
+                <!--                  </a-form-item>-->
+                <!--                </a-col>-->
+                <!--              </template>-->
+
+              </a-row>
+            </a-form>
           </a-col>
-          <a-col :md="8"
-                 :sm="24">
-            <a-form-item label="使用状态">
-              <a-select v-model="queryParam.status"
-                        placeholder="请选择"
-                        default-value="0">
-                <a-select-option value="0">全部</a-select-option>
-                <a-select-option value="1">关闭</a-select-option>
-                <a-select-option value="2">运行中</a-select-option>
-              </a-select>
-            </a-form-item>
+
+          <a-col :span="6">
+           <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+            <a-col :xl="6" :lg="7" :md="8" :sm="24">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
+              <!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
+              <!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
+              <!--              </a>-->
+            </a-col>
+          </span>
+
           </a-col>
-          <template v-if="advanced">
-            <a-col :md="8"
-                   :sm="24">
-              <a-form-item label="调用次数">
-                <a-input-number v-model="queryParam.callNo"
-                                style="width: 100%" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8"
-                   :sm="24">
-              <a-form-item label="更新日期">
-                <a-date-picker v-model="queryParam.date"
-                               style="width: 100%"
-                               placeholder="请输入更新日期" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8"
-                   :sm="24">
-              <a-form-item label="使用状态">
-                <a-select v-model="queryParam.useStatus"
-                          placeholder="请选择"
-                          default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8"
-                   :sm="24">
-              <a-form-item label="使用状态">
-                <a-select placeholder="请选择"
-                          default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-          </template>
-          <a-col :md="!advanced && 8 || 24"
-                 :sm="24">
-            <span class="table-page-search-submitButtons"
-                  :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-              <a-button type="primary">查询</a-button>
-              <a-button style="margin-left: 8px"
-                        @click="resetSearchForm">重置</a-button>
-              <a @click="toggleAdvanced"
-                 style="margin-left: 8px">
-                {{ advanced ? '收起' : '展开' }}
-                <a-icon :type="advanced ? 'up' : 'down'" />
-              </a>
-            </span>
-          </a-col>
+
         </a-row>
-      </a-form>
-    </div>
+      </div>
 
-    <div class="table-operator">
-      <a-button type="primary"
-                icon="plus"
-                @click="() => this.handleModalVisible(true)">新建</a-button>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1">
-            <a-icon type="delete" />删除
-          </a-menu-item>
-          <!-- lock | unlock -->
-          <a-menu-item key="2">
-            <a-icon type="lock" />锁定
-          </a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px">
-          批量操作
-          <a-icon type="down" />
-        </a-button>
-      </a-dropdown>
-    </div>
+      <!--     操作按钮区域 -->
+      <div class="table-operator">
+        <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+        <!--      <a-button type="primary" icon="plus" @click="jump">创建单据</a-button>-->
+        <!--      <a-button type="primary" icon="plus" @click="onetomany">一对多</a-button>-->
+        <a-button type="primary" icon="download" >导出</a-button>
 
-    <s-table ref="table"
-             size="default"
-             :columns="columns"
-             :data="loadData"
-             :showAlertInfo="true"
-             @onSelect="onChange">
-      <span slot="action"
-            slot-scope="text, record">
-        <a @click="handleEdit(record)">编辑</a>
-        <a-divider type="vertical" />
-        <a-dropdown>
-          <a class="ant-dropdown-link">
-            更多
-            <a-icon type="down" />
-          </a>
+        <!-- 高级查询区域 -->
+        <!--      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
+
+        <a-dropdown v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
-            <a-menu-item>
-              <a href="javascript:;"
-                 @click="submitApplication(record)">提交</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">禁用</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">删除</a>
+            <a-menu-item key="1" @click="batchDel">
+              <a-icon type="delete"/>
+              删除
             </a-menu-item>
           </a-menu>
+          <a-button style="margin-left: 8px"> 批量操作
+            <a-icon type="down"/>
+          </a-button>
         </a-dropdown>
-      </span>
-    </s-table>
+      </div>
 
-    <a-modal title="操作"
-             :width="800"
-             v-model="visible"
-             @ok="handleOk">
-      <a-form :autoFormCreate="(form)=>{this.form = form}">
+      <div class="ant-alert ant-alert-info" style="margin-bottom: -25px;">
+        <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{
+          checkedKeys.length }}</a>项
+        <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+        <span style="float:right;">
+          <a @click="loadData()"><a-icon type="sync" />刷新</a>
+          <a-divider type="vertical" />
+           <i class="anticon anticon-info-circle ant-alert-icon"></i> 共 <a style="font-weight: 600">{{
+            dataSource.length }}</a>项
+        </span>
+      </div>
 
-        <a-form-item :labelCol="labelCol"
-                     :wrapperCol="wrapperCol"
-                     label="规则编号"
-                     hasFeedback
-                     validateStatus="success">
-          <a-input placeholder="规则编号"
-                   v-model="mdl.no"
-                   id="no" />
-        </a-form-item>
+    </a-card>
+    <a-row  class="table">
 
-        <a-form-item :labelCol="labelCol"
-                     :wrapperCol="wrapperCol"
-                     label="服务调用次数"
-                     hasFeedback
-                     validateStatus="success">
-          <a-input-number :min="1"
-                          id="callNo"
-                          v-model="mdl.callNo"
-                          style="width: 100%" />
-        </a-form-item>
+      <a-card :bordered="false"  class="item tree">
+        <template slot="title" >
+          <div style="font-size: 20px">列表</div>
+        </template>
+        <div style="height: 100%">
+          <a-tree
+            :showLine="true"
+            checkable
+            :checkedKeys="checkedKeys"
+            :autoExpandParent="true"
+            :tree-data="treeData"
+            @select="onTreeSelect"
+            @check="onTreeCheck"
+          />
+        </div>
+      </a-card>
 
-        <a-form-item :labelCol="labelCol"
-                     :wrapperCol="wrapperCol"
-                     label="状态"
-                     hasFeedback
-                     validateStatus="warning">
-          <a-select defaultValue="1"
-                    v-model="mdl.status">
-            <a-select-option value="1">Option 1</a-select-option>
-            <a-select-option value="2">Option 2</a-select-option>
-            <a-select-option value="3">Option 3</a-select-option>
-          </a-select>
-        </a-form-item>
+      <a-card :bordered="false" class="item detail">
+        <template slot="title">
+          <div style="font-size: 20px;">
+            <a-icon type="form" style="color: #1890ff;margin-right: 10px"></a-icon>合格证详情
+            <a-button v-if="selectedKeys.length !== 0" style="margin-left: 80%" type="primary" @click="handleEdit(dataSource[0])">编辑</a-button>
+          </div>
+        </template>
 
-        <a-form-item :labelCol="labelCol"
-                     :wrapperCol="wrapperCol"
-                     label="描述"
-                     hasFeedback
-                     help="请填写一段描述">
-          <a-textarea :rows="5"
-                      v-model="mdl.description"
-                      placeholder="..."
-                      id="description" />
-        </a-form-item>
+        <info-table v-if="selectedKeys.length !== 0" ref="infoTable" :model="dataSource[0]"></info-table>
+        <a-empty v-else></a-empty>
+      </a-card>
 
-        <a-form-item :labelCol="labelCol"
-                     :wrapperCol="wrapperCol"
-                     label="更新时间"
-                     hasFeedback
-                     validateStatus="error">
-          <a-date-picker style="width: 100%"
-                         showTime
-                         format="YYYY-MM-DD HH:mm:ss"
-                         placeholder="Select Time" />
-        </a-form-item>
+    </a-row>
 
-      </a-form>
-    </a-modal>
+    <!-- 表单区域 -->
+    <modal ref="modalForm" @ok="modalFormOk"></modal>
 
-    <a-modal title="新建规则"
-             destroyOnClose
-             :visible="visibleCreateModal"
-             @ok="handleCreateModalOk"
-             @cancel="handleCreateModalCancel">
-      <!---->
-      <a-form style="margin-top: 8px"
-              :autoFormCreate="(form)=>{this.createForm = form}">
-        <a-form-item :labelCol="{ span: 5 }"
-                     :wrapperCol="{ span: 15 }"
-                     label="描述"
-                     fieldDecoratorId="description"
-                     :fieldDecoratorOptions="{rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }]}">
-          <a-input placeholder="请输入" />
-        </a-form-item>
-      </a-form>
-    </a-modal>
 
-  </a-card>
+
+
+  </div>
 </template>
 
 <script>
-import STable from '@/components/table/'
-import ATextarea from "ant-design-vue/es/input/TextArea"
-import AInput from "ant-design-vue/es/input/Input"
-import moment from "moment"
-import axios from 'axios';
-import { getRoleList, getServiceList, getApplicationList } from '@/api/manage'
-import { submitApplication, getApproveTask } from '@/api/api'
-export default {
-  name: "TableList",
-  components: {
-    AInput,
-    ATextarea,
-    STable
-  },
-  data () {
-    return {
-      visibleCreateModal: false,
-      visible: false,
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 5 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 12 },
-      },
-      form: null,
-      mdl: {},
+import Modal from './childComponents/Modal'
+import { copyObj } from 'codemirror/src/util/misc'
+import SubTable  from './childComponents/SubTable'
+import InfoTable from './childComponents/InfoTable'
 
-      // 高级搜索 展开/关闭
-      advanced: true,
-      // 查询参数
+
+export default {
+  name: 'index.vue',
+  data(){
+    return{
+      //控制只有一个展开项
+      expendedKeys:[],
+      checkedKeys:[],
+      selectedKeys:[],
+      treeData:[
+        {
+          title:"合格证列表",
+          key:'0-0',
+          children: [
+            {
+              title:'海清风',
+              key:'0-0-1'
+            },
+            {
+              title:'海起飞',
+              key:'0-0-2'
+            },
+            {
+              title:'海清风',
+              key:'0-0-3'
+            },
+            {
+              title:'海清风',
+              key:'0-0-4'
+            }
+
+          ]
+        },
+
+      ],
+
+
+      selectedRowKeys:[],
+      /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
       queryParam: {},
-      // 表头
-      columns: [
+      /* 数据源 */
+      dataSource:[
+    //     archivesMainId:'',
+    //   employeeId:'',
+    //   pilotName:'',
+    //   nameSpell:'',
+    //   gender:'',
+    //   birthDate:'',
+    //   nativePlace:'',
+    //   nation:'',
+    //   graduatedSchool:'',
+    //   studyMajor:'',
+    //   eduDegree:'',
+    //   uploadUserId:'',
+    //   uploadDate:'',
+    //   uploadFileName:'',
+    //   remarks:'',
+    //   subList:[
+    //   {
+    //     qualificationId:'',
+    //     archivesMainId:'',
+    //     certClass:'',
+    //     appointmentCancelDate:'',
+    //     oceanArea:'',
+    //     leadingScale:'',
+    //     annualLeadingNum:'',
+    //     accumulateLeadingNum:'',
+    //     archivesVersion:''
+    //   }
+    // ]
         {
-          title: '申请任务id',
-          dataIndex: 'task_id'
+          proficiencyCertMainId:"123214",
+          employeeId:"2",
+          employeeName:'张加油',
+          certNum:"0002",
+          issuingAuthority:"海事局",
+          uploadFileName:"",
+          uploadUserId:"",
+          uploadDate:"",
+          subList:[
+            // {
+            //   proficiencyCertSubId:"",
+            //   proficiencyCertMainId:"",
+            //   certProficiencyCate:"",
+            //   clause:"",
+            //   issueDate:"",
+            //   validity:""
+            // }
+          ]
+        },
+      ],
+      /* 分页参数 */
+      ipagination:{
+        current: 1,
+        pageSize: 10,
+        pageSizeOptions: ['10', '20', '30'],
+        showTotal: (total, range) => {
+          return range[0] + "-" + range[1] + " 共" + total + "条"
+        },
+        showQuickJumper: true,
+        showSizeChanger: true,
+        total: 0
+      },
+
+      //
+
+
+      // 默认列
+      defColumns: [
+        {
+          title: '#',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: "center",
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1;
+          }
         },
         {
-          title: '标准集id',
-          dataIndex: 'standard_id'
+          title: '员工编号',
+          align: "center",
+          dataIndex: 'employeeId'
         },
         {
-          title: '申请人id',
-          dataIndex: 'user_id',
-          sorter: true,
-          needTotal: true,
-          /* customRender: (text) => text + ' 次' */
+          title: '证书编号',
+          align: "center",
+          dataIndex: 'certNum'
         },
         {
-          title: '提交申请时间',
-          dataIndex: 'submit_time',
-          needTotal: true
+          title: '发证机关',
+          align: "center",
+          dataIndex: 'issuingAuthority'
         },
+        // {
+        //   title: '性别',
+        //   align: "center",
+        //   dataIndex: 'sex',
+        //   customRender: (text) => {
+        //     //字典值替换通用方法
+        //     return filterDictTextByCache('sex', text);
+        //   }
+        // },
+
         {
-          title: '申请原因',
-          dataIndex: 'application_purose',
-          sorter: true
-        },
-        {
-          table: '申请操作',
-          dataIndex: 'application_state',
-          width: '150px',
-          scopedSlots: { customRender: 'action' },
+          title: '操作',
+          dataIndex: 'action',
+          align: "center",
+          scopedSlots: {
+            filterDropdown: 'filterDropdown',
+            filterIcon: 'filterIcon',
+            customRender: 'action'
+          },
         }
       ],
-      // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        return getApplicationList(Object.assign(parameter, this.queryParam))
-          .then(res => {
-            return res.result
-          })
-      },
 
-      selectedRowKeys: [],
-      selectedRows: []
+      settingColumns:[],
+
+      toggleSearchStatus:false
     }
   },
-  created () {
-    getRoleList({ t: new Date() })
+  components:{
+
+    Modal,
+    SubTable,
+    InfoTable
   },
-  methods: {
-    handleEdit (record) {
-      //this.mdl = Object.assign({}, record)
-      console.log(record)
-      getApproveTask(record).then((res) => {
-        window.alert(res.message);
-      }).catch((err) => {
-        window.alert(err);
-      });
-      //this.visible = true
-    },
-    handleOk () {
+  methods:{
+    //搜索方法
+    searchQuery(){
 
     },
 
-    //添加逻辑
-    handleModalVisible (isVisible) {
-      this.visibleCreateModal = isVisible;
+    loadData(){
+
     },
-    handleCreateModalOk () {
-      this.createForm.validateFields((err, fieldsValue) => {
-        if (err) {
-          return;
+
+    //点击展开图标触发
+    onTreeExpand(expandedKeys) {
+      console.log('onExpand', expandedKeys);
+      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+      // or, you can remove all expanded children keys.
+      this.expandedKeys = expandedKeys;
+      this.autoExpandParent = false;
+    },
+
+
+    onTreeCheck(checkedKeys) {
+      console.log('onCheck', checkedKeys);
+      this.checkedKeys = checkedKeys;
+    },
+
+
+    onTreeSelect(selectedKeys, info) {
+      this.selectedKeys = selectedKeys;
+      // this.$refs.infoTable.check(this.dataSource[0]);
+
+    },
+
+    searchReset(){
+
+    },
+
+    onIssueDateChange: function (value, dateString) {
+      console.log(dateString[0],dateString[1]);
+      this.queryParam.birthday_begin=dateString[0];
+      this.queryParam.birthday_end=dateString[1];
+    },
+
+    handleToggleSearch(){
+      this.toggleSearchStatus = !this.toggleSearchStatus;
+    },
+
+    onClearSelected() {
+      this.selectedRowKeys = [];
+      this.selectionRows = [];
+    },
+
+    onColSettingsChange(){
+
+    },
+
+    handleEdit(record){
+      this.$refs.modalForm.edit(record);
+      this.$refs.modalForm.title = "编辑引航员健康证";
+      this.$refs.modalForm.method = "edit";
+      this.$refs.modalForm.disableSubmit = false;
+    },
+
+    handleAdd(){
+      this.$refs.modalForm.add();
+      this.$refs.modalForm.title = "新增引航员健康证";
+      this.$refs.modalForm.method = "add";
+      this.$refs.modalForm.disableSubmit = false;
+    },
+
+    handleDelete(id){
+      console.log(id);
+      const dataSource = [...this.dataSource];
+      this.dataSource = dataSource.filter(item => item.proficiencyCertMainId !== id);
+    },
+
+
+    batchDel(){
+
+    },
+
+    // 加载数据
+    modalFormOk(data){
+      if(data.method === "add"){
+        this.dataSource.push(data.modelData);
+      }
+      else if(data.method === "edit") {
+        const dataSource = [...this.dataSource];
+        const target = dataSource.find(item => item.proficiencyCertMainId === data.modelData.proficiencyCertMainId);
+        if (target) {
+          copyObj(data.modelData,target);
+          this.dataSource = dataSource;
+          console.log(this.dataSource);
         }
-        const description = this.createForm.getFieldValue('description');
-        axios.post('/saveRule', {
-          desc: description,
-        }).then((res) => {
-          this.createForm.resetFields();
-          this.visibleCreateModal = false;
-          this.loadRuleData();
-        });
-      });
-    },
-    handleCreateModalCancel () {
-      this.visibleCreateModal = false;
-    },
-
-    onChange (row) {
-      this.selectedRowKeys = row.selectedRowKeys
-      this.selectedRows = row.selectedRows
-
-      console.log(this.$refs.table)
-    },
-    toggleAdvanced () {
-      this.advanced = !this.advanced
-    },
-
-    resetSearchForm () {
-      this.queryParam = {
-        date: moment(new Date())
       }
     },
 
-    //提交申请
-    submitApplication (record) {
-      window.alert("点击了提交")
-      // let params = {
-      //   task_id: this.model.username,
-      //   standard_id: this.model.password,
-      //   user_id: this.model.inputCode,
-      //   checkKey: this.currdatetime,
-      //   remember_me: rememberMe,
+    handleTableChange(pagination, filters, sorter) {
+      // //分页、排序、筛选变化时触发
+      // //TODO 筛选
+      // console.log(pagination)
+      // if (Object.keys(sorter).length > 0) {
+      //   this.isorter.column = sorter.field;
+      //   this.isorter.order = "ascend" == sorter.order ? "asc" : "desc"
       // }
-      console.log(record)
-      submitApplication(record).then((res) => {
-        window.alert(res.message);
-      }).catch((err) => {
-        window.alert(err);
-      });
+      // this.ipagination = pagination;
+      // this.loadData();
     },
 
-  },
-  watch: {
-    /*
-    'selectedRows': function (selectedRows) {
-      this.needTotalList = this.needTotalList.map(item => {
-        return {
-          ...item,
-          total: selectedRows.reduce( (sum, val) => {
-            return sum + val[item.dataIndex]
-          }, 0)
-        }
-      })
-    }
-    */
   }
+
 }
 </script>
+
+<style scoped>
+
+.table{
+  display: flex ;
+}
+
+.tree{
+  flex: 1 auto;
+  box-sizing: border-box;
+  margin-right: 4px;
+  margin-top: 7px;
+}
+
+/*.item{*/
+/*  padding: 10px 24px !important;*/
+/*}*/
+
+.detail{
+  flex: 10 auto;
+  box-sizing: border-box;
+  margin-left: 4px;
+  margin-top: 7px;
+}
+
+
+</style>
