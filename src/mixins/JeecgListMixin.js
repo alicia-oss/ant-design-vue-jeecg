@@ -72,7 +72,6 @@ export const JeecgListMixin = {
     }
   },
   methods:{
-    //请求数据的方法
     loadData(arg) {
       if(!this.url.list){
         this.$message.error("请设置url.list属性!")
@@ -255,7 +254,6 @@ export const JeecgListMixin = {
       //清空列表选中
       this.onClearSelected()
     },
-
     handleDetail:function(record){
       this.$refs.modalForm.edit(record);
       this.$refs.modalForm.title="详情";
@@ -354,7 +352,6 @@ export const JeecgListMixin = {
     },
     /* 文件下载 */
     // update--autor:lvdandan-----date:20200630------for：修改下载文件方法名uploadFile改为downloadFile------
-
     downloadFile(text){
       if(!text){
         this.$message.warning("未知的文件")
