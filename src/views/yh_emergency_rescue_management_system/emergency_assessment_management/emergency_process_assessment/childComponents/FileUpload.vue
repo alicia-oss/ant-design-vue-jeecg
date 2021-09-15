@@ -53,7 +53,7 @@
 
 import Vue from 'vue'
 import { ACCESS_TOKEN } from "@/store/mutation-types"
-import { getFileAccessHttpUrl } from '@api/manage';
+import { getFileAccessHttpUrl } from '@/api/manage';
 import {Base64} from "js-base64";
 const FILE_TYPE_ALL = "all"
 const FILE_TYPE_IMG = "image"

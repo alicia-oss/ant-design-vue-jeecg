@@ -13,18 +13,28 @@
                 </a-form-item>
               </a-col>
 
-
               <a-col :xl="8" :lg="9" :md="10" :sm="24">
-                <a-form-item label="处理方式">
-                  <j-input placeholder="请选择处理方式查询" v-model="queryParam.processType"></j-input>
+                <a-form-item label='处置方式'>
+                  <a-select placeholder="请选择处理方式查询" v-model="queryParam.processType">
+                    <a-select-option v-for="item in inputData.processType" :value="item">
+                      {{item}}
+                    </a-select-option>
+                  </a-select>
                 </a-form-item>
               </a-col>
-
 
             </a-row>
           </a-form>
         </a-col>
 
+        <a-col :span="6">
+        <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+          <a-col  :xl="6" :lg="7" :md="8" :sm="24">
+            <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+            <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+          </a-col>
+        </span>
+        </a-col>
 
       </a-row>
     </div>
@@ -69,7 +79,7 @@
         ref="table"
         size="middle"
         bordered
-        :rowKey="record=>record.serviceBookId"
+        :rowKey="record=>record.emergencyProcessId"
         :columns="defColumns"
         :dataSource="dataSource"
         :pagination="ipagination"
@@ -87,7 +97,7 @@
             <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
             <a-menu slot="overlay">
               <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.serviceBookId)">
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.emergencyProcessId)">
                   <a>删除</a>
                 </a-popconfirm>
               </a-menu-item>
@@ -119,13 +129,30 @@ export default {
       /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
       queryParam: {},
       /* 数据源 */
+      inputData: {
+        processType:["启动应急预案","与相关部门联系"]
+      },
       dataSource:[
         {
-          emergencyProcessId:'',
-          emergencyInfoId:'',
-          emergencInfoName:'',
-          processType:'',
-          processDetail:''
+          emergencyProcessId:'1',
+          emergencyInfoId:'001',
+          emergencyInfoName:'应急信息001',
+          processType:"启动应急预案",
+          processDetail:'启动综合应急预案'
+        },
+        {
+          emergencyProcessId:'2',
+          emergencyInfoId:'002',
+          emergencyInfoName:'应急信息002',
+          processType:"启动应急预案",
+          processDetail:'启动专项应急预案'
+        },
+        {
+          emergencyProcessId:'3',
+          emergencyInfoId:'003',
+          emergencyInfoName:'应急信息003',
+          processType:"与相关部门联系",
+          processDetail:'与部门001联系'
         }
       ],
       /* 分页参数 */
@@ -156,10 +183,10 @@ export default {
         {
           title: '应急信息名称',
           align: "center",
-          dataIndex: 'emergencInfoName'
+          dataIndex: 'emergencyInfoName'
         },
         {
-          title: '处理方式',
+          title: '处置方式',
           align: "center",
           dataIndex: 'processType'
         },
@@ -226,7 +253,7 @@ export default {
 
     handleEdit(record){
       this.$refs.modalForm.edit(record);
-      this.$refs.modalForm.title = "编辑船员服务簿";
+      this.$refs.modalForm.title = "编辑应急信息处理";
       this.$refs.modalForm.method = "edit";
       this.$refs.modalForm.disableSubmit = false;
 
@@ -234,19 +261,19 @@ export default {
 
     handleAdd(){
       this.$refs.modalForm.add();
-      this.$refs.modalForm.title = "新增船员服务簿";
+      this.$refs.modalForm.title = "新增应急信息处理";
       this.$refs.modalForm.method = "add";
       this.$refs.modalForm.disableSubmit = false;
     },
 
     handleDelete(id){
       const dataSource = [...this.dataSource];
-      this.dataSource = dataSource.filter(item => item.serviceBookId !== id);
+      this.dataSource = dataSource.filter(item => item.emergencyProcessId !== id);
     },
 
     handleCheak(record){
       this.$refs.checkModal.check(record);
-      this.$refs.checkModal.title = "查看船员服务簿";
+      this.$refs.checkModal.title = "查看应急信息处理";
       this.$refs.checkModal.confirmLoading = false;
     },
 
