@@ -242,6 +242,7 @@ export default {
           title: '负责人',
           dataIndex: 'personInCharge',
           ellipsis: true,
+          width: 60,
           // sorter: true,
           // needTotal: true,
           /* customRender: (text) => text + ' 次' */
@@ -251,15 +252,10 @@ export default {
           dataIndex: 'startTime',
           // needTotal: true
         },
-        {
-          title: '演练方式',
-          dataIndex: 'drillMethod',
-          ellipsis: true,
-          // needTotal: true
-        },
+
         {
           title: '演练内容',
-          dataIndex: 'drillSite',
+          dataIndex: 'drillContent',
           ellipsis: true,
           // needTotal: true
         },
@@ -279,6 +275,7 @@ export default {
           title: '操作',
           dataIndex: 'action',
           align: "center",
+          width: 180,
           scopedSlots: {
             filterDropdown: 'filterDropdown',
             filterIcon: 'filterIcon',

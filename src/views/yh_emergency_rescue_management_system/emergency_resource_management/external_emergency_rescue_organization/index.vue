@@ -246,6 +246,7 @@ export default {
           title: '操作',
           dataIndex: 'action',
           align: "center",
+          width: 180,
           scopedSlots: {
             filterDropdown: 'filterDropdown',
             filterIcon: 'filterIcon',
