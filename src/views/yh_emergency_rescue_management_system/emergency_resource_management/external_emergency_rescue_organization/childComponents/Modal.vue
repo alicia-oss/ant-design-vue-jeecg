@@ -245,6 +245,9 @@ export default {
     // },
     handleCancel () {
       this.close()
+    },
+    handleReset(){
+
     }
   }
 }

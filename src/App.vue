@@ -32,7 +32,6 @@
           that.$store.commit('TOGGLE_DEVICE', 'desktop')
           that.$store.dispatch('setSidebar', true)
         }
-
       })
     }
   }

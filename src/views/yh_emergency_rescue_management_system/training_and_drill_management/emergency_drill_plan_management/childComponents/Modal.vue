@@ -44,7 +44,7 @@
           </a-form-model-item>
 
           <a-form-model-item label="填报时间" required prop="fillInTime" hasFeedback>
-            <a-input v-model="model.fillInTime"    placeholder="请输入填报时间"/>
+            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.fillInTime" placeholder=""/>
           </a-form-model-item>
 
           <a-form-model-item label="负责人" prop="personInCharge" hasFeedback>
@@ -74,7 +74,7 @@
             <!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
             <a-switch v-model="isClose" checked-children="发布" un-checked-children="未发布" default-unchecked/>
             </a-popconfirm>
-            <a-popconfirm v-if="isReleased=='发布'" title="确定取消发布吗?" @confirm="onChange" @cancel="onCancel">
+            <a-popconfirm v-if="isReleased=='已发布'" title="确定取消发布吗?" @confirm="onChange" @cancel="onCancel">
 
               <!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
               <a-switch  v-model="isClose" checked-children="发布" un-checked-children="未发布" default-unchecked/>
@@ -184,10 +184,10 @@ export default {
     },
     onChange(checked) {
       if(this.isReleased=="未发布"){
-        this.isReleased="发布";
-        this.model.isReleased="发布";
+        this.isReleased="已发布";
+        this.model.isReleased="已发布";
       }
-      else if(this.isReleased=="发布"){
+      else if(this.isReleased=="已发布"){
         this.isReleased="未发布";
         this.model.isReleased="未发布";
       }

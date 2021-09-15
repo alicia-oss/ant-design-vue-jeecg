@@ -341,7 +341,7 @@ export default {
 
     handleEdit(record){
       this.$refs.modalForm.edit(record);
-      this.$refs.modalForm.title = "编辑物资信息";
+      this.$refs.modalForm.title = "编辑应急救援专家信息";
       this.$refs.modalForm.method = "edit";
       this.$refs.modalForm.disableSubmit = false;
 
@@ -349,7 +349,7 @@ export default {
 
     handleAdd(){
       this.$refs.modalForm.add();
-      this.$refs.modalForm.title = "添加应急物资信息";
+      this.$refs.modalForm.title = "添加应急救援专家信息";
       this.$refs.modalForm.method = "add";
       this.$refs.modalForm.disableSubmit = false;
     },
@@ -361,7 +361,7 @@ export default {
 
     handleCheck(record){
       this.$refs.checkModal.check(record);
-      this.$refs.checkModal.title = "查看物资信息";
+      this.$refs.checkModal.title = "查看应急救援专家信息";
       this.$refs.checkModal.confirmLoading = false;
     },
 

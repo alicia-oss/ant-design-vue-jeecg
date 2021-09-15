@@ -34,7 +34,7 @@
 
             <a-form-model-item label="救援方式" required prop="rescueType" hasFeedback>
               <!--            <a-input v-model="model.employeeId"    placeholder="请输入员工编号"/>-->
-              <a-select default-value="0" v-model="model.rescueType">
+              <a-select default-value="0" v-model="model.rescueType" disabled>
                 <a-select-option value="0">
                   医疗救援
                 </a-select-option>

@@ -17,7 +17,7 @@
     props: {
       dataSource: {
         type: Array,
-        required: true
+        required: true,
       },
       yaxisText: {
         type: String,

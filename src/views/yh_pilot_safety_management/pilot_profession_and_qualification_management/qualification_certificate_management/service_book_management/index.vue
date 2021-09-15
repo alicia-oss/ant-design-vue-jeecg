@@ -151,14 +151,36 @@ export default {
       dataSource:[
         {
           serviceBookId:"0001",
-          employeeId:"4221",
+          employeeId:"0001",
           employeeName:"张三",
           registerNum:"13678678",
           issuingAuthority:"海事局",
           issueDate:"",
           uploadFileName:"",
-          uploadUserId:"",
-          uploadDate:""
+          uploadUserId:"王五",
+          uploadDate:"2021-9-11"
+        },
+        {
+          serviceBookId:"0002",
+          employeeId:"0002",
+          employeeName:"李四",
+          registerNum:"1367343",
+          issuingAuthority:"海事局",
+          issueDate:"",
+          uploadFileName:"",
+          uploadUserId:"王五",
+          uploadDate:"2021-9-11"
+        },
+        {
+          serviceBookId:"0003",
+          employeeId:"0003",
+          employeeName:"王六",
+          registerNum:"1367873",
+          issuingAuthority:"海事局",
+          issueDate:"",
+          uploadFileName:"",
+          uploadUserId:"王五",
+          uploadDate:"2021-9-11"
         }
       ],
       /* 分页参数 */
