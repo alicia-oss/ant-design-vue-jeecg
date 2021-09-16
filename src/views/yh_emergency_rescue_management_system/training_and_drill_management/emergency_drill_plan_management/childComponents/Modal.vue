@@ -68,18 +68,18 @@
             <a-input v-model="model.applicationState"    placeholder="编辑中" disabled/>
           </a-form-model-item>
 
-          <a-form-model-item label="发布状态" required  prop="isReleased" hasFeedback >
-            <a-popconfirm v-if="isReleased=='未发布'" title="确定发布吗?" @confirm="onChange" @cancel="onCancel">
+<!--          <a-form-model-item label="发布状态" required  prop="isReleased" hasFeedback >-->
+<!--            <a-popconfirm v-if="isReleased=='未发布'" title="确定发布吗?" @confirm="onChange" @cancel="onCancel">-->
 
-            <!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-            <a-switch v-model="isClose" checked-children="发布" un-checked-children="未发布" default-unchecked/>
-            </a-popconfirm>
-            <a-popconfirm v-if="isReleased=='已发布'" title="确定取消发布吗?" @confirm="onChange" @cancel="onCancel">
+<!--            &lt;!&ndash;            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>&ndash;&gt;-->
+<!--            <a-switch v-model="isClose" checked-children="" un-checked-children="" default-unchecked/>-->
+<!--            </a-popconfirm>-->
+<!--            <a-popconfirm v-if="isReleased=='已发布'" title="确定取消发布吗?" @confirm="onChange" @cancel="onCancel">-->
 
-              <!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-              <a-switch  v-model="isClose" checked-children="发布" un-checked-children="未发布" default-unchecked/>
-            </a-popconfirm>
-          </a-form-model-item>
+<!--              &lt;!&ndash;            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>&ndash;&gt;-->
+<!--              <a-switch  v-model="isClose" checked-children="" un-checked-children="" default-unchecked/>-->
+<!--            </a-popconfirm>-->
+<!--          </a-form-model-item>-->
           <!--        <a-form-model-item label="个人简介"  prop="content" hasFeedback>-->
           <!--          <a-input  type="textarea" placeholder="请输入个人简介"  v-model="model.content"/>-->
           <!--        </a-form-model-item>-->

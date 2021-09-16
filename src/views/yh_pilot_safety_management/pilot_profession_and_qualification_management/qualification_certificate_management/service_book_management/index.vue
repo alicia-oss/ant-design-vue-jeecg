@@ -155,7 +155,7 @@ export default {
           employeeName:"张三",
           registerNum:"13678678",
           issuingAuthority:"海事局",
-          issueDate:"",
+          issueDate:"2021-9-10",
           uploadFileName:"",
           uploadUserId:"王五",
           uploadDate:"2021-9-11"
@@ -166,7 +166,7 @@ export default {
           employeeName:"李四",
           registerNum:"1367343",
           issuingAuthority:"海事局",
-          issueDate:"",
+          issueDate:"2021-9-10",
           uploadFileName:"",
           uploadUserId:"王五",
           uploadDate:"2021-9-11"
@@ -177,7 +177,7 @@ export default {
           employeeName:"王六",
           registerNum:"1367873",
           issuingAuthority:"海事局",
-          issueDate:"",
+          issueDate:"2021-9-10",
           uploadFileName:"",
           uploadUserId:"王五",
           uploadDate:"2021-9-11"

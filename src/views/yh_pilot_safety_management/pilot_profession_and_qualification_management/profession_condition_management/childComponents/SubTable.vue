@@ -58,31 +58,46 @@ export default {
     return{
       selectedRowKeys:[],
       defColumns: [
+        {
+          title: '#',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: "center",
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1;
+          }
+        },
+        {
+          title: '引航等级',
+          align: "center",
+          dataIndex: 'certClass'
+        },
+        {
+          title: '任职与解职日期',
+          align: "center",
+          dataIndex: 'appointmentCancelDate'
+        },
+        {
+          title: '海区',
+          align: "center",
+          dataIndex: 'oceanArea'
+        },
+        {
+          title: '引航尺度',
+          align: "center",
+          dataIndex: 'leadingScale'
+        },
+        // {
+        //   title: '性别',
+        //   align: "center",
+        //   dataIndex: 'sex',
+        //   customRender: (text) => {
+        //     //字典值替换通用方法
+        //     return filterDictTextByCache('sex', text);
+        //   }
+        // },
 
-        {
-          title: '证书种类',
-          align: 'center',
-          dataIndex: 'certProficiencyCate',
-          scopedSlots: { customRender: 'certProficiencyCate' },
-        },
-        {
-          title: '公约条款',
-          align: 'center',
-          dataIndex: 'clause',
-          scopedSlots: { customRender: 'clause' },
-        },
-        {
-          title: '签发日期',
-          align: 'center',
-          dataIndex: 'issueDate',
-          scopedSlots: { customRender: 'clause' },
-        },
-        {
-          title: '有效期至',
-          align: 'center',
-          dataIndex: 'validity',
-          scopedSlots: { customRender: 'clause' },
-        },
         {
           title: '操作',
           dataIndex: 'action',

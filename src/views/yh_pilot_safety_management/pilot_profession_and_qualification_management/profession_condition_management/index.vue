@@ -9,20 +9,22 @@
             <a-form layout="inline" @keyup.enter.native="searchQuery">
               <a-row :gutter="30">
                 <a-col :xl="8" :lg="9" :md="10" :sm="24">
-                  <a-form-item label="员工名称">
-                    <j-input placeholder="请输入名称模糊查询" v-model="queryParam.employeeName"></j-input>
+                  <a-form-item label="员工姓名">
+                    <j-input placeholder="请输入名称模糊查询" v-model="queryParam.pilotName"></j-input>
                   </a-form-item>
                 </a-col>
 
                 <a-col :xl="8" :lg="9" :md="10" :sm="24">
-                  <a-form-item label="证书编号">
-                    <j-input placeholder="请输入证书编号模糊查询" v-model="queryParam.certNum"></j-input>
+                  <a-form-item label="引航等级">
+                    <a-select-option v-for="item in inputData.certClass" :value="item">
+                      {{ item }}
+                    </a-select-option>
                   </a-form-item>
                 </a-col>
 
                 <a-col :xl="8" :lg="9" :md="10" :sm="24">
-                  <a-form-item label="签发机关">
-                    <j-input placeholder="请输入签发机关名称模糊查询" v-model="queryParam.issuingAuthority"></j-input>
+                  <a-form-item label="任职与解职日期">
+                    <a-date-picker valueFormat="YYYY-MM-DD"/>
                   </a-form-item>
                 </a-col>
 
@@ -116,8 +118,8 @@
       <a-card :bordered="false" class="item detail">
         <template slot="title">
           <div style="font-size: 20px;">
-            <a-icon type="form" style="color: #1890ff;margin-right: 10px"></a-icon>合格证详情
-            <a-button v-if="selectedKeys.length !== 0" style="margin-left: 80%" type="primary" @click="handleEdit(dataSource[0])">编辑</a-button>
+            <a-icon type="form" style="color: #1890ff;margin-right: 10px"></a-icon>技术档案详情
+            <a-button v-if="selectedKeys.length !== 0" style="margin-left: 70%" type="primary" @click="handleEdit(dataSource[0])">编辑</a-button>
           </div>
         </template>
 
@@ -147,29 +149,32 @@ export default {
   name: 'index.vue',
   data(){
     return{
+      inputData:{
+        certClass:["一级","二级","三级"]
+      },
       //控制只有一个展开项
       expendedKeys:[],
       checkedKeys:[],
       selectedKeys:[],
       treeData:[
         {
-          title:"合格证列表",
+          title:"员工列表",
           key:'0-0',
           children: [
             {
-              title:'海清风',
+              title:'张三',
               key:'0-0-1'
             },
             {
-              title:'海起飞',
+              title:'李四',
               key:'0-0-2'
             },
             {
-              title:'海清风',
+              title:'王五',
               key:'0-0-3'
             },
             {
-              title:'海清风',
+              title:'小明',
               key:'0-0-4'
             }
 
@@ -213,24 +218,37 @@ export default {
     //   }
     // ]
         {
-          proficiencyCertMainId:"123214",
-          employeeId:"2",
-          employeeName:'张加油',
-          certNum:"0002",
-          issuingAuthority:"海事局",
-          uploadFileName:"",
-          uploadUserId:"",
-          uploadDate:"",
-          subList:[
-            // {
-            //   proficiencyCertSubId:"",
-            //   proficiencyCertMainId:"",
-            //   certProficiencyCate:"",
-            //   clause:"",
-            //   issueDate:"",
-            //   validity:""
-            // }
-          ]
+          id:"2",
+          pilotName:"张三",
+          nameSpell:'ZHANGSAN',
+          gender:"男",
+          birthDate:"201-5-6",
+          nativePlace:"湖北省武汉市武昌区",
+          nation:"汉族",
+          graduatedSchool:"清华大学",
+          studyMajor:"计算机科学与技术",
+          eduDegree:"大学本科",
+          uploadUser:"王五",
+          uploadDate:"2021-9-16",
+          remarks:"备注",
+          subList:[{
+            certClass:"一级",
+            appointmentCancelDate:"2021-5-6",
+            oceanArea:"珠海港及附近海域",
+            leadingScale:"任何船舶",
+            annualLeadingNum:"100",
+            accumulateLeadingNum:"1000",
+            archivesVersion:"新版"
+          },
+            {
+              certClass:"二级",
+              appointmentCancelDate:"2019-5-6",
+              oceanArea:"珠海港及附近海域",
+              leadingScale:"小船舶",
+              annualLeadingNum:"20",
+              accumulateLeadingNum:"100",
+              archivesVersion:"旧版"
+            },],
         },
       ],
       /* 分页参数 */
@@ -262,19 +280,24 @@ export default {
           }
         },
         {
-          title: '员工编号',
+          title: '引航等级',
           align: "center",
-          dataIndex: 'employeeId'
+          dataIndex: 'certClass'
         },
         {
-          title: '证书编号',
+          title: '任职与解职日期',
           align: "center",
-          dataIndex: 'certNum'
+          dataIndex: 'appointmentCancelDate'
         },
         {
-          title: '发证机关',
+          title: '海区',
           align: "center",
-          dataIndex: 'issuingAuthority'
+          dataIndex: 'oceanArea'
+        },
+        {
+          title: '引航尺度',
+          align: "center",
+          dataIndex: 'leadingScale'
         },
         // {
         //   title: '性别',
