@@ -32,20 +32,33 @@
         <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" >
 
           <a-form-model-item label="应急事故名称" required prop="emergencyInfoName" hasFeedback>
-            <a-input v-model="model.emergencyInfoName"  :read-only="true"  placeholder="请选择应急事故名称"/>
+            <a-input v-model="model.emergencyInfoName"  :read-only="true"  placeholder="选择应急事故名称"/>
           </a-form-model-item>
 
-          <a-form-item label='处置方式'>
-            <a-input v-model="model.processType"  :read-only="true"  placeholder="请选择应急事故名称"/>
+          <a-form-item label='评估单位'>
+            <a-input v-model="model.assessmentInstitution"  :read-only="true"  placeholder="请输入应急事故名称"/>
           </a-form-item>
 
-          <a-form-model-item label="具体指示"  prop="processDetail" hasFeedback>
+          <a-form-model-item label="总结评估"  prop="summaryAssessment" hasFeedback>
             <a-textarea
               :read-only="true"
-              placeholder="输入具体指示"
+              placeholder="请输入总结评估"
               :auto-size="{ minRows: 2, maxRows: 6 }"
-              v-model="model.processDetail"
+              v-model="model.summaryAssessment"
             />
+          </a-form-model-item>
+
+          <a-form-model-item label="反馈与建议" >
+            <a-textarea
+              :read-only="true"
+              placeholder="请输入反馈与建议"
+              :auto-size="{ minRows: 2, maxRows: 6 }"
+              v-model="model.feedbackAndSuggestion"
+            />
+          </a-form-model-item>
+
+          <a-form-model-item label="评估时间"  prop="assessmentTime" hasFeedback >
+            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.assessmentTime" :disabled="true" />
           </a-form-model-item>
 
         </a-form-model>
@@ -57,7 +70,7 @@
 </template>
 
 <script>
-import { httpAction } from '@api/manage'
+import { httpAction } from '@/api/manage'
 
 import FileList from './FileList'
 import TextBorder from './TextBorder'

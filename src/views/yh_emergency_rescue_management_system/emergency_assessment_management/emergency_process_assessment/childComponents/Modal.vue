@@ -34,7 +34,7 @@
 
         <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
-          <a-form-model-item label="应急信息名称" required prop="emergencyInfoName" hasFeedback>
+          <a-form-model-item label="应急事故名称" required prop="emergencyInfoName" hasFeedback>
             <a-select placeholder="请选择应急信息名称" v-model="model.emergencyInfoName">
               <a-select-option v-for="item in inputData.emergencyInfoName" :value="item">
                 {{item}}
@@ -42,20 +42,28 @@
             </a-select>
           </a-form-model-item>
 
-          <a-form-model-item label='处置方式' required prop="processType" hasFeedback>
-            <a-select placeholder="请选择处置方式" v-model="model.processType">
-              <a-select-option v-for="item in inputData.processType" :value="item">
-                {{item}}
-              </a-select-option>
-            </a-select>
+          <a-form-model-item label="评估单位" required prop="assessmentInstitution" hasFeedback >
+            <a-input v-model="model.assessmentInstitution"    placeholder="请输入评估单位名称" />
           </a-form-model-item>
 
-          <a-form-model-item label="具体指示"  prop="processDetail" hasFeedback>
+          <a-form-model-item label="总结评估"  prop="summaryAssessment" hasFeedback>
             <a-textarea
-              placeholder="输入具体指示"
+              placeholder="请输入总结评估"
               :auto-size="{ minRows: 2, maxRows: 6 }"
-              v-model="model.processDetail"
+              v-model="model.summaryAssessment"
             />
+          </a-form-model-item>
+
+          <a-form-model-item label="反馈与建议" >
+            <a-textarea
+              placeholder="请输入反馈与建议"
+              :auto-size="{ minRows: 2, maxRows: 6 }"
+              v-model="model.feedbackAndSuggestion"
+            />
+          </a-form-model-item>
+
+          <a-form-model-item label="评估时间"  prop="assessmentTime" hasFeedback >
+            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.assessmentTime" :disabled="true" />
           </a-form-model-item>
 
         </a-form-model>
@@ -68,7 +76,7 @@
 </template>
 
 <script>
-import { httpAction } from '@api/manage'
+import { httpAction } from '@/api/manage'
 import  FileUpload from './FileUpload'
 import TextBorder from './TextBorder'
 import { uuid } from '@tinymce/tinymce-vue/lib/es2015/Utils'
@@ -83,7 +91,6 @@ export default {
       visible: false,
       inputData: {
         emergencyInfoName:["应急信息001","应急信息002","应急信息003","应急信息004","应急信息005"],
-        processType:["启动应急预案","与相关部门联系"]
       },
       // inputData:[{id:"0441",name:"张三"},{id:"0442",name:"王五"}],
       model: {},
@@ -106,13 +113,14 @@ export default {
           { required: true, message: '请选择应急信息名称!' },
           // { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
         ],
-        processType: [
-          { required: true, message: '请选择处置方式!' },
+        assessmentInstitution: [
+          { required: true, message: '请输入评估单位!' },
           // { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
         ],
-        // email: [
-        //   { required: false, type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
-        // ]
+        summaryAssessment: [
+          { required: true, message: '请输入总结评估!' },
+          // { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
+        ]
       },
       url: {
         //待修改
@@ -130,8 +138,8 @@ export default {
   methods: {
     add () {
       this.edit({});
-      // let myData = new Date();
-      // this.model.uploadDate = myData.toLocaleDateString();
+      let myData = new Date();
+      this.model.assessmentTime = myData.toLocaleDateString();
       // this.model.uploadUserId = this.$store.getters.userInfo.realname;
       this.visible = true;
     },
@@ -152,7 +160,7 @@ export default {
       this.$refs.form.validate(valid=>{
         if(valid) {
           if(this.method === "add"){
-            this.model.emergencyProcessId = uuid("");
+            this.model.processAssessmentId = uuid("");
             this.$emit("ok",{method:"add",modelData:modelData})
           }
           else if(this.method === "edit"){
@@ -164,10 +172,10 @@ export default {
 
     },
     handleComplete(){
-      let tempName = this.model.emergencyInfoId;
-      let temp = this.model.emergencyInfoId.split("-");
+      let tempName = this.model.emergencyInfoName;
+      let temp = this.model.emergencyInfoName.split("-");
       this.model.emergencyInfoName = temp[0];
-      this.model.emergencyInfoId = temp[1];
+      this.model.emergencyProcessId = temp[1];
 
     },
 
