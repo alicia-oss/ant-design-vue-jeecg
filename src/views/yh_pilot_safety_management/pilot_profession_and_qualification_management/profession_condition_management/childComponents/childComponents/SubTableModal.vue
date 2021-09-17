@@ -34,24 +34,36 @@
 
               <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
-                <a-form-model-item label="证书种类" required prop="certProficiencyCate" hasFeedback>
-                  <a-select placeholder="请选择证书种类" v-model="model.certProficiencyCate">
-                    <a-select-option v-for="item in inputData.certProficiencyCate" :value="item.value">
+                <a-form-model-item label="证书等级" required prop="certProficiencyCate" hasFeedback>
+                  <a-select placeholder="请选择证书等级" v-model="model.certClass">
+                    <a-select-option v-for="item in inputData.certClass" :value="item.value">
                       {{item.value}}
                     </a-select-option>
                   </a-select>
                 </a-form-model-item>
 
-                <a-form-model-item label="公约条款" required prop="clause" hasFeedback>
-                  <a-input v-model="model.clause"    placeholder="请输入公约条款"/>
+                <a-form-model-item label="任职与解职日期" required prop="appointmentCancelDate" hasFeedback>
+                  <a-date-picker valueFormat="YYYY-MM-DD"  style="width: 100%;" v-model="model.appointmentCancelDate" />
                 </a-form-model-item>
 
-                <a-form-model-item label="签发日期" prop="issueDate" hasFeedback>
-                  <a-date-picker valueFormat="YYYY-MM-DD"  style="width: 100%;" v-model="model.issueDate" />
+                <a-form-model-item label="海区" prop="oceanArea" hasFeedback>
+                  <a-input  placeholder=""  :readOnly="true" v-model="model.oceanArea" />
                 </a-form-model-item>
 
-                <a-form-model-item label="有效期至"   prop="a" hasFeedback>
-                  <a-date-picker valueFormat="YYYY-MM-DD"  style="width: 100%;" v-model="model.validity" />
+                <a-form-model-item label="引领权限"   prop="leadingScale" hasFeedback>
+                  <a-input  placeholder=""  :readOnly="true" v-model="model.leadingScale"/>
+                </a-form-model-item>
+
+                <a-form-model-item label="全年引领艘次"   prop="annualLeadingNum" hasFeedback>
+                  <a-input  placeholder=""  :readOnly="true" v-model="model.annualLeadingNum"/>
+                </a-form-model-item>
+
+                <a-form-model-item label="累计引领艘次"   prop="accumulateLeadingNum" hasFeedback>
+                  <a-input  placeholder=""  :readOnly="true" v-model="model.accumulateLeadingNum"/>
+                </a-form-model-item>
+
+                <a-form-model-item label="版本"   prop="archivesVersion" hasFeedback>
+                  <a-input  placeholder="新版"  :readOnly="true" v-model="model.archivesVersion"/>
                 </a-form-model-item>
               </a-form-model>
          </div>
@@ -76,6 +88,18 @@ export default {
       title:"操作",
       visible: false,
       inputData: {
+        certClass:[{
+          key:1,
+          value:"一级"
+        },
+          {
+            key:2,
+            value:"二级"
+          },
+          {
+            key:3,
+            value:"三级"
+          },],
         certProficiencyCate:[
           {
             key:1,

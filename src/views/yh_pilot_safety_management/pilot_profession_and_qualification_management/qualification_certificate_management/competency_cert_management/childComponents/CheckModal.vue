@@ -1,12 +1,31 @@
 <template>
   <a-modal
-    :footer="null"
     :title="title"
     :width="800"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @cancel="handleCancel"
     cancelText="关闭">
+
+    <template slot="title">
+      <div class="title">
+        <a-icon type="monitor" style="color: #1890ff;margin-right: 10px"></a-icon>{{title}}
+      </div>
+    </template>
+
+    <template slot="footer">
+      <a-button  style="margin: 10px" key="last"  @click="handleLast" >
+        上一条
+      </a-button>
+
+      <a-button  style="margin: 10px" key="next"  @click="handleNext" >
+        下一条
+      </a-button>
+
+      <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleCancel">
+        关闭
+      </a-button>
+    </template>
 
     <a-spin :spinning="confirmLoading">
       <div class="table">
@@ -71,11 +90,11 @@ export default {
       },
       labelCol: {
         xs: { span: 10 },
-        sm: { span: 6 },
+        sm: { span:6 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 15 },
       },
       confirmLoading: false,
       form: this.$form.createForm(this),
@@ -104,6 +123,13 @@ export default {
 
     handleCancel () {
       this.close()
+    },
+    handleLast(){
+
+    },
+
+    handleNext(){
+
     }
   }
 }

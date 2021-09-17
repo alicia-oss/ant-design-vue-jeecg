@@ -113,7 +113,18 @@
         <!--          </a-card>-->
         <!--        </div>-->
         <!--        <a-icon slot="filterIcon" type='setting' :style="{ fontSize:'16px',color:  '#108ee9' }" />-->
+        <span slot="isReleased" slot-scope="isReleased,record">
+      <a-popconfirm v-if="record.isReleased==false" title="确定发布吗?" @confirm="onChange(record)" @cancel="onCancel(record)">
 
+            <!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
+            <a-switch :checked="record.isReleased" checked-children="" un-checked-children="" default-unchecked/>
+            </a-popconfirm>
+            <a-popconfirm v-if="record.isReleased==true" title="确定取消发布吗?" @confirm="onChange(record)" @cancel="onCancel(record)">
+
+              <!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
+              <a-switch  :checked="record.isReleased" checked-children="" un-checked-children="" default-unchecked/>
+            </a-popconfirm>
+    </span>
         <span slot="action" slot-scope="text, record">
           <a @click="()=>handleCheak(record)" style="margin-right: 8px">详情 </a>
           <a @click="handleEdit(record)" style="margin-right: 8px">编辑</a>
@@ -231,9 +242,12 @@ export default {
           // needTotal: true
         },
         {
-          title: '发布状态',
+          title: '是否发布',
           dataIndex: 'isReleased',
           // needTotal: true
+          scopedSlots: {
+            customRender: 'isReleased'
+          }
         },
         {
           title: '操作',
@@ -258,7 +272,7 @@ export default {
         applyTime:"2021-9-11",
         uploadFileName:"",
         applicationState:"审批中",
-        isReleased:"已发布"
+        isReleased:true
       },
         {
           id:2,
@@ -271,7 +285,7 @@ export default {
           applyTime:"2021-9-11",
           uploadFileName:"",
           applicationState:"通过",
-          isReleased:"未发布"
+          isReleased:false
         },
         {
           id:3,
@@ -284,7 +298,7 @@ export default {
           applyTime:"2021-9-11",
           uploadFileName:"",
           applicationState:"通过",
-          isReleased:"已发布"
+          isReleased:true
         }],
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
@@ -308,6 +322,17 @@ export default {
     CheckModal
   },
   methods: {
+    onCancel(record){
+
+    },
+    onChange(record) {
+      if(record.isReleased==false){
+        record.isReleased=true;
+      }
+      else if(record.isReleased==true) {
+        record.isReleased=false;
+      }
+    },
     resetSearchForm () {
       this.queryParam = {
         date: moment(new Date())

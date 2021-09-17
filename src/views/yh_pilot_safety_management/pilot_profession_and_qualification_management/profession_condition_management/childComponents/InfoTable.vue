@@ -8,44 +8,72 @@
              <text-border title="基本信息" >
                <a-form-model ref="form" :label-col="labelCol" :wrapper-col="wrapperCol" :model="model"
                >
-                 <a-form-model-item label="员工姓名" required prop="employeeName" hasFeedback>
-                   <a-input v-model="model.employeeName" :readOnly="true"   placeholder=""/>
+                 <a-form-model-item label="员工姓名" required prop="pilotName" hasFeedback>
+                   <a-input v-model="model.pilotName" :readOnly="true"   placeholder=""/>
                  </a-form-model-item>
 
-                 <a-form-model-item label="员工编号" required prop="employeeId" hasFeedback>
-                   <a-input v-model="model.employeeId" :readOnly="true"   placeholder=""/>
+                 <a-form-model-item label="汉语拼音" required prop="nameSpell" hasFeedback>
+                   <a-input v-model="model.nameSpell" :readOnly="true"   placeholder=""/>
                  </a-form-model-item>
 
-                 <a-form-model-item label="部门"  prop="apartment" hasFeedback >
-                   <a-input  placeholder="" :readOnly="true"  v-model="model.apartment"/>
+                 <a-form-model-item label="性别"  prop="gender" hasFeedback >
+                   <a-input  placeholder="" :readOnly="true"  v-model="model.gender"/>
                  </a-form-model-item>
 
-                 <a-form-model-item label="证书编号" required prop="certNum" hasFeedback>
-                   <a-input v-model="model.certNum"  :readOnly="true"  placeholder=""/>
+                 <a-form-model-item label="出生日期" required prop="birthDate" hasFeedback>
+                   <a-input v-model="model.birthDate"  :readOnly="true"  placeholder=""/>
 
                  </a-form-model-item>
 
-                 <a-form-model-item label="发证机关"  prop="issuingAuthority" hasFeedback >
-                                 <a-input  placeholder="" :readOnly="true"  v-model="model.issuingAuthority"/>
+                 <a-form-model-item label="籍贯"  prop="nativePlace" hasFeedback >
+                   <a-input  placeholder="" :readOnly="true"  v-model="model.nativePlace"/>
                  </a-form-model-item>
 
-                 <a-form-model-item label="上传人"   prop="uploadUserId" hasFeedback >
-                                 <a-input  placeholder=""  :readOnly="true" v-model="model.uploadUserId" :disabled="true"/>
+                 <a-form-model-item label="民族"  prop="nation" hasFeedback >
+                   <a-input  placeholder="" :readOnly="true"  v-model="model.nation"/>
                  </a-form-model-item>
 
-                 <a-form-model-item label="上传日期"  prop="uploadDate" hasFeedback >
-                   <a-input  placeholder=""  :readOnly="true" v-model="model.uploadDate" :disabled="true"/>
-                 </a-form-model-item>
 
                </a-form-model>
              </text-border>
            </div>
-           <div class="item-right">
-             <text-border title="相关文件">
-               <carousel :value="model.uploadFileName"></carousel>
-             </text-border>
-           </div>
+         <div class="item">
+           <text-border>
+             <a-form-model ref="form" :label-col="labelCol" :wrapper-col="wrapperCol" :model="model">
+           <a-form-model-item label="毕业院校"  prop="graduatedSchool" hasFeedback >
+             <a-input  placeholder="" :readOnly="true"  v-model="model.graduatedSchool"/>
+           </a-form-model-item>
+
+           <a-form-model-item label="所学专业"  prop="studyMajor" hasFeedback >
+             <a-input  placeholder="" :readOnly="true"  v-model="model.studyMajor"/>
+           </a-form-model-item>
+
+           <a-form-model-item label="文化程度"  prop="eduDegree" hasFeedback >
+             <a-input  placeholder="" :readOnly="true"  v-model="model.eduDegree"/>
+           </a-form-model-item>
+
+
+           <a-form-model-item label="上传人"   prop="uploadUser" hasFeedback >
+             <a-input  placeholder=""  :readOnly="true" v-model="model.uploadUser" :disabled="true"/>
+           </a-form-model-item>
+
+           <a-form-model-item label="上传日期"  prop="uploadDate" hasFeedback >
+             <a-input  placeholder=""  :readOnly="true" v-model="model.uploadDate" :disabled="true"/>
+           </a-form-model-item>
+
+           <a-form-model-item label="备注"  prop="remarks" hasFeedback >
+             <a-input  placeholder=""  :readOnly="true" v-model="model.remarks" :disabled="true"/>
+           </a-form-model-item>
+             </a-form-model>
+           </text-border>
+         </div>
+
        </a-row>
+       <div class="item-right">
+         <text-border title="相关文件">
+           <carousel :value="model.uploadFileName"></carousel>
+         </text-border>
+       </div>
        <a-row>
          <text-border class="cert-table" title="证书列表">
            <sub-table :dataSource="model.subList"></sub-table>

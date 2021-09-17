@@ -19,65 +19,74 @@
           <a-row>
             <a-col :span="12">
               <div class="item">
-                <text-border title="基本信息" :height="height">
+                <text-border title="基本信息" >
                   <a-form-model ref="form" :label-col="labelCol" :wrapper-col="wrapperCol" :model="model"
-                                :rules="validatorRules">
+                  >
+                    <a-form-model-item label="员工姓名" required prop="pilotName" hasFeedback>
+                      <a-input v-model="model.pilotName"    placeholder=""/>
+                    </a-form-model-item>
 
-                    <a-form-model-item label="员工编号" required prop="employeeId" hasFeedback>
-                      <!--            <a-input v-model="model.employeeId"    placeholder="请输入员工编号"/>-->
-                      <a-auto-complete
-                        :data-source="inputData.employeeId"
-                        @change="handleComplete"
-                        placeholder="请输入员工编号"
-                        v-model="model.employeeId"
-                      ></a-auto-complete>
+                    <a-form-model-item label="汉语拼音" required prop="nameSpell" hasFeedback>
+                      <a-input v-model="model.nameSpell"    placeholder=""/>
+                    </a-form-model-item>
+
+                    <a-form-model-item label="性别"  prop="gender" hasFeedback >
+                      <a-input  placeholder=""   v-model="model.gender"/>
+                    </a-form-model-item>
+
+                    <a-form-model-item label="出生日期" required prop="birthDate" hasFeedback>
+                      <a-input v-model="model.birthDate"    placeholder=""/>
 
                     </a-form-model-item>
 
-                    <a-form-model-item label="部门" prop="apartment" hasFeedback>
-                      <!--            <a-input  placeholder="请输入部门"  v-model="model.apartment"/>-->
-                      <a-select placeholder="请输入部门" v-model="model.apartment">
-                        <a-select-option v-for="item in inputData.apartment" :value="item">
-                          {{ item }}
-                        </a-select-option>
-                      </a-select>
+                    <a-form-model-item label="籍贯"  prop="nativePlace" hasFeedback >
+                      <a-input  placeholder=""   v-model="model.nativePlace"/>
                     </a-form-model-item>
 
-                    <a-form-model-item label="证书编号" required prop="certNum" hasFeedback>
-                      <a-input v-model="model.certNum" placeholder="请输入证书编号" />
+                    <a-form-model-item label="民族"  prop="nation" hasFeedback >
+                      <a-input  placeholder=""   v-model="model.nation"/>
                     </a-form-model-item>
 
-                    <!--          <a-form-model-item label="签发日期"  prop="issueDate" hasFeedback>-->
-                    <!--            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" />-->
-                    <!--          </a-form-model-item>-->
-
-                    <a-form-model-item label="发证机关" prop="issuingAuthority" hasFeedback>
-                      <!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-                      <a-select placeholder="请输入发证机关" v-model="model.issuingAuthority">
-                        <a-select-option v-for="item in inputData.issuingAuthority" :value="item">
-                          {{ item }}
-                        </a-select-option>
-                      </a-select>
-                    </a-form-model-item>
-
-                    <a-form-model-item label="上传人" prop="uploadUserId" hasFeedback>
-                      <a-input placeholder="请输入上传人" v-model="model.uploadUserId" :disabled="true" />
-                    </a-form-model-item>
-
-                    <a-form-model-item label="上传日期" prop="uploadDate" hasFeedback>
-                      <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.uploadDate" :disabled="true" />
-                    </a-form-model-item>
-
-
-                    <!--        <a-form-model-item label="个人简介"  prop="content" hasFeedback>-->
-                    <!--          <a-input  type="textarea" placeholder="请输入个人简介"  v-model="model.content"/>-->
-                    <!--        </a-form-model-item>-->
 
                   </a-form-model>
                 </text-border>
               </div>
             </a-col>
             <a-col :span="12">
+              <div class="item">
+                <text-border>
+                  <a-form-model ref="form" :label-col="labelCol" :wrapper-col="wrapperCol" :model="model">
+                    <a-form-model-item label="毕业院校"  prop="graduatedSchool" hasFeedback >
+                      <a-input  placeholder=""   v-model="model.graduatedSchool"/>
+                    </a-form-model-item>
+
+                    <a-form-model-item label="所学专业"  prop="studyMajor" hasFeedback >
+                      <a-input  placeholder=""   v-model="model.studyMajor"/>
+                    </a-form-model-item>
+
+                    <a-form-model-item label="文化程度"  prop="eduDegree" hasFeedback >
+                      <a-input  placeholder=""  v-model="model.eduDegree"/>
+                    </a-form-model-item>
+
+
+                    <a-form-model-item label="上传人"   prop="uploadUser" hasFeedback >
+                      <a-input  placeholder=""  :readOnly="true" v-model="model.uploadUser" :disabled="true"/>
+                    </a-form-model-item>
+
+                    <a-form-model-item label="上传日期"  prop="uploadDate" hasFeedback >
+                      <a-input  placeholder="" :readOnly="true"  v-model="model.uploadDate" :disabled="true"/>
+                    </a-form-model-item>
+
+                    <a-form-model-item label="备注"  prop="remarks" hasFeedback >
+                      <a-input  placeholder=""   v-model="model.remarks" :disabled="true"/>
+                    </a-form-model-item>
+                  </a-form-model>
+                </text-border>
+              </div>
+            </a-col>
+          </a-row>
+          <a-row>
+
               <div class="item">
                 <text-border title="证件上传" :height="height">
                   <a-form-model ref="form" :label-col="labelCol" :wrapper-col="wrapperCol" :model="model"
@@ -87,7 +96,7 @@
                   </a-form-model>
                 </text-border>
               </div>
-            </a-col>
+
           </a-row>
           <a-row>
             <text-border class="cert-table" title="增加证书">

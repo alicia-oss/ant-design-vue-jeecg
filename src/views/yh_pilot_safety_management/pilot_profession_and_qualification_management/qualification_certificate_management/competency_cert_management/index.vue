@@ -105,20 +105,17 @@
 
         <span slot="action" slot-scope="text, record">
           <a @click="()=>handleCheak(record)">详情</a>
-          <a @click="handleEdit(record)"style="margin-left: 8px">编辑</a>
+                 <a-divider type="vertical"/>
+          <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical"/>
           <a-dropdown>
             <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
             <a-menu slot="overlay">
               <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.certNum)">
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.serviceBookId)">
                   <a>删除</a>
                 </a-popconfirm>
-              </a-menu-item>
-
-              <a-menu-item>
-                  <a>下载</a>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -341,7 +338,7 @@
 
       handleEdit(record){
         this.$refs.modalForm.edit(record);
-        this.$refs.modalForm.title = "编辑船员服务簿";
+        this.$refs.modalForm.title = "编辑适任证书";
         this.$refs.modalForm.method = "edit";
         this.$refs.modalForm.disableSubmit = false;
 
@@ -349,7 +346,7 @@
 
       handleAdd(){
         this.$refs.modalForm.add();
-        this.$refs.modalForm.title = "新增船员服务簿";
+        this.$refs.modalForm.title = "新增适任证书";
         this.$refs.modalForm.method = "add";
         this.$refs.modalForm.disableSubmit = false;
       },
@@ -361,7 +358,7 @@
 
       handleCheak(record){
         this.$refs.checkModal.check(record);
-        this.$refs.checkModal.title = "查看船员服务簿";
+        this.$refs.checkModal.title = "查看适任证书";
         this.$refs.checkModal.confirmLoading = false;
       },
 
