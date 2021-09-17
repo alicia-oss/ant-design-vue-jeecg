@@ -10,160 +10,83 @@
     <a-spin :spinning="confirmLoading">
       <a-form-model ref="form" :model="model" :rules="validatorRules">
 
-        <a-form-model-item label="菜单类型" :labelCol="labelCol" :wrapperCol="wrapperCol" >
+        <a-form-model-item label="新建类型" :labelCol="labelCol" :wrapperCol="wrapperCol" >
           <a-radio-group @change="onChangeMenuType" v-model="model.menuType">
-            <a-radio :value="0">一级菜单</a-radio>
-            <a-radio :value="1">子菜单</a-radio>
-            <a-radio :value="2">按钮/权限</a-radio>
+            <a-radio :value="0">应急预案评审标准</a-radio>
+            <a-radio :value="1">新指标</a-radio>
           </a-radio-group>
         </a-form-model-item>
 
+
         <a-form-model-item
+          v-show="model.menuType == 0"
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          :label="menuLabel"
-          prop="name"
+          prop="emergencyPlanCategory"
+          label="应急预案类型">
+          <a-select placeholder="请输入应急预案类型" v-model="model.emergencyPlanCategory">
+            <a-select-option v-for="item in inputData.emergencyPlanCategory" :readOnly="disableSubmit" :value="item">
+              {{ item }}
+            </a-select-option>
+          </a-select>
+        </a-form-model-item>
+
+        <a-form-model-item
+          v-show="model.menuType == 0"
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="制定时间"
+          prop="establishmentTime"
           hasFeedback >
-          <a-input placeholder="请输入菜单名称" v-model="model.name" :readOnly="disableSubmit"/>
+          <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.establishmentTime" :disabled="true" />
         </a-form-model-item>
 
 
         <a-form-model-item
-          v-show="model.menuType!=0"
-          label="上级菜单"
+          v-show="model.menuType == 1"
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol"
+          label="请输入指标评审内容"
+          prop="contentAndRequirement"
+          hasFeedback >
+          <a-input placeholder="请输入指标评审内容" v-model="model.contentAndRequirement" :readOnly="disableSubmit"/>
+        </a-form-model-item>
+
+
+        <a-form-model-item
+          v-show="model.menuType==1"
+          label="父级指标"
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
           :validate-status="validateStatus"
           :hasFeedback="true"
           :required="true">
-          <span slot="help">{{ validateStatus=='error'?'请选择上级菜单':'&nbsp;&nbsp;' }}</span>
+          <span slot="help">{{ validateStatus=='error'?'请选择父级指标':'&nbsp;&nbsp;' }}</span>
           <a-tree-select
             style="width:100%"
             :dropdownStyle="{ maxHeight: '200px', overflow: 'auto' }"
             :treeData="treeData"
-            v-model="model.parentId"
-            placeholder="请选择父级菜单"
+            v-model="model.fatherReviewId"
+            placeholder="请选择父级指标"
             :disabled="disableSubmit"
             @change="handleParentIdChange">
           </a-tree-select>
         </a-form-model-item>
 
-        <a-form-model-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          prop="url"
-          label="菜单路径">
-          <a-input placeholder="请输入菜单路径" v-model="model.url" :readOnly="disableSubmit"/>
-        </a-form-model-item>
 
         <a-form-model-item
-          v-show="show"
+          v-show="model.menuType == 1"
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
-          prop="component"
-          label="前端组件">
-          <a-input placeholder="请输入前端组件" v-model="model.component" :readOnly="disableSubmit"/>
-        </a-form-model-item>
-
-        <a-form-model-item
-          v-show="model.menuType==0"
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="默认跳转地址">
-          <a-input placeholder="请输入路由参数 redirect" v-model="model.redirect" :readOnly="disableSubmit"/>
-        </a-form-model-item>
-
-        <a-form-model-item
-          v-show="!show"
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          prop="perms"
-          label="授权标识">
-          <a-input placeholder="请输入授权标识, 如: user:list" v-model="model.perms" :readOnly="disableSubmit"/>
-        </a-form-model-item>
-
-        <a-form-model-item
-          v-show="!show"
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="授权策略">
-          <j-dict-select-tag  v-model="model.permsType" placeholder="请选择授权策略" :type="'radio'"  dictCode="global_perms_type"/>
-
-
-        </a-form-model-item>
-        <a-form-model-item
-          v-show="!show"
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="状态">
-          <j-dict-select-tag v-model="model.status" placeholder="请选择状态" :type="'radio'" dictCode="valid_status"/>
-
-        </a-form-model-item>
-
-        <a-form-model-item
-          v-show="show"
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="菜单图标">
-          <a-input placeholder="点击选择图标" v-model="model.icon" :readOnly="disableSubmit">
-            <a-icon slot="addonAfter" type="setting" @click="selectIcons" />
-          </a-input>
-        </a-form-model-item>
-
-        <a-form-model-item
-          v-show="show"
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          prop="sortNo"
+          prop="seriaNum"
           label="排序">
-          <a-input-number placeholder="请输入菜单排序" v-model="model.sortNo" style="width: 200px" :readOnly="disableSubmit"/>
+          <a-input-number placeholder="请输入指标排序" v-model="model.seriaNum" style="width: 200px" :readOnly="disableSubmit"/>
         </a-form-model-item>
 
-        <a-form-model-item
-          v-show="show"
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="是否路由菜单">
-          <a-switch checkedChildren="是" unCheckedChildren="否" v-model="model.route"/>
-        </a-form-model-item>
-
-        <a-form-model-item
-          v-show="show"
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="隐藏路由">
-          <a-switch checkedChildren="是" unCheckedChildren="否" v-model="model.hidden"/>
-        </a-form-model-item>
-
-        <a-form-model-item
-          v-show="show"
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="是否缓存路由">
-          <a-switch checkedChildren="是" unCheckedChildren="否" v-model="model.keepAlive"/>
-        </a-form-model-item>
-
-
-        <a-form-model-item
-          v-show="show"
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="聚合路由">
-          <a-switch checkedChildren="是" unCheckedChildren="否" v-model="model.alwaysShow"/>
-        </a-form-model-item>
-
-        <a-form-model-item
-          v-show="show"
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="打开方式">
-          <a-switch checkedChildren="外部" unCheckedChildren="内部" v-model="model.internalOrExternal"/>
-        </a-form-model-item>
 
       </a-form-model>
 
       <!-- 选择图标 -->
-      <icons @choose="handleIconChoose" @close="handleIconCancel" :iconChooseVisible="iconChooseVisible"></icons>
     </a-spin>
       <a-row :style="{textAlign:'right'}">
         <a-button :style="{marginRight: '8px'}" @click="handleCancel">
@@ -184,9 +107,13 @@ s
     components: {Icons},
     data () {
       return {
+        inputData:{
+          emergencyPlanCategory:['综合应急预案', '专项应急预案' , '现场处置方案']
+        },
         drawerWidth:700,
         treeData:[],
         title:"操作",
+        method:"",
         visible: false,
         disableSubmit:false,
         model: {},
@@ -220,19 +147,38 @@ s
     },
     methods: {
       loadTree(){
-        var that = this;
-        queryTreeList().then((res)=>{
-          if(res.success){
-            console.log(res)
-            that.treeData = [];
-            let treeList = res.result.treeList
-            for(let a=0;a<treeList.length;a++){
-              let temp = treeList[a];
-              temp.isLeaf = temp.leaf;
-              that.treeData.push(temp);
-            }
-          }
-        });
+        this.treeData =  [
+          {
+            title: '港口用火安全准则',
+            value: '1',
+            key: '0-0',
+            children: [
+              {
+                title: '港口TC-208用火限制及方法',
+                value: '1.1',
+                key: '0-0-1',
+              },
+            ],
+          },
+          {
+            title: 'Node2',
+            value: '0-1',
+            key: '0-1',
+          },
+        ];
+        // var that = this;
+        // queryTreeList().then((res)=>{
+        //   if(res.success){
+        //     console.log(res)
+        //     that.treeData = [];
+        //     let treeList = res.result.treeList
+        //     for(let a=0;a<treeList.length;a++){
+        //       let temp = treeList[a];
+        //       temp.isLeaf = temp.leaf;
+        //       that.treeData.push(temp);
+        //     }
+        //   }
+        // });
       },
       add () {
         //初始化默认值
@@ -244,9 +190,6 @@ s
 
         //根据菜单类型，动态展示页面字段
         console.log('record: ',record)
-        this.show = record.menuType==2?false:true;
-        this.menuLabel = record.menuType==2?'按钮/权限':'菜单名称';
-
         this.visible = true;
         this.loadTree();
       },
@@ -321,18 +264,8 @@ s
           callback()
         }
       },
-      onChangeMenuType(e) {
-        if(this.model.menuType == 2){
-          this.show = false;
-          this.menuLabel = '按钮/权限';
-        }else{
-          this.show = true;
-          this.menuLabel = '菜单名称';
-        }
-        this.$nextTick(() => {
-          this.$refs.form.validateField(['url','component']);
-        });
-      },
+
+
       selectIcons(){
         this.iconChooseVisible = true
       },

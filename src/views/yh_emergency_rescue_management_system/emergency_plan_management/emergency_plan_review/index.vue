@@ -13,11 +13,6 @@
                 </a-form-item>
               </a-col>
 
-              <a-col :xl="8" :lg="9" :md="10" :sm="24">
-                <a-form-item label="评审标准">
-                  <j-input placeholder="请输入评审标准模糊查询" v-model="queryParam.planReviewName"></j-input>
-                </a-form-item>
-              </a-col>
 
               <a-col :xl="8" :lg="9" :md="10" :sm="24">
                 <a-form-item label="评审时间">
@@ -35,13 +30,11 @@
                   </a-form-item>
                 </a-col>
 
-
                 <a-col :xl="8" :lg="9" :md="10" :sm="24">
                   <a-form-item label="评审单位">
                     <j-input placeholder="请输入评审单位模糊查询" v-model="queryParam.reviewInstitution"></j-input>
                   </a-form-item>
                 </a-col>
-
               </template>
 
             </a-row>
@@ -72,9 +65,6 @@
       <!--      <a-button type="primary" icon="plus" @click="jump">创建单据</a-button>-->
       <!--      <a-button type="primary" icon="plus" @click="onetomany">一对多</a-button>-->
       <a-button type="primary" icon="download" >导出</a-button>
-      <a-upload name="file" :showUploadList="false" :multiple="false" >
-        <a-button type="primary" icon="import">导入</a-button>
-      </a-upload>
       <!-- 高级查询区域 -->
       <!--      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
 
@@ -145,6 +135,8 @@
     <!-- 一对多表单区域 -->
     <!--    <JeecgDemoTabsModal ref="jeecgDemoTabsModal" @ok="modalFormOk"></JeecgDemoTabsModal>-->
 
+<!--    <test></test>-->
+    <review-table></review-table>
 
 
   </a-card>
@@ -154,6 +146,9 @@
 import Modal from './childComponents/Modal'
 import { copyObj } from 'codemirror/src/util/misc'
 import CheckModal from './childComponents/CheckModal'
+import ReviewTable from './childComponents/ReviewTable'
+
+// import test from './childComponents/test'
 export default {
   name: 'index.vue',
   data(){
@@ -163,7 +158,7 @@ export default {
       queryParam: {},
       /* 数据源 */
       inputData: {
-        emergencyPlanCategory:["综合应急预案" , "专项应急预案"] ,
+        emergencyPlanCategory: ['综合应急预案', '专项应急预案' , '现场处置方案'] ,
         applicationState:["编辑中","审批中","通过","未通过","被退回"],
         isReleased:['已发布','未发布']
       },
@@ -173,7 +168,6 @@ export default {
           emergencyPlanId:'',
           emergencyPlanName:'',
           planReviewId:'',
-          planReviewName:'',
           emergencyPlanCategory:'',
           reviewTime:'',
           reviewInstitution:''
@@ -248,7 +242,10 @@ export default {
   },
   components:{
     Modal,
-    CheckModal
+    CheckModal,
+    // test,
+    ReviewTable
+
   },
   methods:{
     //搜索方法
@@ -292,10 +289,11 @@ export default {
     },
 
     handleAdd(){
-      this.$refs.modalForm.add();
-      this.$refs.modalForm.title = "新增应急预案";
-      this.$refs.modalForm.method = "add";
-      this.$refs.modalForm.disableSubmit = false;
+    this.$router.push({path:'/yh_emergency_rescue_management_system/emergency_plan_management/emergency_plan_review_do/index'})
+      // this.$refs.modalForm.add();
+      // this.$refs.modalForm.title = "新增应急预案";
+      // this.$refs.modalForm.method = "add";
+      // this.$refs.modalForm.disableSubmit = false;
     },
 
     handleDelete(id){

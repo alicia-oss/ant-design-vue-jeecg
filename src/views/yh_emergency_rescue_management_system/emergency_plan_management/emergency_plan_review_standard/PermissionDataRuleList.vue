@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    title="数据权限规则"
+    title="预案审核标准制定"
     :width="drawerWidth"
     @close="onClose"
     :visible="visible">

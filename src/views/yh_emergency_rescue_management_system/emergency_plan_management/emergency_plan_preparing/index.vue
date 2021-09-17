@@ -38,14 +38,12 @@
 
               <template v-if="toggleSearchStatus">
                 <a-col :xl="8" :lg="9" :md="10" :sm="24">
-                  <a-form-item label="">
                     <a-form-item label="发布时间">
                       <a-range-picker v-model="queryParam.applyTime"
                                       format="YYYY-MM-DD"
                                       :placeholder="['开始时间', '结束时间']"
                                       @change="onIssueDateChange" />
                     </a-form-item>
-                  </a-form-item>
                 </a-col>
 
                 <a-col :xl="8" :lg="9" :md="10" :sm="24">

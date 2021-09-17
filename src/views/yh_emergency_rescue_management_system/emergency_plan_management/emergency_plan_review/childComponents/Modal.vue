@@ -15,11 +15,7 @@
           </a-button>
 
           <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
-            提交审批
-          </a-button>
-
-          <a-button style="margin: 10px" key="submitNow" type="danger" :loading="loading" @click="handleNow" >
-            立即发布
+            完成评审
           </a-button>
 
         </template>
@@ -32,57 +28,44 @@
     <a-spin :spinning="confirmLoading">
       <div class="table">
       <div class="item">
-        <text-border title="基本信息">
-        <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
+        <a-form-model ref="form" layout="inline"   :model="model" :rules="validatorRules">
+          <a-row :gutter="30">
+            <a-col :xl="8" :lg="9" :md="10" :sm="24">
+              <a-form-model-item label="预案名称" required prop="emergencyPlanName" hasFeedback>
+                <a-select placeholder="请选择预案种类" v-model="model.emergencyPlanName">
+                  <a-select-option @select="handleNameSelect" v-for="item in inputData.emergencyPlanName" :value="item">
+                    {{ item }}
+                  </a-select-option>
+                </a-select>
+              </a-form-model-item>
+            </a-col>
 
-          <a-form-model-item label="预案名称" required prop="emergencyPlanName" hasFeedback>
-            <a-input v-model="model.emergencyPlanName"    placeholder="请输入应急预案名称"/>
-          </a-form-model-item>
+            <a-col :xl="8" :lg="9" :md="10" :sm="24">
+              <a-form-item label="预案种类">
+                <a-select placeholder="请选择预案种类" v-model="model.emergencyPlanCategory">
+                  <a-select-option v-for="item in inputData.emergencyPlanCategory" :value="item">
+                    {{ item }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
 
+            <a-col :xl="8" :lg="9" :md="10" :sm="24">
+              <a-form-model-item label="评审单位" prop="version" hasFeedback>
+                <a-input v-model="model.reviewInstitution" placeholder="请输入填写机构" />
+              </a-form-model-item>
+            </a-col>
 
-          <a-form-item label='预案种类'>
-            <a-select placeholder="请选择预案种类" v-model="model.emergencyPlanCategory">
-              <a-select-option v-for="item in inputData.emergencyPlanCategory" :value="item">
-                {{item}}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-
-          <a-form-model-item label="制定日期"  prop="specifiedTime" hasFeedback>
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.specifiedTime" />
-          </a-form-model-item>
-
-          <a-form-model-item label="版本号" required prop="version" hasFeedback>
-            <a-input v-model="model.version"    placeholder="请输入版本号"/>
-          </a-form-model-item>
-
-          <a-form-item label='部门'>
-            <a-select placeholder="请选择部门" v-model="model.departName">
-              <a-select-option v-for="item in inputData.departName" :value="item">
-                {{item}}
-              </a-select-option>
-            </a-select>
-          </a-form-item>
-
-
-          <a-form-model-item label="填写人"  prop="version" hasFeedback>
-            <a-input v-model="model.fillPerson"  :disabled="true"   placeholder="请输入填写人"/>
-          </a-form-model-item>
-
-          <a-form-model-item label="修改日期"  prop="uploadDate" hasFeedback >
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.updateTime" :disabled="true" />
-          </a-form-model-item>
+            <a-col :xl="8" :lg="9" :md="10" :sm="24">
+              <a-form-model-item label="评审时间" prop="uploadDate" hasFeedback>
+                <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.reviewTime" :disabled="true" />
+              </a-form-model-item>
+            </a-col>
+          </a-row>
 
         </a-form-model>
-        </text-border>
-      </div>
-      <div class="item-right">
-        <text-border title="证件上传">
-        <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
-            <file style="width: 100%" v-model="model.uploadFileName"></file>
-        </a-form-model>
-        </text-border>
+
       </div>
       </div>
 
@@ -106,7 +89,8 @@ export default {
       title:"操作",
       visible: false,
       inputData: {
-        emergencyPlanCategory:["综合应急预案" , "专项应急预案"] ,
+        emergencyPlanName:['预案01','预案02'],
+        emergencyPlanCategory:["综合应急预案" , "专项应急预案",'现场处置方案'] ,
         applicationState:["编辑中","审批中","通过","未通过","被退回"],
         isReleased:['已发布','未发布'],
         departName:["部门1","部门2"]
@@ -119,7 +103,7 @@ export default {
       },
       labelCol: {
         xs: { span: 10 },
-        sm: { span: 6 },
+        sm: { span: 5 },
       },
       wrapperCol: {
         xs: { span: 24 },
@@ -154,8 +138,7 @@ export default {
     add () {
       this.edit({});
       let myData = new Date();
-      this.model.updateTime = myData.toLocaleDateString();
-      this.model.fillPerson = this.$store.getters.userInfo.realname;
+      this.model.reviewTime = myData.toLocaleDateString();
       this.visible = true;
     },
     edit (record) {
@@ -189,12 +172,12 @@ export default {
       })
 
     },
-    handleComplete(){
-      let temp = this.model.employeeId.split("-");
-      this.model.employeeId = temp[0];
-      this.model.employeeName = temp[1];
+    handleNameSelect(){
+     this.model.emergencyPlanCategory = this.inputData.emergencyPlanCategory[0];
+
       // this.model.apartment = "测试部门01";
     },
+
 
     handleCancel () {
       this.close()

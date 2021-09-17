@@ -127,7 +127,7 @@ export default {
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 15 },
       },
       confirmLoading: false,
       // form: this.$form.createForm(this),
