@@ -20,18 +20,19 @@
            </a-col>
 
            <a-col :xl="8" :lg="9" :md="10" :sm="24">
-             <a-form-item label="签发机关">
-               <j-input placeholder="请输入签发机关名称模糊查询" v-model="queryParam.issuingAuthority"></j-input>
+             <a-form-item label="签发日期">
+               <a-range-picker v-model="queryParam.issueDate"
+                               format="YYYY-MM-DD"
+                               :placeholder="['开始时间', '结束时间']"
+                               @change="onIssueDateChange" />
              </a-form-item>
            </a-col>
 
+
            <template v-if="toggleSearchStatus">
              <a-col :xl="8" :lg="9" :md="10" :sm="24">
-               <a-form-item label="签发日期">
-                 <a-range-picker v-model="queryParam.issueDate"
-                                 format="YYYY-MM-DD"
-                                 :placeholder="['开始时间', '结束时间']"
-                                 @change="onIssueDateChange" />
+               <a-form-item label="签发机关">
+                 <j-input placeholder="请输入签发机关名称模糊查询" v-model="queryParam.issuingAuthority"></j-input>
                </a-form-item>
              </a-col>
 
@@ -61,7 +62,6 @@
     <!--     操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <a-button type="primary" icon="download" >导出</a-button>
       <a-upload name="file" :showUploadList="false" :multiple="false" >
       </a-upload>
       <!-- 高级查询区域 -->
@@ -72,6 +72,10 @@
           <a-menu-item key="1" @click="batchDel">
             <a-icon type="delete"/>
             删除
+          </a-menu-item>
+          <a-menu-item key="2" >
+            <a-icon type="download"/>
+            导出
           </a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作

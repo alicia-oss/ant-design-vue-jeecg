@@ -1,6 +1,5 @@
 <template>
   <a-modal
-    :title="title"
     :width="800"
     :visible="visible"
     :confirmLoading="confirmLoading"

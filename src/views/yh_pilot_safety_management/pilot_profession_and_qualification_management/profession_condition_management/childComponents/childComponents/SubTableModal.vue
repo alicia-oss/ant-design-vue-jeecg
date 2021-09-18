@@ -34,8 +34,8 @@
 
               <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
-                <a-form-model-item label="证书等级" required prop="certProficiencyCate" hasFeedback>
-                  <a-select placeholder="请选择证书等级" v-model="model.certClass">
+                <a-form-model-item label="引航等级" required prop="certProficiencyCate" hasFeedback>
+                  <a-select placeholder="请选择引航等级" v-model="model.certClass">
                     <a-select-option v-for="item in inputData.certClass" :value="item.value">
                       {{item.value}}
                     </a-select-option>

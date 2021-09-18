@@ -46,7 +46,7 @@
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
       <!--      <a-button type="primary" icon="plus" @click="jump">创建单据</a-button>-->
       <!--      <a-button type="primary" icon="plus" @click="onetomany">一对多</a-button>-->
-      <a-button type="primary" icon="download" >导出</a-button>
+
       <!-- 高级查询区域 -->
       <!--      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
 
@@ -55,6 +55,10 @@
           <a-menu-item key="1" @click="batchDel">
             <a-icon type="delete"/>
             删除
+          </a-menu-item>
+          <a-menu-item key="2" >
+            <a-icon type="download"/>
+            导出
           </a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作
@@ -116,6 +120,9 @@
                 <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.serviceBookId)">
                   <a>删除</a>
                 </a-popconfirm>
+              </a-menu-item>
+              <a-menu-item>
+                 <a>过往版本</a>
               </a-menu-item>
             </a-menu>
           </a-dropdown>

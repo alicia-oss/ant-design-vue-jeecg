@@ -1,12 +1,31 @@
 <template>
   <a-modal
-    :title="title"
     :width="800"
+    style="padding-bottom: 10px"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @cancel="handleCancel"
     @ok="handleOk"
     cancelText="关闭">
+    <template slot="title">
+      <div class="title">
+        <a-icon type="form" style="color: #1890ff;margin-right: 10px"></a-icon>{{title}}
+      </div>
+    </template>
+
+    <template slot="footer">
+      <a-button style="margin: 10px" key="reset"  @click="handleReset" >
+        重置
+      </a-button>
+
+      <a-button style="margin: 10px" key="back"  @click="handleCancel" >
+        取消
+      </a-button>
+
+      <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
+        保存
+      </a-button>
+    </template>
 
     <a-spin :spinning="confirmLoading">
       <div class="table">
@@ -164,7 +183,12 @@ export default {
 
     handleCancel () {
       this.close()
+    },
+
+    handleReset(){
+      this.add();
     }
+
   }
 }
 </script>
