@@ -1,6 +1,5 @@
 <template>
   <a-modal
-    :footer="null"
     :width="800"
     :visible="visible"
     :confirmLoading="confirmLoading"
@@ -13,51 +12,65 @@
       </div>
     </template>
 
+    <template slot="footer">
+      <a-button  style="margin: 10px" key="last"  @click="handleLast" >
+        上一条
+      </a-button>
+
+      <a-button  style="margin: 10px" key="next"  @click="handleNext" >
+        下一条
+      </a-button>
+
+      <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleCancel">
+        关闭
+      </a-button>
+    </template>
+
     <a-spin :spinning="confirmLoading">
       <div class="table">
         <div class="item">
           <text-border title="基本信息" >
           <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" >
 
-            <a-form-model-item label="应急预案名称" required prop="emergencyPlanName" hasFeedback>
-              {{model.emergencyPlanName}}
+            <a-form-model-item label="预案名称" required prop="emergencyPlanName" hasFeedback>
+              <a-input v-model="model.emergencyPlanName" :readonly="true"/>
             </a-form-model-item>
 
             <a-form-item label='预案种类'>
-              {{model.emergencyPlanCategory}}
+              <a-input v-model="model.emergencyPlanCategory" :readonly="true"/>
             </a-form-item>
 
             <a-form-model-item label="制定日期"  prop="specifiedTime" hasFeedback>
-              {{model.specifiedTime}}
+              <a-input v-model="model.specifiedTime" :readonly="true"/>
             </a-form-model-item>
 
             <a-form-model-item label="版本号" required prop="version" hasFeedback>
-              {{model.version}}
+              <a-input v-model="model.version" :readonly="true"/>
             </a-form-model-item>
 
             <a-form-item label='部门'>
-              {{model.departName}}
+              <a-input v-model="model.departName" :readonly="true"/>
             </a-form-item>
 
             <a-form-model-item label="申请日期" required prop="applyTime" hasFeedback>
-              {{model.applyTime}}
+              <a-input v-model="model.applyTime" :readonly="true"/>
             </a-form-model-item>
 
 
             <a-form-model-item label="填写人" required prop="version" hasFeedback>
-            {{model.fillPerson}}
+              <a-input v-model="model.fillPerson" :readonly="true"/>
             </a-form-model-item>
 
             <a-form-model-item label="修改日期"  prop="updateTime" hasFeedback >
-             {{model.updateTime}}
+              <a-input v-model="model.updateTime" :readonly="true"/>
             </a-form-model-item>
 
             <a-form-model-item label="申请状态"  prop="updateTime" hasFeedback >
-              {{model.applicationState}}
+              <a-input v-model="model.applicationState" :readonly="true"/>
             </a-form-model-item>
 
             <a-form-model-item label="发布状态"  prop="updateTime" hasFeedback >
-              {{model.isReleased}}
+              <a-input v-model="model.isReleased" :readonly="true"/>
             </a-form-model-item>
 
            </a-form-model>

@@ -50,7 +50,7 @@
           </a-form-item>
 
           <a-form-model-item label="制定日期"  prop="specifiedTime" hasFeedback>
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.specifiedTime" />
+            <a-date-picker valueFormat="YYYY-MM-DD" style="width: 100%;" v-model="model.specifiedTime" />
           </a-form-model-item>
 
           <a-form-model-item label="版本号" required prop="version" hasFeedback>
@@ -71,7 +71,7 @@
           </a-form-model-item>
 
           <a-form-model-item label="修改日期"  prop="uploadDate" hasFeedback >
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.updateTime" :disabled="true" />
+            <a-date-picker valueFormat="YYYY-MM-DD" style="width: 100%;" v-model="model.updateTime" :disabled="true" />
           </a-form-model-item>
 
         </a-form-model>

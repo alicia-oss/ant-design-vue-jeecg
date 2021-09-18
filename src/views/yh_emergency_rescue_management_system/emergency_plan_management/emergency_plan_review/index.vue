@@ -291,10 +291,6 @@ export default {
 
     handleAdd(){
     this.$router.push({path:'/yh/emergency_plan_review_do',query:{id:"0"}})
-      // this.$refs.modalForm.add();
-      // this.$refs.modalForm.title = "新增应急预案";
-      // this.$refs.modalForm.method = "add";
-      // this.$refs.modalForm.disableSubmit = false;
     },
 
     handleDelete(id){

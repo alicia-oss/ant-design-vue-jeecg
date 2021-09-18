@@ -108,6 +108,8 @@ export default {
       this.show = false;
     }
     else{
+      this.model.emergencyPlanCategory= '综合应急预案';
+      this.model.emergencyPlanName = '预案01';
       this.edit = false;
       this.show = true;
     }
