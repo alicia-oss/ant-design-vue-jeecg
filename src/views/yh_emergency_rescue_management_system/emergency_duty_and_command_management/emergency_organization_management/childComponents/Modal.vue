@@ -1,8 +1,7 @@
 <template>
   <div>
   <a-modal
-    :width="800"
-    style="padding-bottom: 10px"
+    style="padding-bottom: 10px;width: 35%;"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @cancel="handleCancel"
@@ -14,6 +13,20 @@
         <a-icon type="form" style="color: #1890ff;margin-right: 10px"></a-icon>{{title}}
       </div>
     </template>
+
+    <template slot="footer">
+      <a-button style="margin: 10px" key="reset"  @click="handleReset" >
+        重置
+      </a-button>
+      <a-button style="margin: 10px" key="back"  @click="handleCancel" >
+        取消
+      </a-button>
+      <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
+        保存
+      </a-button>
+    </template>
+
+
     <a-spin :spinning="confirmLoading">
       <div class="table">
         <div class="item">
@@ -63,8 +76,8 @@
             <a-input  placeholder="请输入上传人"  v-model="model.uploadUserId" :disabled="true"/>
           </a-form-model-item>
 
-          <a-form-model-item label="上传日期"  prop="uploadDate" hasFeedback >
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.uploadDate" :disabled="true" />
+          <a-form-model-item  label="上传日期"  prop="uploadDate" hasFeedback >
+            <a-date-picker style="width: 100%;" valueFormat="YYYY-MM-DD" v-model="model.uploadDate" :disabled="true" />
           </a-form-model-item>
 
         </a-form-model>
@@ -108,7 +121,7 @@ export default {
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 15 },
       },
       confirmLoading: false,
       // form: this.$form.createForm(this),
@@ -121,9 +134,6 @@ export default {
           { required: true, message: '请输入员工编号!' },
           { min: 2, max: 30, message: '长度在 2 到 30 个字符', trigger: 'blur' }
         ],
-        // email: [
-        //   { required: false, type: 'email', message: '邮箱格式不正确', trigger: 'blur' }
-        // ]
       },
       url: {
         add: "/wzh/yhHealthCert/add",

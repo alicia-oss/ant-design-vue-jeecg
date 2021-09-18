@@ -16,9 +16,11 @@
 
                 <a-col :xl="8" :lg="9" :md="10" :sm="24">
                   <a-form-item label="引航等级">
-                    <a-select-option v-for="item in inputData.certClass" :value="item">
-                      {{ item }}
-                    </a-select-option>
+                    <a-select v-model="queryParam.certClass" placeholder="请选择引航等级">
+                      <a-select-option v-for="item in inputData.certClass" :value="item">
+                        {{ item }}
+                      </a-select-option>
+                    </a-select>
                   </a-form-item>
                 </a-col>
 
@@ -27,17 +29,6 @@
                     <a-date-picker valueFormat="YYYY-MM-DD"/>
                   </a-form-item>
                 </a-col>
-
-                <!--              <template v-if="toggleSearchStatus">-->
-                <!--                <a-col :xl="8" :lg="9" :md="10" :sm="24">-->
-                <!--                  <a-form-item label="签发日期">-->
-                <!--                    <a-range-picker v-model="queryParam.issueDate"-->
-                <!--                                    format="YYYY-MM-DD"-->
-                <!--                                    :placeholder="['开始时间', '结束时间']"-->
-                <!--                                    @change="onIssueDateChange" />-->
-                <!--                  </a-form-item>-->
-                <!--                </a-col>-->
-                <!--              </template>-->
 
               </a-row>
             </a-form>
@@ -48,10 +39,7 @@
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
-              <!--              <a @click="handleToggleSearch" style="margin-left: 8px">-->
-              <!--                {{ toggleSearchStatus ? '收起' : '展开' }}-->
-              <!--                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>-->
-              <!--              </a>-->
+
             </a-col>
           </span>
 
@@ -63,12 +51,7 @@
       <!--     操作按钮区域 -->
       <div class="table-operator">
         <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-        <!--      <a-button type="primary" icon="plus" @click="jump">创建单据</a-button>-->
-        <!--      <a-button type="primary" icon="plus" @click="onetomany">一对多</a-button>-->
         <a-button type="primary" icon="download" >导出</a-button>
-
-        <!-- 高级查询区域 -->
-        <!--      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
 
         <a-dropdown v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">

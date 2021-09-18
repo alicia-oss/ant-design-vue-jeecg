@@ -10,8 +10,8 @@
     :dataSource="dataSource"
 >
 
-    <template slot="result" slot-scope="record,index">
-      <a-radio-group  @change="resultChange(record,index)">
+    <template slot="result" slot-scope="index,record">
+      <a-radio-group  @change="resultChange(index,record)" v-model="record.planReviewResult" :disabled="!submitAble" >
         <a-radio :value="0">
           符合
         </a-radio>
@@ -28,7 +28,7 @@
   <a-col :span="18">
     <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  >
       <a-form-model-item label="评审结果说明"  style="text-align: left" prop="emergencyPlanName" hasFeedback>
-        <a-textarea
+        <a-textarea :read-only="!submitAble"
           placeholder="请输入评审结果说明"
           :auto-size="{ minRows: 4, maxRows: 8 }"
           v-model="resultDescription"
@@ -38,7 +38,7 @@
   </a-col>
 
   <a-col :span="6">
-    <div class="button-group">
+    <div class="button-group" v-show="submitAble">
       <div class="item">
         <a-button style="height:80px;width: 80px; ">
            重置
@@ -71,6 +71,9 @@
 <script>
 export default {
   name: 'ReviewTable',
+  props:{
+    submitAble:true
+  },
   data(){
     return{
       resultDescription:'',
@@ -85,7 +88,7 @@ export default {
           reviewSub:'准则01',
           seriaNum:1,
           contentAndRequirement:"港口TC-208用火限制及方法",
-          planReviewResult:0,
+          planReviewResult:1,
           resultDescription:'',
         },
         {
@@ -190,7 +193,6 @@ export default {
           dataIndex: 'reviewTotal',
           ellipsis:true,
           customRender: (text, row, index) => {
-            console.log(row);
             const obj = {
               children: <span>{text}</span>,
               attrs: {},
@@ -219,7 +221,6 @@ export default {
           colSpan: 0,
           ellipsis:true,
           customRender: (text, row, index) => {
-            console.log(row);
             const obj = {
               children: <span>{text}</span>,
               attrs: {},
@@ -269,9 +270,8 @@ export default {
     }
   },
   methods:{
-    resultChange(record,index){
-      console.log(record);
-      this.dataSource[index].planReviewResult = record;
+    resultChange(index,record){
+
     }
   }
 }

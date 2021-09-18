@@ -46,6 +46,7 @@
       </div>
 
       <a-table
+        :key="record=>record.planReviewDetailId"
         :columns="columns"
         size="middle"
         :indentSize="50"
@@ -134,7 +135,7 @@ const columns = [
 ]
 
 export default {
-  name: 'PermissionList',
+  name: 'index',
 
   // mixins: [JeecgListMixin],
   components: {
@@ -238,7 +239,7 @@ export default {
       this.$refs.modalForm.method="check"
       this.$refs.modalForm.edit(record);
       this.$refs.modalForm.title = "查看指标";
-      this.$refs.modalForm.confirmLoading = true;
+      this.$refs.modalForm.disableSubmit = true;
     },
 
     modalFormOk(data){

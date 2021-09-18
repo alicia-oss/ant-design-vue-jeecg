@@ -8,11 +8,24 @@
     @ok="handleOk"
     cancelText="关闭">
 
+    <template slot="footer">
+      <a-button style="margin: 10px" key="reset"  @click="handleReset" >
+        重置
+      </a-button>
+      <a-button style="margin: 10px" key="back"  @click="handleCancel" >
+        取消
+      </a-button>
+      <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
+        保存
+      </a-button>
+    </template>
+
     <template slot="title">
       <div class="title">
         <a-icon type="form" style="color: #1890ff;margin-right: 10px"></a-icon>{{title}}
       </div>
     </template>
+
     <a-spin :spinning="confirmLoading">
       <div class="table">
       <div class="item">
@@ -44,11 +57,10 @@
           </a-form-model-item>
 
           <a-form-model-item label="签发日期"  prop="issueDate" hasFeedback>
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" />
+            <a-date-picker style="width: 100%;" valueFormat="YYYY-MM-DD" v-model="model.issueDate" />
           </a-form-model-item>
 
           <a-form-model-item label="发证机关"  prop="issuingAuthority" hasFeedback >
-<!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
             <a-select placeholder="请输入发证机关" v-model="model.issuingAuthority">
               <a-select-option v-for="item in inputData.issuingAuthority" :value="item">
                 {{item}}
@@ -61,13 +73,9 @@
           </a-form-model-item>
 
           <a-form-model-item label="上传日期"  prop="uploadDate" hasFeedback >
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.uploadDate" :disabled="true" />
+            <a-date-picker style="width: 100%;" valueFormat="YYYY-MM-DD" v-model="model.uploadDate" :disabled="true" />
           </a-form-model-item>
 
-
-          <!--        <a-form-model-item label="个人简介"  prop="content" hasFeedback>-->
-          <!--          <a-input  type="textarea" placeholder="请输入个人简介"  v-model="model.content"/>-->
-          <!--        </a-form-model-item>-->
 
         </a-form-model>
         </text-border>
@@ -168,6 +176,10 @@ export default {
       this.$refs.form.resetFields();
       this.$emit('close');
       this.visible = false;
+    },
+
+    handleReset(){
+      this.add();
     },
 
     handleOk(){

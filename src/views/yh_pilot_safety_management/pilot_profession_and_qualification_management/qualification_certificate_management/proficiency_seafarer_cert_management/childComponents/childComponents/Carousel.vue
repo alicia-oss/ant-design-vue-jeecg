@@ -26,6 +26,7 @@
         <img :src="item">
       </swiper-item>
     </swiper>
+    <a-empty v-if="fileList.length ===0"></a-empty>
   </div>
 </template>
 

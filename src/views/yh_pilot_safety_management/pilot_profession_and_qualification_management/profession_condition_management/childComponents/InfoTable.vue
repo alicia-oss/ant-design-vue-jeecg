@@ -37,7 +37,7 @@
                </a-form-model>
              </text-border>
            </div>
-         <div class="item">
+         <div class="item-right">
            <text-border>
              <a-form-model ref="form" :label-col="labelCol" :wrapper-col="wrapperCol" :model="model">
            <a-form-model-item label="毕业院校"  prop="graduatedSchool" hasFeedback >
@@ -69,11 +69,13 @@
          </div>
 
        </a-row>
-       <div class="item-right">
+       <a-row>
+       <div style="margin-top: 30px">
          <text-border title="相关文件">
            <carousel :value="model.uploadFileName"></carousel>
          </text-border>
        </div>
+       </a-row>
        <a-row>
          <text-border class="cert-table" title="证书列表">
            <sub-table :dataSource="model.subList"></sub-table>

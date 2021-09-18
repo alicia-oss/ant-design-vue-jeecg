@@ -35,7 +35,7 @@
         <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
             <a-col :xl="6" :lg="7" :md="8" :sm="24">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a-button @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
             </a-col>
           </span>
   </a-row>
@@ -207,7 +207,6 @@
             title: '员工编号',
             align: "center",
             dataIndex: 'employeeId',
-            ellipsis: true,
             ellipsis: true,
           },
           {

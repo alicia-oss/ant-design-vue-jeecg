@@ -14,6 +14,18 @@
           {{ title }}
         </div>
       </template>
+      <template slot="footer">
+        <a-button style="margin: 10px" key="reset"  @click="handleReset" >
+          重置
+        </a-button>
+        <a-button style="margin: 10px" key="back"  @click="handleCancel" >
+          取消
+        </a-button>
+        <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
+          保存
+        </a-button>
+      </template>
+
       <a-spin :spinning="confirmLoading">
         <div class="table">
           <a-row>
@@ -87,7 +99,7 @@
           </a-row>
           <a-row>
 
-              <div class="item">
+              <div style="margin-top: 30px">
                 <text-border title="证件上传" :height="height">
                   <a-form-model ref="form" :label-col="labelCol" :wrapper-col="wrapperCol" :model="model"
                                 :rules="validatorRules">
@@ -238,7 +250,7 @@ export default {
 }
 
 .cert-table {
-  margin-top: 35px;
+  margin-top: 30px;
 }
 
 </style>

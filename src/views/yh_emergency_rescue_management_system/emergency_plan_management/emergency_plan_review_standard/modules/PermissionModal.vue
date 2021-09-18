@@ -11,7 +11,7 @@
       <a-form-model ref="form" :model="model" :rules="validatorRules">
 
         <a-form-model-item label="新建类型" :labelCol="labelCol" :wrapperCol="wrapperCol" >
-          <a-radio-group @change="onChangeMenuType" v-model="model.menuType">
+          <a-radio-group  v-model="model.menuType">
             <a-radio :value="0">应急预案评审标准</a-radio>
             <a-radio :value="1">新指标</a-radio>
           </a-radio-group>
@@ -97,7 +97,7 @@
     </div>
   </a-drawer>
 </template>
-s
+
 <script>
   import {addPermission,editPermission,queryTreeList, duplicateCheck} from '@/api/api'
   import Icons from './icon/Icons'
@@ -202,37 +202,8 @@ s
       handleOk () {
         const that = this;
         // 触发表单验证
-        this.$refs.form.validate(valid => {
-          if (valid) {
-            if ((this.model.menuType == 1 || this.model.menuType == 2) && !this.model.parentId) {
-              that.validateStatus = 'error';
-              that.$message.error("请检查你填的类型以及信息是否正确！");
-              return;
-            } else {
-              that.validateStatus = 'success';
-            }
-            that.confirmLoading = true;
-            let obj;
-            if (!this.model.id) {
-              obj = addPermission(this.model);
-            } else {
-              obj = editPermission(this.model);
-            }
-            obj.then((res) => {
-              if (res.success) {
-                that.$message.success(res.message);
-                that.$emit('ok');
-              } else {
-                that.$message.warning(res.message);
-              }
-            }).finally(() => {
-              that.confirmLoading = false;
-              that.close();
-            });
-          }else{
-            return false;
-          }
-        })
+        that.confirmLoading = false;
+        that.close();
       },
       handleCancel () {
         this.close()
@@ -245,24 +216,7 @@ s
         }
       },
       validatePerms(rule, value, callback){
-        if(value && value.length>0){
-          //校验授权标识是否存在
-          var params = {
-            tableName: 'sys_permission',
-            fieldName: 'perms',
-            fieldVal: value,
-            dataId: this.model.id
-          };
-          duplicateCheck(params).then((res) => {
-            if (res.success) {
-              callback()
-            } else {
-              callback("授权标识已存在!")
-            }
-          })
-        }else{
-          callback()
-        }
+
       },
 
 

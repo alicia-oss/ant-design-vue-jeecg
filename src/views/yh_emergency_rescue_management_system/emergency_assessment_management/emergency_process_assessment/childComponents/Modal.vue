@@ -63,7 +63,7 @@
           </a-form-model-item>
 
           <a-form-model-item label="评估时间"  prop="assessmentTime" hasFeedback >
-            <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.assessmentTime" :disabled="true" />
+            <a-date-picker valueFormat="YYYY-MM-DD" style="width: 100%;" v-model="model.assessmentTime" :disabled="true" />
           </a-form-model-item>
 
         </a-form-model>
