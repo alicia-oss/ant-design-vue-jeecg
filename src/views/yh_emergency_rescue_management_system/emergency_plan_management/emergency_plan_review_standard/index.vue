@@ -7,7 +7,7 @@
         <a-row :gutter="30">
           <a-col :xl="6" :lg="9" :md="10" :sm="24">
             <a-form-item label="应急预案类型">
-              <a-select placeholder="请选择应急预案类型" v-model="queryParam.emergencyPlanCategory">
+              <a-select placeholder="请选择应急预案类型" @select="()=>{this.show = true}" v-model="queryParam.emergencyPlanCategory">
                 <a-select-option v-for="item in inputData.emergencyPlanCategory" :readOnly="disableSubmit" :value="item">
                   {{ item }}
                 </a-select-option>
@@ -20,7 +20,7 @@
             <a-button @click="handleAdd" type="primary" icon="plus">创建应急预案评审标准</a-button>
           </a-col>
 
-          <a-col :xl="4" :lg="9" :md="10" :sm="24">
+          <a-col :xl="4" :lg="9" :md="10" :sm="24" v-show="show">
             <a-button @click="handleAddSub" type="primary"   icon="plus">新增应急预案评审指标</a-button>
             <a-button
               @click="batchDel"
@@ -46,6 +46,7 @@
       </div>
 
       <a-table
+        v-show="show"
         :key="record=>record.planReviewDetailId"
         :columns="columns"
         size="middle"
@@ -145,6 +146,7 @@ export default {
   },
   data() {
     return {
+      show:false,
       inputData:{
         emergencyPlanCategory:['综合应急预案', '专项应急预案' , '现场处置方案']
       },
@@ -169,8 +171,22 @@ export default {
               fatherReviewId:"1",
               contentAndRequirement:'港口TC-208用火限制及方法',
               seriaNum:'1.1',
+            },
+            {
+              planReviewDetailId:'1.2',
+              planReviewId:'333',
+              fatherReviewId:"1",
+              contentAndRequirement:'港口TC-818用火限制及方法',
+              seriaNum:'1.1',
+            },
+            {
+              planReviewDetailId:'1.3',
+              planReviewId:'333',
+              fatherReviewId:"1",
+              contentAndRequirement:'港口TG-208用火限制及方法',
+              seriaNum:'1.1',
+            },
 
-            }
           ]
         }
       ],
