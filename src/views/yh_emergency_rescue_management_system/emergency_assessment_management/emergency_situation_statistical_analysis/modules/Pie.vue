@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 :style="{ marginBottom: '20px' }">{{ title }}</h3>
+    <h1 :style="{ marginBottom: '20px' }">{{ title }}</h1>
     <v-chart :forceFit="true" :height="height" :data="data" :scale="scale" :onClick="handleClick">
       <v-tooltip :showTitle="false" dataKey="item*percent" />
       <v-axis />

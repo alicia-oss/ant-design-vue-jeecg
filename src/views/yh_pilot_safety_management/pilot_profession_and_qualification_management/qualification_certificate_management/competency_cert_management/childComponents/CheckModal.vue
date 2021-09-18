@@ -48,7 +48,7 @@
               </a-select>
             </a-form-model-item>
             <a-form-model-item label="签发日期" prop="issuingDate" hasFeedback>
-              <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" disabled/>
+              <a-input  v-model="model.issueDate" :read-only="true"/>
             </a-form-model-item>
             <a-form-model-item label="发证机关" prop="issuingAuthority" hasFeedback>
               <a-input placeholder="请输入发证机关" v-model="model.issuingAuthority"  :read-only="true"/>
@@ -57,7 +57,7 @@
               <a-input placeholder="王五" v-model="model.uploadUserId"  :read-only="true"/>
             </a-form-model-item>
             <a-form-model-item label="上传日期">
-              <a-input placeholder="2021-9-11" v-model="model.uploadDate" disabled />
+              <a-input placeholder="2021-9-11" v-model="model.uploadDate" :read-only="true" />
             </a-form-model-item>
           </a-form-model>
           </text-border>
@@ -136,11 +136,12 @@ export default {
 
 <style scoped>
 .table{
+  display: flex ;
   width: 100%;
 }
 
 .item{
-
+  flex: 1 ;
 }
 .title{
   font-size: 20px;

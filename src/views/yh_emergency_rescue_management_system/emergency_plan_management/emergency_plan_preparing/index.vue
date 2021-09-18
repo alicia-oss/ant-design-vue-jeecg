@@ -128,8 +128,18 @@
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange">
 
+        <span slot="state">
+          <a-popconfirm title="确定发布吗?" @confirm="() => handlePublish(record)">
+                   <a-switch checked-children="开" un-checked-children="关" default-unchecked />
+          </a-popconfirm>
+
+        </span>
+
+
 
         <span slot="action" slot-scope="text, record">
+          <a @click="()=>handleCheak(record)">详情</a>
+                 <a-divider type="vertical"/>
           <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical"/>
@@ -137,13 +147,9 @@
             <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
             <a-menu slot="overlay">
               <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.emergencyPlanId)">
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.serviceBookId)">
                   <a>删除</a>
                 </a-popconfirm>
-              </a-menu-item>
-
-              <a-menu-item>
-                  <a @click="()=>handleCheak(record)">详情</a>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -282,7 +288,10 @@ export default {
         {
           title: '发布状态',
           align: "center",
-          dataIndex: 'isReleased'
+          dataIndex: 'isReleased',
+          scopedSlots: {
+            customRender: 'state'
+          },
         },
         {
           title: '操作',
@@ -306,6 +315,10 @@ export default {
     CheckModal
   },
   methods:{
+    handlePublish(record){
+
+
+    },
     //搜索方法
     searchQuery(){
 

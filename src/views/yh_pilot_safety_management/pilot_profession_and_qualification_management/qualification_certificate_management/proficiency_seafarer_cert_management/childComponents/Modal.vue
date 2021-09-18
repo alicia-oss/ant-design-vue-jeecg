@@ -14,6 +14,19 @@
           {{ title }}
         </div>
       </template>
+      <template slot="footer">
+        <a-button style="margin: 10px" key="reset"  @click="handleReset" >
+          重置
+        </a-button>
+
+        <a-button style="margin: 10px" key="back"  @click="handleCancel" >
+          取消
+        </a-button>
+
+        <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
+          保存
+        </a-button>
+      </template>
       <a-spin :spinning="confirmLoading">
         <div class="table">
           <a-row>

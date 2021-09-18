@@ -1,24 +1,5 @@
 <template>
   <div>
-<!--    <a-row :gutter="20">-->
-
-<!--      左边-->
-<!--      <a-col style="height: 100%" span="4">-->
-<!--        <a-card style="height: 100%" :bordered="false">-->
-<!--          <a-tree-->
-<!--            style="font-size: 20px"-->
-<!--            :showLine="true"-->
-<!--            checkable-->
-<!--            :autoExpandParent="true"-->
-<!--            :tree-data="treeData"-->
-<!--            @select="onSelect"-->
-<!--            @check="onCheck"-->
-<!--          />-->
-
-<!--        </a-card>-->
-<!--      </a-col>-->
-<!--      右边-->
-<!--      <a-col span="20">-->
         <a-card :bordered="false">
 
           <!--     查询区域 -->
@@ -55,7 +36,7 @@
                 </a-col>
                 <a-col :xl="6" :lg="7" :md="8" :sm="24">
                   <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-                  <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+                  <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
                 </a-col>
               </a-row>
             </a-form>
@@ -89,8 +70,8 @@
           <!--     table区域-begin-->
           <div>
             <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
-              <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{
-                selectedRowKeys.length }}</a>项
+              <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a
+              style="font-weight: 600">{{ selectedRowKeys.length }}</a>项
               <a style="margin-left: 24px" @click="onClearSelected">清空</a>
               <span style="float:right;">
           <a @click="loadData()"><a-icon type="sync" />刷新</a>
@@ -111,6 +92,8 @@
 
 
         <span slot="action" slot-scope="text, record">
+          <a @click="()=>handleCheak(record)">详情</a>
+                 <a-divider type="vertical"/>
           <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical"/>
@@ -122,27 +105,17 @@
                   <a>删除</a>
                 </a-popconfirm>
               </a-menu-item>
-
-              <a-menu-item>
-                  <a @click="()=>handleCheak(record)">详情</a>
-              </a-menu-item>
             </a-menu>
           </a-dropdown>
         </span>
 
             </a-table>
           </div>
-          <!-- table区域-end -->
 
-          <!-- 表单区域 -->
           <modal ref="modalForm" @ok="modalFormOk"></modal>
           <check-modal ref="checkModal"></check-modal>
-          <!-- 一对多表单区域 -->
-          <!--    <JeecgDemoTabsModal ref="jeecgDemoTabsModal" @ok="modalFormOk"></JeecgDemoTabsModal>-->
-
         </a-card>
-<!--      </a-col>-->
-<!--    </a-row>-->
+
 
   </div>
 

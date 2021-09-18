@@ -1,6 +1,6 @@
 <template>
   <div :style="{ padding: '0 0 32px 32px' }">
-    <h3 :style="{ marginBottom: '20px' }">{{ title }}</h3>
+    <h1 :style="{ marginBottom: '20px' }">{{ title }}</h1>
     <v-chart :forceFit="true" :height="height" :data="dataSource" :scale="scale" >
       <v-tooltip/>
       <v-axis/>
@@ -43,3 +43,8 @@
     }
   }
 </script>
+
+<style scoped>
+
+
+</style>

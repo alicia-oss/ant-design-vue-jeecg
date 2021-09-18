@@ -21,11 +21,12 @@
 
 <!--  </a-carousel>-->
   <div>
-    <swiper>
+    <swiper >
       <swiper-item v-for="item in fileList">
         <img :src="item">
       </swiper-item>
     </swiper>
+    <a-empty v-if="fileList.length === 0" ></a-empty>
   </div>
 </template>
 

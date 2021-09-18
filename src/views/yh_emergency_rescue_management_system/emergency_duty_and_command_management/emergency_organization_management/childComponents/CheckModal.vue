@@ -1,11 +1,24 @@
 <template>
   <a-modal
-    :footer="null"
-    :width="800"
+    style="width: 35%;"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @cancel="handleCancel"
     cancelText="关闭">
+
+    <template slot="footer">
+      <a-button  style="margin: 10px" key="last"  @click="handleLast" >
+        上一条
+      </a-button>
+
+      <a-button  style="margin: 10px" key="next"  @click="handleNext" >
+        下一条
+      </a-button>
+
+      <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleCancel">
+        关闭
+      </a-button>
+    </template>
 
     <template slot="title">
       <div class="title">
@@ -19,34 +32,41 @@
           <text-border title="基本信息" >
           <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" >
 
-            <a-form-model-item label="员工编号" required prop="rescuePeopleId" hasFeedback>
-              {{model.rescuePeopleId}}
-            </a-form-model-item>
+
 
             <a-form-model-item label="员工姓名" required prop="rescuePeopleName" hasFeedback>
-              {{model.rescuePeopleName}}
+              <a-input v-model="model.rescuePeopleName"    :read-only="true" />
             </a-form-model-item>
 
+            <a-form-model-item label="员工编号" required prop="rescuePeopleId" hasFeedback>
+              <a-input v-model="model.rescuePeopleId"    :read-only="true" />
+            </a-form-model-item>
 
             <a-form-model-item label="所属部门" required prop="departName" hasFeedback>
-              {{model.departName}}
+<!--              {{model.departName}}-->
+              <a-input v-model="model.departName"    :read-only="true" />
+
             </a-form-model-item>
 
             <a-form-model-item label="职责"  prop="phone" hasFeedback >
-              {{model.rescuePeopleDuty}}
+<!--              {{model.rescuePeopleDuty}}-->
+              <a-input v-model="model.rescuePeopleDuty"    :read-only="true" />
             </a-form-model-item>
 
             <a-form-model-item label="电话号码"  prop="phone" hasFeedback >
-              {{model.phone}}
+<!--              {{model.phone}}-->
+              <a-input v-model="model.phone"    :read-only="true" />
             </a-form-model-item>
 
             <a-form-model-item label="上传人"   prop="uploadUserId" hasFeedback >
-              {{model.uploadUserId}}
+<!--              {{model.uploadUserId}}-->
+              <a-input v-model="model.uploadUserId"    :read-only="true" />
             </a-form-model-item>
 
             <a-form-model-item label="上传日期"  prop="uploadDate" hasFeedback >
 <!--              <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.uploadDate" :disabled="true" />-->
-              {{model.uploadDate}}
+<!--              {{model.uploadDate}}-->
+              <a-input v-model="model.uploadDate"    :read-only="true" />
             </a-form-model-item>
 
            </a-form-model>

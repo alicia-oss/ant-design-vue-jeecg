@@ -27,6 +27,23 @@
       </a-button>
     </template>
 
+    <template slot="footer">
+      <a-button style="margin: 10px" key="reset"  @click="handleReset" >
+        重置
+      </a-button>
+      <a-button style="margin: 10px" key="back"  @click="handleCancel" >
+        取消
+      </a-button>
+      <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleOk">
+        保存
+      </a-button>
+    </template>
+
+    <template slot="title">
+      <div class="title">
+        <a-icon type="form" style="color: #1890ff;margin-right: 10px"></a-icon>{{title}}
+      </div>
+    </template>
     <a-spin :spinning="confirmLoading">
       <div class="table">
         <div class="item">
@@ -53,7 +70,7 @@
               </a-select>
             </a-form-model-item>
             <a-form-model-item label="签发日期" prop="issuingDate" hasFeedback>
-              <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" />
+              <a-date-picker valueFormat="YYYY-MM-DD" style="width: 100%" v-model="model.issueDate" />
             </a-form-model-item>
             <a-form-model-item label="发证机关" prop="issuingAuthority" hasFeedback>
               <a-input placeholder="请输入发证机关" v-model="model.issuingAuthority" />
@@ -62,7 +79,7 @@
               <a-input placeholder="王五" v-model="model.uploadUserId" disabled />
             </a-form-model-item>
             <a-form-model-item label="上传日期">
-              <a-input placeholder="2021-9-11" v-model="model.uploadDate" disabled />
+              <a-date-picker valueFormat="YYYY-MM-DD" style="width: 100%" v-model="model.uploadDate" disabled />
             </a-form-model-item>
           </a-form-model>
           </text-border>
@@ -178,7 +195,7 @@ export default {
     handleComplete(){
       let temp = this.model.employeeId.split("-");
       this.model.employeeId = temp[0];
-      // this.model.apartment = "测试部门01";
+
     },
 
     handleCancel () {

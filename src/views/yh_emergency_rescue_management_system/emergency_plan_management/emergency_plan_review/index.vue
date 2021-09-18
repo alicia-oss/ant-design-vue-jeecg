@@ -23,12 +23,14 @@
                 </a-form-item>
               </a-col>
 
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="预览类别">
+                  <j-input placeholder="请输入预览类别模糊查询" v-model="queryParam.emergencyPlanCategory"></j-input>
+                </a-form-item>
+              </a-col>
+
               <template v-if="toggleSearchStatus">
-                <a-col :xl="8" :lg="9" :md="10" :sm="24">
-                  <a-form-item label="预览类别">
-                    <j-input placeholder="请输入预览类别模糊查询" v-model="queryParam.emergencyPlanCategory"></j-input>
-                  </a-form-item>
-                </a-col>
+
 
                 <a-col :xl="8" :lg="9" :md="10" :sm="24">
                   <a-form-item label="评审单位">
@@ -105,7 +107,10 @@
         @change="handleTableChange">
 
 
+
         <span slot="action" slot-scope="text, record">
+          <a @click="()=>handleCheak(record)">详情</a>
+                 <a-divider type="vertical"/>
           <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical"/>
@@ -113,13 +118,9 @@
             <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
             <a-menu slot="overlay">
               <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.emergencyPlanId)">
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.serviceBookId)">
                   <a>删除</a>
                 </a-popconfirm>
-              </a-menu-item>
-
-              <a-menu-item>
-                  <a @click="()=>handleCheak(record)">详情</a>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
@@ -136,7 +137,7 @@
     <!--    <JeecgDemoTabsModal ref="jeecgDemoTabsModal" @ok="modalFormOk"></JeecgDemoTabsModal>-->
 
 <!--    <test></test>-->
-    <review-table></review-table>
+
 
 
   </a-card>
@@ -289,7 +290,7 @@ export default {
     },
 
     handleAdd(){
-    this.$router.push({path:'/yh_emergency_rescue_management_system/emergency_plan_management/emergency_plan_review_do/index'})
+    this.$router.push({path:'/yh/emergency_plan_review_do',query:{id:"0"}})
       // this.$refs.modalForm.add();
       // this.$refs.modalForm.title = "新增应急预案";
       // this.$refs.modalForm.method = "add";
@@ -302,9 +303,7 @@ export default {
     },
 
     handleCheak(record){
-      this.$refs.checkModal.check(record);
-      this.$refs.checkModal.title = "查看应急预案";
-      this.$refs.checkModal.confirmLoading = false;
+      this.$router.push({path:'/yh/emergency_plan_review_do',query:{id:"1"}});
     },
 
     batchDel(){

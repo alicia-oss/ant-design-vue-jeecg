@@ -1,83 +1,82 @@
 <template>
   <a-card :bordered="false">
 
-<!--     查询区域 -->
+    <!--     查询区域 -->
+
     <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="30">
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="员工编号">
-              <j-input placeholder="请输入名称模糊查询" v-model="queryParam.employeeId"></j-input>
-            </a-form-item>
-          </a-col>
+      <a-row :gutter="30">
+        <a-col :span="18">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="30">
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="员工编号">
+                  <j-input placeholder="请输入名称模糊查询" v-model="queryParam.employeeId"></j-input>
+                </a-form-item>
+              </a-col>
 
-          <a-col :xl="6" :lg="7" :md="8" :sm="24">
-            <a-form-item label="证书编号">
-              <j-input placeholder="请输入名称模糊查询" v-model="queryParam.certNum"></j-input>
-            </a-form-item>
-          </a-col>
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="证书编号">
+                  <j-input placeholder="请输入名称模糊查询" v-model="queryParam.certNum"></j-input>
+                </a-form-item>
+              </a-col>
 
-          <template v-if="toggleSearchStatus">
-
-            <a-col :xl="6" :lg="7" :md="8" :sm="24">
-              <a-form-item label="部门">
-                <j-input placeholder="请输入名称模糊查询" v-model="queryParam.apartment"></j-input>
-              </a-form-item>
-            </a-col>
-
-            <a-col :xl="6" :lg="7" :md="8" :sm="24">
-              <a-form-item label="签发日期">
-                <a-range-picker v-model="queryParam.issueDate"
-                                format="YYYY-MM-DD"
-                                :placeholder="['开始时间', '结束时间']"
-                                @change="onIssueDateChange" />
-              </a-form-item>
-            </a-col>
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="部门">
+                  <j-input placeholder="请输入名称模糊查询" v-model="queryParam.apartment"></j-input>
+                </a-form-item>
+              </a-col>
 
 
-          </template>
+              <template v-if="toggleSearchStatus">
 
+                <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                  <a-form-item label="签发日期">
+                    <a-range-picker v-model="queryParam.issueDate"
+                                    format="YYYY-MM-DD"
+                                    :placeholder="['开始时间', '结束时间']"
+                                    @change="onIssueDateChange" />
+                  </a-form-item>
+                </a-col>
 
-          <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-            <a-col :xl="6" :lg="7" :md="8" :sm="24">
+              </template>
+
+            </a-row>
+          </a-form>
+        </a-col>
+
+        <a-col :span="6">
+           <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+            <a-col :xl="8" :lg="9" :md="10" :sm="24">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
-              <a-button type="primary" @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+              <a-button @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
               <a @click="handleToggleSearch" style="margin-left: 8px">
                 {{ toggleSearchStatus ? '收起' : '展开' }}
-                <a-icon :type="toggleSearchStatus ? 'up' : 'down'"/>
+                <a-icon :type="toggleSearchStatus ? 'up' : 'down'" />
               </a>
             </a-col>
           </span>
-        </a-row>
-      </a-form>
+        </a-col>
+      </a-row>
     </div>
 
-<!--     操作按钮区域 -->
+    <!--     操作按钮区域 -->
     <div class="table-operator">
       <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-      <!--      <a-button type="primary" icon="plus" @click="jump">创建单据</a-button>-->
-      <!--      <a-button type="primary" icon="plus" @click="onetomany">一对多</a-button>-->
-            <a-button type="primary" icon="download" >导出</a-button>
-            <a-upload name="file" :showUploadList="false" :multiple="false" >
-              <a-button type="primary" icon="import">导入</a-button>
-            </a-upload>
-      <!-- 高级查询区域 -->
-<!--      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
-
+      <a-button type="primary" icon="download">导出</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="batchDel">
-            <a-icon type="delete"/>
+            <a-icon type="delete" />
             删除
           </a-menu-item>
         </a-menu>
         <a-button style="margin-left: 8px"> 批量操作
-          <a-icon type="down"/>
+          <a-icon type="down" />
         </a-button>
       </a-dropdown>
     </div>
 
-<!--     table区域-begin-->
+    <!--     table区域-begin-->
     <div>
       <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
         <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{
@@ -86,20 +85,7 @@
         <span style="float:right;">
           <a @click="loadData()"><a-icon type="sync" />刷新</a>
           <a-divider type="vertical" />
-<!--          <a-popover title="自定义列" trigger="click" placement="leftBottom">-->
-<!--            <template slot="content">-->
-<!--              <a-checkbox-group @change="onColSettingsChange" v-model="settingColumns" :defaultValue="settingColumns">-->
-<!--                <a-row style="width: 400px">-->
-<!--                  <template v-for="(item,index) in defColumns">-->
-<!--                    <template v-if="item.key!='rowIndex'&& item.dataIndex!='action'">-->
-<!--                        <a-col :span="12"><a-checkbox :value="item.dataIndex"><j-ellipsis :value="item.title" :length="10"></j-ellipsis></a-checkbox></a-col>-->
-<!--                    </template>-->
-<!--                  </template>-->
-<!--                </a-row>-->
-<!--              </a-checkbox-group>-->
-<!--            </template>-->
-<!--            <a><a-icon type="setting" />设置</a>-->
-<!--          </a-popover>-->
+
         </span>
       </div>
 
@@ -114,51 +100,31 @@
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange">
 
-<!--        <div slot="filterDropdown">-->
-<!--          <a-card>-->
-<!--            &lt;!&ndash;            表头第一行&ndash;&gt;-->
-<!--            <a-checkbox-group @change="onColSettingsChange" v-model="settingColumns" :defaultValue="settingColumns">-->
-<!--              <a-row style="width: 400px">-->
-<!--                <template v-for="(item,index) in defColumns">-->
-<!--                  <template v-if="item.key!='rowIndex'&& item.dataIndex!='action'">-->
-<!--                    <a-col :span="12"><a-checkbox :value="item.dataIndex"><j-ellipsis :value="item.title" :length="10"></j-ellipsis></a-checkbox></a-col>-->
-<!--                  </template>-->
-<!--                </template>-->
-<!--              </a-row>-->
-<!--            </a-checkbox-group>-->
-<!--          </a-card>-->
-<!--        </div>-->
-<!--        <a-icon slot="filterIcon" type='setting' :style="{ fontSize:'16px',color:  '#108ee9' }" />-->
-
         <span slot="action" slot-scope="text, record">
+          <a @click="()=>handleCheak(record)">详情</a>
+                 <a-divider type="vertical" />
           <a @click="handleEdit(record)">编辑</a>
 
-          <a-divider type="vertical"/>
+          <a-divider type="vertical" />
           <a-dropdown>
-            <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
+            <a class="ant-dropdown-link">更多 <a-icon type="down" /></a>
             <a-menu slot="overlay">
               <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.serviceBookId)">
                   <a>删除</a>
                 </a-popconfirm>
-              </a-menu-item>
-
-              <a-menu-item>
-                  <a @click="()=>handleCheak(record)">详情</a>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
         </span>
 
+
       </a-table>
     </div>
-    <!-- table区域-end -->
 
-    <!-- 表单区域 -->
     <modal ref="modalForm" @ok="modalFormOk"></modal>
     <check-modal ref="checkModal"></check-modal>
-    <!-- 一对多表单区域 -->
-    <!--    <JeecgDemoTabsModal ref="jeecgDemoTabsModal" @ok="modalFormOk"></JeecgDemoTabsModal>-->
+
 
   </a-card>
 </template>
@@ -167,36 +133,37 @@
 import Modal from './childComponents/Modal'
 import { copyObj } from 'codemirror/src/util/misc'
 import CheckModal from './childComponents/CheckModal'
+
 export default {
   name: 'index.vue',
-  data(){
-    return{
+  data() {
+    return {
 
-      selectedRowKeys:[],
+      selectedRowKeys: [],
       /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
       queryParam: {},
       /* 数据源 */
-      dataSource:[
-            {
-              id:"123213",
-              employeeId:"1",
-              certNum:"0001",
-              issueDate:"2021-10-1",
-              issuingAuthority:"海事局",
-              apartment:"航海一部",
-              validity:"2021-12-1",
-              uploadFileName:"",
-              uploadUserId:"",
-              uploadDate:"",
-            }
+      dataSource: [
+        {
+          id: '123213',
+          employeeId: '1',
+          certNum: '0001',
+          issueDate: '2021-10-1',
+          issuingAuthority: '海事局',
+          apartment: '航海一部',
+          validity: '2021-12-1',
+          uploadFileName: '',
+          uploadUserId: '',
+          uploadDate: ''
+        }
       ],
       /* 分页参数 */
-      ipagination:{
+      ipagination: {
         current: 1,
         pageSize: 10,
         pageSizeOptions: ['10', '20', '30'],
         showTotal: (total, range) => {
-          return range[0] + "-" + range[1] + " 共" + total + "条"
+          return range[0] + '-' + range[1] + ' 共' + total + '条'
         },
         showQuickJumper: true,
         showSizeChanger: true,
@@ -210,24 +177,24 @@ export default {
           dataIndex: '',
           key: 'rowIndex',
           width: 60,
-          align: "center",
-          customRender: function (t, r, index) {
-            return parseInt(index) + 1;
+          align: 'center',
+          customRender: function(t, r, index) {
+            return parseInt(index) + 1
           }
         },
         {
           title: '员工编号',
-          align: "center",
+          align: 'center',
           dataIndex: 'employeeId'
         },
         {
           title: '证书编号',
-          align: "center",
+          align: 'center',
           dataIndex: 'certNum'
         },
         {
           title: '部门',
-          align: "center",
+          align: 'center',
           dataIndex: 'apartment'
         },
         // {
@@ -241,106 +208,105 @@ export default {
         // },
         {
           title: '签发日期',
-          align: "center",
+          align: 'center',
           dataIndex: 'issueDate'
         },
 
         {
           title: '操作',
           dataIndex: 'action',
-          align: "center",
+          align: 'center',
           scopedSlots: {
             filterDropdown: 'filterDropdown',
             filterIcon: 'filterIcon',
             customRender: 'action'
-          },
+          }
         }
       ],
 
-      settingColumns:[],
+      settingColumns: [],
 
-      toggleSearchStatus:false
+      toggleSearchStatus: false
     }
   },
-  components:{
+  components: {
     Modal,
     CheckModal
   },
-  methods:{
+  methods: {
     //搜索方法
-    searchQuery(){
+    searchQuery() {
 
     },
 
-    loadData(){
+    loadData() {
 
     },
 
-    searchReset(){
+    searchReset() {
 
     },
 
-    onIssueDateChange: function (value, dateString) {
-      console.log(dateString[0],dateString[1]);
-      this.queryParam.birthday_begin=dateString[0];
-      this.queryParam.birthday_end=dateString[1];
+    onIssueDateChange: function(value, dateString) {
+      console.log(dateString[0], dateString[1])
+      this.queryParam.birthday_begin = dateString[0]
+      this.queryParam.birthday_end = dateString[1]
     },
 
-    handleToggleSearch(){
-      this.toggleSearchStatus = !this.toggleSearchStatus;
+    handleToggleSearch() {
+      this.toggleSearchStatus = !this.toggleSearchStatus
     },
 
     onClearSelected() {
-      this.selectedRowKeys = [];
-      this.selectionRows = [];
+      this.selectedRowKeys = []
+      this.selectionRows = []
     },
 
-    onColSettingsChange(){
-
-    },
-
-    handleEdit(record){
-      this.$refs.modalForm.edit(record);
-      this.$refs.modalForm.title = "编辑引航员健康证";
-      this.$refs.modalForm.method = "edit";
-      this.$refs.modalForm.disableSubmit = false;
+    onColSettingsChange() {
 
     },
 
-    handleAdd(){
-      this.$refs.modalForm.add();
-      this.$refs.modalForm.title = "新增引航员健康证";
-      this.$refs.modalForm.method = "add";
-      this.$refs.modalForm.disableSubmit = false;
+    handleEdit(record) {
+      this.$refs.modalForm.edit(record)
+      this.$refs.modalForm.title = '编辑引航员健康证'
+      this.$refs.modalForm.method = 'edit'
+      this.$refs.modalForm.disableSubmit = false
+
     },
 
-    handleDelete(id){
-      const dataSource = [...this.dataSource];
-      this.dataSource = dataSource.filter(item => item.id !== id);
+    handleAdd() {
+      this.$refs.modalForm.add()
+      this.$refs.modalForm.title = '新增引航员健康证'
+      this.$refs.modalForm.method = 'add'
+      this.$refs.modalForm.disableSubmit = false
     },
 
-    handleCheak(record){
-      this.$refs.checkModal.check(record);
-      this.$refs.checkModal.title = "查看引航员健康证";
-      this.$refs.checkModal.confirmLoading = false;
+    handleDelete(id) {
+      const dataSource = [...this.dataSource]
+      this.dataSource = dataSource.filter(item => item.id !== id)
     },
 
-    batchDel(){
+    handleCheak(record) {
+      this.$refs.checkModal.check(record)
+      this.$refs.checkModal.title = '查看引航员健康证'
+      this.$refs.checkModal.confirmLoading = false
+    },
+
+    batchDel() {
 
     },
 
     // 加载数据
-    modalFormOk(data){
-      if(data.method === "add"){
-        this.dataSource.push(data.modelData);
-      }
-      else if(data.method === "edit") {
-        const dataSource = [...this.dataSource];
-        const target = dataSource.find(item => item.id === data.modelData.id);
+    modalFormOk(data) {
+      if (data.method === 'add') {
+        this.dataSource.push(data.modelData)
+      } else if (data.method === 'edit') {
+        const dataSource = [...this.dataSource]
+        const target = dataSource.find(item => item.id === data.modelData.id)
         if (target) {
-          copyObj(data.modelData,target);
-          this.dataSource = dataSource;
-          console.log(this.dataSource);
+          copyObj(data.modelData, target)
+          this.dataSource = dataSource
+          console.log(this.dataSource)
         }
       }
     },
@@ -358,10 +324,9 @@ export default {
     },
 
     onSelectChange(selectedRowKeys, selectionRows) {
-      this.selectedRowKeys = selectedRowKeys;
-      this.selectionRows = selectionRows;
-    },
-
+      this.selectedRowKeys = selectedRowKeys
+      this.selectionRows = selectionRows
+    }
 
   }
 

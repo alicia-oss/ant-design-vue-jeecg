@@ -1,6 +1,5 @@
 <template>
   <a-modal
-    :footer="null"
     :width="800"
     :visible="visible"
     :confirmLoading="confirmLoading"
@@ -9,70 +8,71 @@
 
     <template slot="title">
       <div class="title">
-        <a-icon type="form" style="color: #1890ff;margin-right: 10px"></a-icon>{{title}}
+        <a-icon type="monitor" style="color: #1890ff;margin-right: 10px"></a-icon>{{title}}
       </div>
+    </template>
+
+    <template slot="footer">
+      <a-button  style="margin: 10px" key="last"  @click="handleLast" >
+        上一条
+      </a-button>
+
+      <a-button  style="margin: 10px" key="next"  @click="handleNext" >
+        下一条
+      </a-button>
+
+      <a-button style="margin: 10px" key="submit" type="primary" :loading="loading" @click="handleCancel">
+        关闭
+      </a-button>
     </template>
 
     <a-spin :spinning="confirmLoading">
       <div class="table">
-        <a-row>
-          <a-col :span="12">
-            <div class="item">
-              <text-border title="基本信息" height="510px">
-                <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" >
+        <div class="item">
+          <text-border title="基本信息" >
+            <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" >
+            <a-form-model-item label="员工编号" required prop="employeeId" hasFeedback>
+              <a-input v-model="model.employeeId"    placeholder="请输入员工编号" :read-only="true"/>
+            </a-form-model-item>
 
-                  <a-form-model-item label="员工编号" required prop="employeeId" hasFeedback>
-                    <!--              <a-input v-model="model.employeeId"    placeholder="请输入员工编号"/>-->
-                    {{model.employeeId}}
-                  </a-form-model-item>
+            <a-form-model-item label="部门"  prop="apartment" hasFeedback >
+              <a-input  placeholder="请输入部门"  v-model="model.apartment" :read-only="true"/>
 
-                  <a-form-model-item label="部门"  prop="apartment" hasFeedback >
-                    <!--              <a-input  placeholder="请输入部门"  v-model="model.apartment"/>-->
-                    {{model.apartment}}
-                  </a-form-model-item>
+            </a-form-model-item>
 
-                  <a-form-model-item label="证书编号" required prop="certNum" hasFeedback>
-                    <!--              <a-input v-model="model.certNum"    placeholder="请输入证书编号"/>-->
-                    {{model.certNum}}
-                  </a-form-model-item>
+            <a-form-model-item label="证书编号" required prop="certNum" hasFeedback>
+              <a-input v-model="model.certNum"  placeholder="请输入证书编号" :read-only="true"/>
 
-                  <a-form-model-item label="签发日期"  prop="issueDate" hasFeedback>
-                    <!--              <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.issueDate" />-->
-                    {{model.issueDate}}
-                  </a-form-model-item>
+            </a-form-model-item>
 
-                  <a-form-model-item label="发证机关"  prop="issuingAuthority" hasFeedback >
-                    <!--              <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-                    {{model.issuingAuthority}}
-                  </a-form-model-item>
+            <a-form-model-item label="签发日期"  prop="issueDate" hasFeedback>
+              <a-input v-model="model.issueDate" :read-only="true"/>
 
-                  <a-form-model-item label="上传人"   prop="uploadUserId" hasFeedback >
-                    <!--              <a-input  placeholder="请输入上传人"  v-model="model.uploadUserId" :disabled="true"/>-->
-                    {{model.uploadUserId}}
-                  </a-form-model-item>
+            </a-form-model-item>
 
-                  <a-form-model-item label="上传日期"  prop="uploadDate" hasFeedback >
-                    <!--              <a-date-picker valueFormat="YYYY-MM-DD" v-model="model.uploadDate" :disabled="true" />-->
-                    {{model.uploadDate}}
-                  </a-form-model-item>
+            <a-form-model-item label="发证机关"  prop="issuingAuthority" hasFeedback >
+              <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority" :read-only="true"/>
+            </a-form-model-item>
 
-                </a-form-model>
-              </text-border>
-            </div>
-          </a-col>
-          <a-col :span="12">
-            <div class="item">
-              <text-border title="相关证件" height="510px">
-                <file-list :value="model.uploadFileName" ref="fileList"></file-list>
-              </text-border>
-            </div>
-          </a-col>
-        </a-row>
+            <a-form-model-item label="上传人"   prop="uploadUserId" hasFeedback >
+              <a-input  placeholder="请输入上传人"  v-model="model.uploadUserId" :read-only="true"/>
+            </a-form-model-item>
 
+            <a-form-model-item label="上传日期"  prop="uploadDate" hasFeedback >
+              <a-input valueFormat="YYYY-MM-DD" v-model="model.uploadDate" :read-only="true" />
+            </a-form-model-item>
+
+            </a-form-model>
+          </text-border>
+        </div>
+        <div class="item">
+          <text-border title="相关证件">
+            <file-list :value="model.uploadFileName" ref="fileList"></file-list>
+          </text-border>
+        </div>
       </div>
 
     </a-spin>
-
 
   </a-modal>
 </template>
@@ -115,6 +115,12 @@ export default {
   created () {
   },
   methods: {
+    handleLast(){
+
+    },
+    handleNext(){
+
+    },
     check (record) {
       this.model = Object.assign({}, record);
       // this.$refs.fileList.initFileList();
@@ -136,11 +142,12 @@ export default {
 
 <style scoped>
 .table{
+  display: flex ;
   width: 100%;
 }
 
 .item{
-
+  flex: 1 ;
 }
 .title{
   font-size: 20px;

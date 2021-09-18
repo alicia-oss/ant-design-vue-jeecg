@@ -22,10 +22,6 @@
             提交审批
           </a-button>
 
-          <a-button style="margin: 10px" key="submitNow" type="danger" :loading="loading" @click="handleNow" >
-            立即发布
-          </a-button>
-
         </template>
 
     <template slot="title">
