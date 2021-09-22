@@ -20,7 +20,7 @@
 
          <a-col :xl="6" :lg="8" :md="12" :sm="24">
            <a-form-model-item label="预案种类">
-             <a-select style="width: 100%;" placeholder="请选择预案种类" :disabled="!edit" v-model="model.emergencyPlanCategory">
+             <a-select style="width: 100%;" placeholder="请选择预案种类" disabled v-model="model.emergencyPlanCategory">
                <a-select-option v-for="item in inputData.emergencyPlanCategory" :value="item">
                  {{ item }}
                </a-select-option>

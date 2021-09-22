@@ -130,7 +130,7 @@
 
         <span slot="state">
           <a-popconfirm title="确定发布吗?" @confirm="() => handlePublish(record)">
-                   <a-switch checked-children="开" un-checked-children="关" default-unchecked />
+                   <a-switch checked-children="" un-checked-children="" default-unchecked />
           </a-popconfirm>
 
         </span>

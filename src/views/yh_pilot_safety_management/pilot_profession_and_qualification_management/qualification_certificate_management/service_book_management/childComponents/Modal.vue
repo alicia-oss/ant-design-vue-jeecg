@@ -178,7 +178,6 @@ export default {
       let temp = this.model.employeeName.split("-");
       this.model.employeeName = temp[0];
       this.model.employeeId = temp[1];
-
     },
 
     handleCancel () {

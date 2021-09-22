@@ -47,7 +47,7 @@
 
       <a-table
         v-show="show"
-        :key="record=>record.planReviewDetailId"
+        :rowKey="record=>record.planReviewDetailId"
         :columns="columns"
         size="middle"
         :indentSize="50"
@@ -61,8 +61,6 @@
 
         <span slot="action" slot-scope="text, record">
 
-          <a href="javascript:;" @click="handleDetail(record)">详情</a>
-        <a-divider type="vertical"/>
           <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical"/>
@@ -131,7 +129,6 @@ const columns = [
     fixed: 'right',
     scopedSlots: { customRender: 'action' },
     align: 'center',
-
   }
 ]
 
@@ -156,9 +153,6 @@ export default {
       cateSource:['综合应急预案', '专项应急预案' , '现场处置方案'],
       dataSource:[
         {
-          // planReviewId:'',
-          // emergencyPlanCategory:'综合应急预案',
-          // establishmentTime:'',
           planReviewDetailId:'1',
           planReviewId:'333',
           fatherReviewId:"-1",
@@ -177,16 +171,15 @@ export default {
               planReviewId:'333',
               fatherReviewId:"1",
               contentAndRequirement:'港口TC-818用火限制及方法',
-              seriaNum:'1.1',
+              seriaNum:'1.2',
             },
             {
               planReviewDetailId:'1.3',
               planReviewId:'333',
               fatherReviewId:"1",
               contentAndRequirement:'港口TG-208用火限制及方法',
-              seriaNum:'1.1',
+              seriaNum:'1.3',
             },
-
           ]
         }
       ],
@@ -216,6 +209,7 @@ export default {
       this.$refs.modalForm.title = "添加指标";
       this.$refs.modalForm.disableSubmit = false;
       this.$refs.modalForm.edit({status:'1',permsType:'1',route:true,'fatherReviewId':record.planReviewDetailId,menuType:1});
+      this.$refs.modalForm.method = 'add';
     },
 
     searchQuery(){
@@ -227,7 +221,7 @@ export default {
     },
 
     handleEdit(record){
-      this.$refs.modalForm.edit(record);
+      this.$refs.modalForm.edit({status:'1',permsType:'1',route:true,'fatherReviewId':record.fatherReviewId,menuType:1});
       this.$refs.modalForm.title = "编辑指标";
       this.$refs.modalForm.method = "edit";
       this.$refs.modalForm.disableSubmit = false;

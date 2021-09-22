@@ -60,8 +60,8 @@
             </a-select>
           </a-form-model-item>
 
-          <a-form-model-item label="职责"  prop="rescuePeopleDuty" hasFeedback >
-            <a-select placeholder="请输入职责" v-model="model.rescuePeopleDuty">
+          <a-form-model-item label="岗位"  prop="rescuePeopleDuty" hasFeedback >
+            <a-select placeholder="请选择岗位" v-model="model.rescuePeopleDuty">
               <a-select-option v-for="item in inputData.rescuePeopleDuty" :value="item">
                 {{item}}
               </a-select-option>
