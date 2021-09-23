@@ -1,8 +1,8 @@
 <template>
   <div>
   <a-modal
-    :width="800"
-    style="padding-bottom: 10px"
+
+    style="padding-bottom: 10px;width: 35%;"
     :visible="visible"
     :confirmLoading="confirmLoading"
     @cancel="handleCancel"
@@ -29,48 +29,24 @@
     <a-spin :spinning="confirmLoading">
       <div class="table">
       <div class="item">
-        <text-border title="基本信息">
         <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
-          <a-form-model-item label="员工姓名" required prop="employeeName" hasFeedback>
-            <a-auto-complete
-              :data-source="inputData.employeeId"
-              @change="handleComplete"
-              placeholder="请输入员工姓名"
-              v-model="model.employeeName"
-            ></a-auto-complete>
+
+          <a-form-model-item label="预案标准类别" required prop="emergencyPlanCategory" hasFeedback>
+            <a-select placeholder="请选择应急预案类型" @select="()=>{this.show = true}" v-model="model.emergencyPlanCategory">-->
+                              <a-select-option v-for="item in inputData.emergencyPlanCategory" :readOnly="disableSubmit" :value="item">
+                                {{ item }}
+                              </a-select-option>
+                            </a-select>
           </a-form-model-item>
 
-          <a-form-model-item label="注册号码" required prop="registerNum" hasFeedback>
-            <a-input v-model="model.registerNum"    placeholder="请输入注册号码"/>
+          <a-form-model-item label="发布/修改日期"  prop="establishmentTime" hasFeedback>
+            <a-date-picker style="width: 100%"  valueFormat="YYYY-MM-DD" v-model="model.establishmentTime" />
           </a-form-model-item>
-
-          <a-form-model-item label="签发日期"  prop="issueDate" hasFeedback>
-            <a-date-picker style="width: 100%"  valueFormat="YYYY-MM-DD" v-model="model.issueDate" />
-          </a-form-model-item>
-
-          <a-form-model-item label="发证机关" required prop="issuingAuthority" hasFeedback>
-            <a-input v-model="model.issuingAuthority"    placeholder="请输入发证机关"/>
-          </a-form-model-item>
-
-          <a-form-model-item label="上传人"  prop="uploadUserId" hasFeedback >
-            <a-input  placeholder="请输入上传人"  v-model="model.uploadUserId" :read-only="true"/>
-          </a-form-model-item>
-
-          <a-form-model-item label="上传日期"  prop="uploadDate" hasFeedback >
-            <a-date-picker  style="width: 100%" valueFormat="YYYY-MM-DD" v-model="model.uploadDate" :disabled="true"  />
-          </a-form-model-item>
-
         </a-form-model>
-        </text-border>
+
       </div>
-      <div class="item-right">
-        <text-border title="证件上传">
-        <a-form-model ref="form"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
-            <file-upload style="width: 100%" v-model="model.uploadFileName"></file-upload>
-        </a-form-model>
-        </text-border>
-      </div>
+
       </div>
 
     </a-spin>
@@ -80,12 +56,12 @@
 
 <script>
 import { httpAction } from '@/api/manage'
-import  FileUpload from './FileUpload'
-import TextBorder from './TextBorder'
+
 import { uuid } from '@tinymce/tinymce-vue/lib/es2015/Utils'
 import { copyObj } from 'codemirror/src/util/misc'
 export default {
   name: "Modal",
+
   data () {
     return {
       method:"",
@@ -93,10 +69,10 @@ export default {
       title:"操作",
       visible: false,
       inputData: {
+        emergencyPlanCategory:['综合应急预案', '专项应急预案' , '现场处置方案'],
         employeeId:["张三-0441","王五-0442","赵四-0443"],
         apartment:["测试部门01","测试部门02","测试部门03","测试部门04"],
       },
-      // inputData:[{id:"0441",name:"张三"},{id:"0442",name:"王五"}],
       model: {},
       layout: {
         labelCol: { span: 3 },
@@ -133,8 +109,6 @@ export default {
     }
   },
   components:{
-    TextBorder,
-    FileUpload
   },
 
   methods: {

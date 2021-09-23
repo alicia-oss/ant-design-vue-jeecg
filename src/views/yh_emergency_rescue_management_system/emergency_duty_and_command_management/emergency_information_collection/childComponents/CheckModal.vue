@@ -29,6 +29,7 @@
       </template>
 
       <a-spin :spinning="confirmLoading">
+
         <div class="table">
           <div class="item">
             <text-border >

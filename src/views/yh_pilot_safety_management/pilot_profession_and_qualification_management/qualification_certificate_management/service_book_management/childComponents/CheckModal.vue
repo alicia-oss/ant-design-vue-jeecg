@@ -16,7 +16,6 @@
       <a-button  style="margin: 10px" key="last"  @click="handleLast" >
         上一条
       </a-button>
-
       <a-button  style="margin: 10px" key="next"  @click="handleNext" >
         下一条
       </a-button>

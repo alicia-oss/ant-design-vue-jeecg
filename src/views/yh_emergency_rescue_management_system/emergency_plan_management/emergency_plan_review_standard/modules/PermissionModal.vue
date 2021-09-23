@@ -10,7 +10,7 @@
     <a-spin :spinning="confirmLoading">
       <a-form-model ref="form" :model="model" :rules="validatorRules">
 
-        <a-form-model-item label="新建类型" :labelCol="labelCol" :wrapperCol="wrapperCol" >
+        <a-form-model-item v-show="method !== 'edit'" label="新建类型" :labelCol="labelCol" :wrapperCol="wrapperCol" >
           <a-radio-group  v-model="model.menuType">
             <a-radio :value="0">应急预案评审标准</a-radio>
             <a-radio :value="1">新指标</a-radio>
@@ -161,7 +161,7 @@
             ],
           },
           {
-            title: 'Node2',
+            title: '无',
             value: '0-1',
             key: '0-1',
           },

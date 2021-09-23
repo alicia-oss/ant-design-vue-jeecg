@@ -1,8 +1,6 @@
 <template>
   <a-card :bordered="false">
-
     <!--     查询区域 -->
-
     <div class="table-page-search-wrapper">
       <a-row :gutter="30">
         <a-col :span="18">
@@ -94,14 +92,14 @@
         size="middle"
         bordered
         :rowKey="record=>record.id"
-        :columns="defColumns"
+        :columns="columns"
         :dataSource="dataSource"
         :pagination="ipagination"
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         @change="handleTableChange">
 
         <span slot="action" slot-scope="text, record">
-          <a @click="()=>handleCheak(record)">详情</a>
+          <a @click="()=>handleDetail(record)">详情</a>
                  <a-divider type="vertical" />
           <a @click="handleEdit(record)">编辑</a>
 
@@ -138,48 +136,19 @@
 </template>
 
 <script>
+
+import { ListMixin } from '@comp/yh_components/simpleList/ListMixin'
 import Modal from './childComponents/Modal'
 import { copyObj } from 'codemirror/src/util/misc'
-import CheckModal from './childComponents/CheckModal'
+import { initDictOptions } from '@comp/dict/JDictSelectUtil'
 
 export default {
   name: 'index.vue',
-  data() {
-    return {
-
-      selectedRowKeys: [],
-      /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
-      queryParam: {},
-      /* 数据源 */
-      dataSource: [
-        {
-          id: '123213',
-          employeeId: '1',
-          certNum: '0001',
-          issueDate: '2021-10-1',
-          issuingAuthority: '海事局',
-          apartment: '航海一部',
-          validity: '2021-12-1',
-          uploadFileName: '',
-          uploadUserId: '',
-          uploadDate: ''
-        }
-      ],
-      /* 分页参数 */
-      ipagination: {
-        current: 1,
-        pageSize: 10,
-        pageSizeOptions: ['10', '20', '30'],
-        showTotal: (total, range) => {
-          return range[0] + '-' + range[1] + ' 共' + total + '条'
-        },
-        showQuickJumper: true,
-        showSizeChanger: true,
-        total: 0
-      },
-
+  mixins:[ListMixin],
+  data(){
+    return{
       // 默认列
-      defColumns: [
+      columns: [
         {
           title: '#',
           dataIndex: '',
@@ -189,6 +158,11 @@ export default {
           customRender: function(t, r, index) {
             return parseInt(index) + 1
           }
+        },
+        {
+          title: '员工姓名',
+          align: 'center',
+          dataIndex: 'employeeName'
         },
         {
           title: '员工编号',
@@ -205,15 +179,6 @@ export default {
           align: 'center',
           dataIndex: 'apartment'
         },
-        // {
-        //   title: '性别',
-        //   align: "center",
-        //   dataIndex: 'sex',
-        //   customRender: (text) => {
-        //     //字典值替换通用方法
-        //     return filterDictTextByCache('sex', text);
-        //   }
-        // },
         {
           title: '签发日期',
           align: 'center',
@@ -232,109 +197,63 @@ export default {
         }
       ],
 
-      settingColumns: [],
-
-      toggleSearchStatus: false
+      url: {
+        list: "/test/jeecgDemo/list",
+        delete: "/test/jeecgDemo/delete",
+        deleteBatch: "/test/jeecgDemo/deleteBatch",
+        exportXlsUrl: "/test/jeecgDemo/exportXls"
+      },
     }
   },
-  components: {
+  components:{
     Modal,
-    CheckModal
   },
-  methods: {
-    //搜索方法
-    searchQuery() {
+  methods:{
+    // initDictConfig() {
+    //   console.log("--我才是真的方法!--")
+    //   //初始化字典 - 性别  根据自己的需要去拿
+    //   initDictOptions('sex').then((res) => {
+    //     if (res.success) {
+    //       this.sexDictOptions = res.result;
+    //     }
+    //   });
+    // },
 
+    handleEdit(record){
+      this.$refs.modalForm.edit(record);
+      this.$refs.modalForm.method = "edit";
+      this.$refs.modalForm.disableSubmit = false;
+      this.$refs.modalForm.title = "编辑船员服务簿";
     },
 
-    loadData() {
-
+    handleAdd(){
+      this.$refs.modalForm.add();
+      this.$refs.modalForm.method = "add";
+      this.$refs.modalForm.disableSubmit = false;
+      this.$refs.modalForm.title = "新增船员服务簿";
     },
 
-    searchReset() {
-
+    handleDetail(record){
+      this.$refs.modalForm.method = "check";
+      this.$refs.modalForm.edit(record);
+      this.$refs.modalForm.disableSubmit = true;
+      this.$refs.modalForm.title = "查看船员服务簿";
     },
 
-    onIssueDateChange: function(value, dateString) {
-      console.log(dateString[0], dateString[1])
-      this.queryParam.birthday_begin = dateString[0]
-      this.queryParam.birthday_end = dateString[1]
+    //查询参数需要自己设计，去上面的查询框里面改，调用方法如下
+    // onBirthdayChange: function (value, dateString) {
+    //   // console.log(dateString[0],dateString[1]);
+    //   this.queryParam.birthday_begin=dateString[0];
+    //   this.queryParam.birthday_end=dateString[1];
+    // },
+    onIssueDateChange: function (value, dateString) {
+      // console.log(dateString[0],dateString[1]);
+      this.queryParam.issueDate_begin=dateString[0];
+      this.queryParam.birthday_end=dateString[1];
     },
 
-    handleToggleSearch() {
-      this.toggleSearchStatus = !this.toggleSearchStatus
-    },
 
-    onClearSelected() {
-      this.selectedRowKeys = []
-      this.selectionRows = []
-    },
 
-    onColSettingsChange() {
-
-    },
-
-    handleEdit(record) {
-      this.$refs.modalForm.edit(record)
-      this.$refs.modalForm.title = '编辑引航员健康证'
-      this.$refs.modalForm.method = 'edit'
-      this.$refs.modalForm.disableSubmit = false
-
-    },
-
-    handleAdd() {
-      this.$refs.modalForm.add()
-      this.$refs.modalForm.title = '新增引航员健康证'
-      this.$refs.modalForm.method = 'add'
-      this.$refs.modalForm.disableSubmit = false
-    },
-
-    handleDelete(id) {
-      const dataSource = [...this.dataSource]
-      this.dataSource = dataSource.filter(item => item.id !== id)
-    },
-
-    handleCheak(record) {
-      this.$refs.checkModal.check(record)
-      this.$refs.checkModal.title = '查看引航员健康证'
-      this.$refs.checkModal.confirmLoading = false
-    },
-
-    batchDel() {
-
-    },
-
-    // 加载数据
-    modalFormOk(data) {
-      if (data.method === 'add') {
-        this.dataSource.push(data.modelData)
-      } else if (data.method === 'edit') {
-        const dataSource = [...this.dataSource]
-        const target = dataSource.find(item => item.id === data.modelData.id)
-        if (target) {
-          copyObj(data.modelData, target)
-          this.dataSource = dataSource
-          console.log(this.dataSource)
-        }
-      }
-    },
-
-    handleTableChange(pagination, filters, sorter) {
-      // //分页、排序、筛选变化时触发
-      // //TODO 筛选
-      // console.log(pagination)
-      // if (Object.keys(sorter).length > 0) {
-      //   this.isorter.column = sorter.field;
-      //   this.isorter.order = "ascend" == sorter.order ? "asc" : "desc"
-      // }
-      // this.ipagination = pagination;
-      // this.loadData();
-    },
-
-    onSelectChange(selectedRowKeys, selectionRows) {
-      this.selectedRowKeys = selectedRowKeys
-      this.selectionRows = selectionRows
-    }
 
   }
 

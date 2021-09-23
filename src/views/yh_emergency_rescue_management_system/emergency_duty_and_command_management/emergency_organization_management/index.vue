@@ -15,8 +15,8 @@
                 </a-col>
 
                 <a-col :xl="6" :lg="7" :md="8" :sm="24">
-                  <a-form-item label="担任职责"  prop="rescuePeopleDuty" hasFeedback >
-                    <a-select placeholder="请输入担任的职责" v-model="dataSource.rescuePeopleDuty">
+                  <a-form-item label="岗位"  prop="rescuePeopleDuty" hasFeedback >
+                    <a-select placeholder="请输入担任的岗位" v-model="dataSource.rescuePeopleDuty">
                       <a-select-option v-for="item in inputData.rescuePeopleDuty" :value="item">
                         {{item}}
                       </a-select-option>
@@ -27,7 +27,7 @@
 
                 <a-col :xl="6" :lg="7" :md="8" :sm="24">
                   <a-form-item label="所属部门"  prop="rescuePeopleDuty" hasFeedback >
-                    <a-select placeholder="请输入职责" v-model="dataSource.departId">
+                    <a-select placeholder="请选择部门" v-model="dataSource.departId">
                       <a-select-option v-for="item in inputData.apartment" :value="item">
                         {{item}}
                       </a-select-option>
@@ -45,14 +45,10 @@
           <!--     操作按钮区域 -->
           <div class="table-operator">
             <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
-            <!--      <a-button type="primary" icon="plus" @click="jump">创建单据</a-button>-->
-            <!--      <a-button type="primary" icon="plus" @click="onetomany">一对多</a-button>-->
-            <a-button type="primary" icon="download" >导出</a-button>
+
             <a-upload name="file" :showUploadList="false" :multiple="false" >
               <a-button type="primary" icon="import">导入</a-button>
             </a-upload>
-            <!-- 高级查询区域 -->
-            <!--      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
 
             <a-dropdown v-if="selectedRowKeys.length > 0">
               <a-menu slot="overlay">
@@ -235,7 +231,7 @@ export default {
           dataIndex: 'departName'
         },
         {
-          title: '职责',
+          title: '岗位',
           align: "center",
           dataIndex: 'rescuePeopleDuty'
         },

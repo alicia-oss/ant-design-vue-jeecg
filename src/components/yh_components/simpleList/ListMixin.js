@@ -10,7 +10,7 @@ import { ACCESS_TOKEN, TENANT_ID } from "@/store/mutation-types"
 import store from '@/store'
 import {Modal} from 'ant-design-vue'
 
-export const JeecgListMixin = {
+export const ListMixin = {
   data(){
     return {
       /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
@@ -44,21 +44,16 @@ export const JeecgListMixin = {
       selectionRows: [],
       /* 查询折叠 */
       toggleSearchStatus:false,
-      /* 高级查询条件生效状态 */
-      superQueryFlag:false,
-      /* 高级查询条件 */
-      superQueryParams: '',
-      /** 高级查询拼接方式 */
-      superQueryMatchType: 'and',
+
     }
   },
   created() {
-      if(!this.disableMixinCreated){
-        console.log(' -- mixin created -- ')
-        this.loadData();
-        //初始化字典配置 在自己页面定义
-        this.initDictConfig();
-      }
+    if(!this.disableMixinCreated){
+      console.log(' -- mixin created -- ')
+      this.loadData();
+      //初始化字典配置 在自己页面定义
+      this.initDictConfig();
+    }
   },
   computed: {
     //token header
@@ -72,6 +67,7 @@ export const JeecgListMixin = {
     }
   },
   methods:{
+    //加载数据 使用url.list  查询的参数
     loadData(arg) {
       if(!this.url.list){
         this.$message.error("请设置url.list属性!")
@@ -83,12 +79,11 @@ export const JeecgListMixin = {
       }
       var params = this.getQueryParams();//查询条件
       this.loading = true;
+      //params为查询参数
       getAction(this.url.list, params).then((res) => {
         if (res.success) {
           //update-begin---author:zhangyafei    Date:20201118  for：适配不分页的数据列表------------
           this.dataSource = res.result.records||res.result;
-          console.log('-----'+res.result);
-          console.log('----'+this.dataSource);
           if(res.result.total)
           {
             this.ipagination.total = res.result.total;
@@ -103,34 +98,28 @@ export const JeecgListMixin = {
         this.loading = false;
       })
     },
+
+    //加载数据字典
     initDictConfig(){
       console.log("--这是一个假的方法!")
     },
-    handleSuperQuery(params, matchType) {
-      //高级查询方法
-      if(!params){
-        this.superQueryParams=''
-        this.superQueryFlag = false
-      }else{
-        this.superQueryFlag = true
-        this.superQueryParams=JSON.stringify(params)
-        this.superQueryMatchType = matchType
-      }
-      this.loadData(1)
-    },
+
     getQueryParams() {
       //获取查询条件
       let sqp = {}
-      if(this.superQueryParams){
-        sqp['superQueryParams']=encodeURI(this.superQueryParams)
-        sqp['superQueryMatchType'] = this.superQueryMatchType
-      }
+      // if(this.superQueryParams){
+      //
+      //   sqp['superQueryParams']=encodeURI(this.superQueryParams)
+      //   sqp['superQueryMatchType'] = this.superQueryMatchType
+      // }
+      //有效的URI中不能包含某些字符，例如空格。而这URI编码方法就可以对URI进行编码，它们用特殊的UTF-8编码替换所有无效的字 符，从而让浏览器能够接受和理解。
       var param = Object.assign(sqp, this.queryParam, this.isorter ,this.filters);
       param.field = this.getQueryField();
       param.pageNo = this.ipagination.current;
       param.pageSize = this.ipagination.pageSize;
       return filterObj(param);
     },
+    //返回的字段
     getQueryField() {
       //TODO 字段权限控制
       var str = "id,";
@@ -144,24 +133,27 @@ export const JeecgListMixin = {
       this.selectedRowKeys = selectedRowKeys;
       this.selectionRows = selectionRows;
     },
+
     onClearSelected() {
       this.selectedRowKeys = [];
       this.selectionRows = [];
     },
+
+    //搜索
     searchQuery() {
       this.loadData(1);
     },
-    superQuery() {
-      this.$refs.superQueryModal.show();
-    },
+
     searchReset() {
       this.queryParam = {}
       this.loadData(1);
     },
+
+    //批量删除
     batchDel: function () {
       if(!this.url.deleteBatch){
         this.$message.error("请设置url.deleteBatch属性!")
-        return
+        return;
       }
       if (this.selectedRowKeys.length <= 0) {
         this.$message.warning('请选择一条记录！');
@@ -194,6 +186,7 @@ export const JeecgListMixin = {
         });
       }
     },
+
     handleDelete: function (id) {
       if(!this.url.delete){
         this.$message.error("请设置url.delete属性!")
@@ -202,7 +195,7 @@ export const JeecgListMixin = {
       var that = this;
       deleteAction(that.url.delete, {id: id}).then((res) => {
         if (res.success) {
-          //重新计算分页问题
+          //重新计算分页问题  可以确保留在当前页
           that.reCalculatePage(1)
           that.$message.success(res.message);
           that.loadData();
@@ -211,6 +204,7 @@ export const JeecgListMixin = {
         }
       });
     },
+
     reCalculatePage(count){
       //总数量-count
       let total=this.ipagination.total-count;
@@ -222,20 +216,10 @@ export const JeecgListMixin = {
       }
       console.log('currentIndex',currentIndex)
     },
-    handleEdit: function (record) {
-      this.$refs.modalForm.edit(record);
-      this.$refs.modalForm.title = "编辑";
-      this.$refs.modalForm.disableSubmit = false;
-    },
-    handleAdd: function () {
-      this.$refs.modalForm.add();
-      this.$refs.modalForm.title = "新增";
-      this.$refs.modalForm.disableSubmit = false;
-    },
+
     handleTableChange(pagination, filters, sorter) {
       //分页、排序、筛选变化时触发
       //TODO 筛选
-      console.log(pagination)
       if (Object.keys(sorter).length > 0) {
         this.isorter.column = sorter.field;
         this.isorter.order = "ascend" == sorter.order ? "asc" : "desc"
@@ -243,6 +227,7 @@ export const JeecgListMixin = {
       this.ipagination = pagination;
       this.loadData();
     },
+
     handleToggleSearch(){
       this.toggleSearchStatus = !this.toggleSearchStatus;
     },
@@ -256,11 +241,7 @@ export const JeecgListMixin = {
       //清空列表选中
       this.onClearSelected()
     },
-    handleDetail:function(record){
-      this.$refs.modalForm.edit(record);
-      this.$refs.modalForm.title="详情";
-      this.$refs.modalForm.disableSubmit = true;
-    },
+
     /* 导出 */
     handleExportXls2(){
       let paramsStr = encodeURI(JSON.stringify(this.getQueryParams()));

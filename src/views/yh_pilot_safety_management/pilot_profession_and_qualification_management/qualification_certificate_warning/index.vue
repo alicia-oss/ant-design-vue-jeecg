@@ -118,7 +118,7 @@
         </span>
 
         <span slot="action" slot-scope="text, record">
-        <a-switch checked-children="开" un-checked-children="关" default-unchecked />
+        <a-switch checked-children="" un-checked-children="" default-unchecked />
 
         </span>
 
@@ -227,12 +227,14 @@ export default {
         {
           title: '员工姓名',
           align: "center",
-          dataIndex: 'employeeName'
+          dataIndex: 'employeeName',
+          sorter: (a, b) => a.employeeName - b.employeeName,
         },
         {
           title: '员工编号',
           align: "center",
-          dataIndex: 'employeeId'
+          dataIndex: 'employeeId',
+          sorter: (a, b) => a.employeeId - b.employeeId,
         },
         {
           title: '证书种类',
