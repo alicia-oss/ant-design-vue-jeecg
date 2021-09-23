@@ -1,242 +1,224 @@
 <template>
   <a-card :bordered="false">
 
-    <!-- 操作按钮区域 -->
+    <!--     查询区域 -->
     <div class="table-page-search-wrapper">
-      <a-form layout="inline" @keyup.enter.native="searchQuery">
-        <a-row :gutter="30">
-          <a-col :xl="6" :lg="9" :md="10" :sm="24">
-            <a-form-item label="应急预案类型">
-              <a-select placeholder="请选择应急预案类型" @select="()=>{this.show = true}" v-model="queryParam.emergencyPlanCategory">
-                <a-select-option v-for="item in inputData.emergencyPlanCategory" :readOnly="disableSubmit" :value="item">
-                  {{ item }}
-                </a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
+      <a-row :gutter="30">
+        <a-col :span="18">
+          <a-form layout="inline" @keyup.enter.native="searchQuery">
+            <a-row :gutter="30">
+              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-form-item label="标准种类">
+                  <j-input placeholder="请输入标准种类模糊查询" v-model="queryParam.employeeId"></j-input>
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-form>
+        </a-col>
 
+        <a-col :span="6">
+           <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
+            <a-col :xl="6" :lg="7" :md="8" :sm="24">
+              <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
+              <a-button  @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
+            </a-col>
+          </span>
+        </a-col>
 
-          <a-col :xl="4" :lg="9" :md="10" :sm="24">
-            <a-button @click="handleAdd" type="primary" icon="plus">创建应急预案评审标准</a-button>
-          </a-col>
-
-          <a-col :xl="4" :lg="9" :md="10" :sm="24" v-show="show">
-            <a-button @click="handleAddSub" type="primary"   icon="plus">新增应急预案评审指标</a-button>
-            <a-button
-              @click="batchDel"
-              v-if="selectedRowKeys.length > 0"
-              ghost
-              type="primary"
-              icon="delete">批量删除
-            </a-button>
-          </a-col>
-        </a-row>
-
-
-      </a-form>
+      </a-row>
     </div>
 
-    <!-- table区域-begin -->
-    <div>
+    <!--     操作按钮区域 -->
+    <div class="table-operator">
+      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-upload name="file" :showUploadList="false" :multiple="false" >
+      </a-upload>
+      <!-- 高级查询区域 -->
+      <!--      <j-super-query :fieldList="fieldList" ref="superQueryModal" @handleSuperQuery="handleSuperQuery"></j-super-query>-->
 
+      <a-dropdown v-if="selectedRowKeys.length > 0">
+        <a-menu slot="overlay">
+          <a-menu-item key="1" @click="batchDel">
+            <a-icon type="delete"/>
+            删除
+          </a-menu-item>
+        </a-menu>
+        <a-button style="margin-left: 8px"> 批量操作
+          <a-icon type="down"/>
+        </a-button>
+      </a-dropdown>
+    </div>
+
+    <!--     table区域-begin-->
+    <div>
       <div class="ant-alert ant-alert-info" style="margin-bottom: 16px;">
-        <i class="anticon anticon-info-circle ant-alert-icon"></i>已选择&nbsp;<a style="font-weight: 600">{{
-          selectedRowKeys.length }}</a>项&nbsp;&nbsp;
+        <i class="anticon anticon-info-circle ant-alert-icon"></i> 已选择 <a style="font-weight: 600">{{
+          selectedRowKeys.length }}</a>项
         <a style="margin-left: 24px" @click="onClearSelected">清空</a>
+        <span style="float:right;">
+          <a @click="loadData()"><a-icon type="sync" />刷新</a>
+          <a-divider type="vertical" />
+           <i class="anticon anticon-info-circle ant-alert-icon"></i> 共 <a style="font-weight: 600">{{
+            dataSource.length }}</a>项
+        </span>
       </div>
 
       <a-table
-        v-show="show"
-        :rowKey="record=>record.planReviewDetailId"
-        :columns="columns"
+        ref="table"
         size="middle"
-        :indentSize="50"
-        :pagination="false"
+        bordered
+        :rowKey="record=>record.planReviewId"
+        :columns="defColumns"
         :dataSource="dataSource"
-        :loading="loading"
-        :expandedRowKeys="expandedRowKeys"
+        :pagination="ipagination"
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        @expandedRowsChange="handleExpandedRowsChange">
+        @change="handleTableChange">
 
 
         <span slot="action" slot-scope="text, record">
-
+          <a @click="()=>handleCheak(record)">详情</a>
+                 <a-divider type="vertical"/>
           <a @click="handleEdit(record)">编辑</a>
 
           <a-divider type="vertical"/>
           <a-dropdown>
-            <a class="ant-dropdown-link">
-              更多 <a-icon type="down"/>
-            </a>
+            <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
             <a-menu slot="overlay">
-
               <a-menu-item>
-                <a href="javascript:;" @click="handleAddSub(record)">添加下级</a>
-              </a-menu-item>
-
-              <a-menu-item>
-                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.serviceBookId)">
                   <a>删除</a>
                 </a-popconfirm>
               </a-menu-item>
             </a-menu>
           </a-dropdown>
         </span>
-        <!-- 字符串超长截取省略号显示 -->
-        <span slot="contentAndRequirement" slot-scope="text">
-          <j-ellipsis :value="text" :length="35"/>
-        </span>
-        <!-- 字符串超长截取省略号显示-->
 
       </a-table>
-
     </div>
     <!-- table区域-end -->
 
-    <permission-modal ref="modalForm" @ok="modalFormOk"></permission-modal>
-<!--    <permission-data-rule-list ref="PermissionDataRuleList" @ok="modalFormOk"></permission-data-rule-list>-->
+    <!-- 表单区域 -->
+    <modal ref="modalForm" @ok="modalFormOk"></modal>
+    <check-modal ref="checkModal"></check-modal>
+
 
   </a-card>
 </template>
 
 <script>
-import PermissionModal from './modules/PermissionModal'
-import { getPermissionList } from '@/api/api'
-import { JeecgListMixin } from '@/mixins/JeecgListMixin'
-import PermissionDataRuleList from './PermissionDataRuleList'
-import JEllipsis from '@/components/jeecg/JEllipsis'
+import Modal from './childComponents/Modal'
 import { copyObj } from 'codemirror/src/util/misc'
-
-const columns = [
-
-  {
-    title: '评审内容',
-    dataIndex: 'contentAndRequirement',
-    key: 'contentAndRequirement',
-    scopedSlots: { customRender: 'contentAndRequirement' }
-  },
-  {
-    title: '排序',
-    dataIndex: 'seriaNum',
-    key: 'seriaNum',
-    align: "center",
-    width:"90px",
-  },
-
-  {
-    title: '操作',
-    dataIndex: 'action',
-    fixed: 'right',
-    scopedSlots: { customRender: 'action' },
-    align: 'center',
-  }
-]
-
 export default {
-  name: 'index',
-
-  // mixins: [JeecgListMixin],
-  components: {
-    // PermissionDataRuleList,
-    PermissionModal,
-    JEllipsis
-  },
-  data() {
-    return {
-      show:false,
-      inputData:{
-        emergencyPlanCategory:['综合应急预案', '专项应急预案' , '现场处置方案']
-      },
+  name: 'index.vue',
+  data(){
+    return{
       selectedRowKeys:[],
       /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
       queryParam: {},
-      cateSource:['综合应急预案', '专项应急预案' , '现场处置方案'],
+      /* 数据源 */
       dataSource:[
         {
-          planReviewDetailId:'1',
-          planReviewId:'333',
-          fatherReviewId:"-1",
-          contentAndRequirement:'港口用火安全准则',
-          seriaNum:'1',
-          children:[
-            {
-              planReviewDetailId:'1.1',
-              planReviewId:'333',
-              fatherReviewId:"1",
-              contentAndRequirement:'港口TC-208用火限制及方法',
-              seriaNum:'1.1',
-            },
-            {
-              planReviewDetailId:'1.2',
-              planReviewId:'333',
-              fatherReviewId:"1",
-              contentAndRequirement:'港口TC-818用火限制及方法',
-              seriaNum:'1.2',
-            },
-            {
-              planReviewDetailId:'1.3',
-              planReviewId:'333',
-              fatherReviewId:"1",
-              contentAndRequirement:'港口TG-208用火限制及方法',
-              seriaNum:'1.3',
-            },
-          ]
+          planReviewId:'1',
+          emergencyPlanCategory:'标准',
+          establishmentTime:'2020-9-10'
         }
       ],
-      description: '预案标准制定',
-      // 表头
-      columns: columns,
-      loading: false,
-      // 展开的行，受控属性
-      expandedRowKeys: [],
-      url: {
-        list: '/sys/permission/list',
-        delete: '/sys/permission/delete',
-        deleteBatch: '/sys/permission/deleteBatch'
-      }
+      /* 分页参数 */
+      ipagination:{
+        current: 1,
+        pageSize: 10,
+        pageSizeOptions: ['10', '20', '30'],
+        showTotal: (total, range) => {
+          return range[0] + "-" + range[1] + " 共" + total + "条"
+        },
+        showQuickJumper: true,
+        showSizeChanger: true,
+        total: 0
+      },
+
+      // 默认列
+      defColumns: [
+        {
+          title: '#',
+          dataIndex: '',
+          key: 'rowIndex',
+          width: 60,
+          align: "center",
+          customRender: function (t, r, index) {
+            return parseInt(index) + 1;
+          }
+        },
+        {
+          title: '预案标准类别',
+          align: "center",
+          dataIndex: 'emergencyPlanCategory'
+        },
+        {
+          title: '发布/修改时间',
+          align: 'center',
+          dataIndex: 'establishmentTime'
+        },
+        {
+          title: '操作',
+          dataIndex: 'action',
+          align: "center",
+          scopedSlots: {
+            filterDropdown: 'filterDropdown',
+            filterIcon: 'filterIcon',
+            customRender: 'action'
+          },
+        }
+      ],
+
+      settingColumns:[],
+
+      toggleSearchStatus:false
     }
   },
-  methods: {
-    onSelectChange(selectedRowKeys, selectionRows) {
-      this.selectedRowKeys = selectedRowKeys;
-      this.selectionRows = selectionRows;
-    },
-    // 打开数据规则编辑
-    handleDataRule(record) {
-      // this.$refs.PermissionDataRuleList.edit(record)
-    },
-    handleAddSub(record) {
-      this.$refs.modalForm.title = "添加指标";
-      this.$refs.modalForm.disableSubmit = false;
-      this.$refs.modalForm.edit({status:'1',permsType:'1',route:true,'fatherReviewId':record.planReviewDetailId,menuType:1});
-      this.$refs.modalForm.method = 'add';
-    },
-
+  components:{
+    Modal,
+  },
+  methods:{
+    //搜索方法
     searchQuery(){
 
     },
 
-    handleExpandedRowsChange(expandedRows) {
-      this.expandedRowKeys = expandedRows
-    },
-
-    handleEdit(record){
-      this.$refs.modalForm.edit({status:'1',permsType:'1',route:true,'fatherReviewId':record.fatherReviewId,menuType:1});
-      this.$refs.modalForm.title = "编辑指标";
-      this.$refs.modalForm.method = "edit";
-      this.$refs.modalForm.disableSubmit = false;
-    },
-    batchDel(){
+    loadData(){
 
     },
+
+    searchReset(){
+
+    },
+
+    onIssueDateChange: function (value, dateString) {
+      console.log(dateString[0],dateString[1]);
+      this.queryParam.birthday_begin=dateString[0];
+      this.queryParam.birthday_end=dateString[1];
+    },
+
+    handleToggleSearch(){
+      this.toggleSearchStatus = !this.toggleSearchStatus;
+    },
+
     onClearSelected() {
       this.selectedRowKeys = [];
       this.selectionRows = [];
     },
+
+    onColSettingsChange(){
+
+    },
+
+    handleEdit(record){
+
+    },
+
     handleAdd(){
       this.$refs.modalForm.add();
-      this.$refs.modalForm.method="add"
-      this.$refs.modalForm.title = "创建应急预案评审标准";
+      this.$refs.modalForm.title = "新增预案评审标准";
+      this.$refs.modalForm.method = "add";
       this.$refs.modalForm.disableSubmit = false;
     },
 
@@ -245,13 +227,15 @@ export default {
       this.dataSource = dataSource.filter(item => item.serviceBookId !== id);
     },
 
-    handleDetail(record){
-      this.$refs.modalForm.method="check"
-      this.$refs.modalForm.edit(record);
-      this.$refs.modalForm.title = "查看指标";
-      this.$refs.modalForm.disableSubmit = true;
+    handleCheak(record){
+      this.$router.push('/views/yh_emergency_rescue_management_system/emergency_plan_management/emergency_plan_review_standard/StandardMake');
     },
 
+    batchDel(){
+
+    },
+
+    // 加载数据
     modalFormOk(data){
       if(data.method === "add"){
         this.dataSource.push(data.modelData);
@@ -265,9 +249,30 @@ export default {
         }
       }
     },
+
+    handleTableChange(pagination, filters, sorter) {
+      // //分页、排序、筛选变化时触发
+      // //TODO 筛选
+      // console.log(pagination)
+      // if (Object.keys(sorter).length > 0) {
+      //   this.isorter.column = sorter.field;
+      //   this.isorter.order = "ascend" == sorter.order ? "asc" : "desc"
+      // }
+      // this.ipagination = pagination;
+      // this.loadData();
+    },
+
+    onSelectChange(selectedRowKeys, selectionRows) {
+      this.selectedRowKeys = selectedRowKeys;
+      this.selectionRows = selectionRows;
+    },
+
+
   }
+
 }
 </script>
+
 <style scoped>
-@import '~@assets/less/common.less';
+
 </style>

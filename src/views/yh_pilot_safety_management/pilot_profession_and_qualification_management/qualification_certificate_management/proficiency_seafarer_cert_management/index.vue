@@ -25,18 +25,6 @@
                   <j-input placeholder="请输入签发机关名称模糊查询" v-model="queryParam.issuingAuthority"></j-input>
                 </a-form-item>
               </a-col>
-
-<!--              <template v-if="toggleSearchStatus">-->
-<!--                <a-col :xl="8" :lg="9" :md="10" :sm="24">-->
-<!--                  <a-form-item label="签发日期">-->
-<!--                    <a-range-picker v-model="queryParam.issueDate"-->
-<!--                                    format="YYYY-MM-DD"-->
-<!--                                    :placeholder="['开始时间', '结束时间']"-->
-<!--                                    @change="onIssueDateChange" />-->
-<!--                  </a-form-item>-->
-<!--                </a-col>-->
-<!--              </template>-->
-
             </a-row>
           </a-form>
         </a-col>
@@ -109,7 +97,21 @@
           :tree-data="treeData"
           @select="onTreeSelect"
           @check="onTreeCheck"
-        />
+        >
+          <template #title="{ key: treeKey, title }">
+            <a-dropdown :trigger="['contextmenu']">
+              <span>{{ title }}</span>
+              <template #overlay>
+                <a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">
+
+                  <a-menu-item key="1">删除</a-menu-item>
+                  <a-menu-item key="2">查看</a-menu-item>
+
+                </a-menu>
+              </template>
+            </a-dropdown>
+          </template>
+        </a-tree>
           </div>
         </a-card>
 
@@ -387,6 +389,11 @@ export default {
           console.log(this.dataSource);
         }
       }
+    },
+
+    // 鼠标右键菜单
+    onContextMenuClick(treeKey, menuKey){
+
     },
 
     handleTableChange(pagination, filters, sorter) {
