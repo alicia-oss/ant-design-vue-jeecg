@@ -48,10 +48,9 @@
             <text-border title="基本信息">
               <a-form-model ref="formAdd"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
-                <a-form-model-item label="员工编号" required prop="employeeId" hasFeedback>
+                <a-form-model-item label="员工姓名" required prop="employeeName" hasFeedback>
                   <a-auto-complete
                     :data-source="inputData.employeeId"
-                    @change="handleComplete"
                     placeholder="请输入员工编号"
                     v-model="model.employeeId"
                   ></a-auto-complete>
@@ -177,12 +176,6 @@ export default {
 
   methods: {
 
-    handleComplete(){
-      let tempName = this.model.employeeName;
-      let temp = this.model.employeeName.split("-");
-      this.model.employeeName = temp[0];
-      this.model.employeeId = temp[1];
-    },
 
   }
 }

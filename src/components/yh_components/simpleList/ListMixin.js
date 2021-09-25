@@ -13,6 +13,12 @@ import {Modal} from 'ant-design-vue'
 export const ListMixin = {
   data(){
     return {
+      queryCol:{
+        xl:8,
+        lg:8,
+        md:12,
+        sm:24
+      },
       /* 查询条件-请不要在queryParam中声明非字符串值的属性 */
       queryParam: {},
       /* 数据源 */
@@ -31,7 +37,7 @@ export const ListMixin = {
       },
       /* 排序参数 */
       isorter:{
-        column: 'createTime',
+        column: 'id',
         order: 'desc',
       },
       /* 筛选参数 */
@@ -45,6 +51,8 @@ export const ListMixin = {
       /* 查询折叠 */
       toggleSearchStatus:false,
 
+
+
     }
   },
   created() {
@@ -53,6 +61,7 @@ export const ListMixin = {
       this.loadData();
       //初始化字典配置 在自己页面定义
       this.initDictConfig();
+      this.initColumns();
     }
   },
   computed: {
@@ -67,6 +76,52 @@ export const ListMixin = {
     }
   },
   methods:{
+
+    //列管理
+    onColSettingsChange(checkedValues) {
+      var key = this.$route.name + ":colsettings";
+      Vue.ls.set(key, checkedValues, 7 * 24 * 60 * 60 * 1000)
+      this.settingColumns = checkedValues;
+      const cols = this.defColumns.filter(item => {
+        if (item.key == 'rowIndex' || item.dataIndex == 'action') {
+          return true
+        }
+        if (this.settingColumns.includes(item.dataIndex)) {
+          return true
+        }
+        return false
+      })
+      this.columns = cols;
+    },
+
+    initColumns() {
+      //权限过滤（列权限控制时打开，修改第二个参数为授权码前缀）
+      //this.defColumns = colAuthFilter(this.defColumns,'testdemo:');
+      var key = this.$route.name + ':colsettings'
+      let colSettings = Vue.ls.get(key)
+      if (colSettings == null || colSettings == undefined) {
+        let allSettingColumns = []
+        this.defColumns.forEach(function(item, i, array) {
+          allSettingColumns.push(item.dataIndex)
+        })
+        this.settingColumns = allSettingColumns
+        this.columns = this.defColumns
+      } else {
+        this.settingColumns = colSettings
+        const cols = this.defColumns.filter(item => {
+          if (item.key == 'rowIndex' || item.dataIndex == 'action') {
+            return true
+          }
+          if (colSettings.includes(item.dataIndex)) {
+            return true
+          }
+          return false
+        })
+        this.columns = cols
+      }
+    },
+
+
     //加载数据 使用url.list  查询的参数
     loadData(arg) {
       if(!this.url.list){
@@ -220,6 +275,8 @@ export const ListMixin = {
     handleTableChange(pagination, filters, sorter) {
       //分页、排序、筛选变化时触发
       //TODO 筛选
+      console.log("排序===="+sorter)
+      console.log("筛选===="+filters)
       if (Object.keys(sorter).length > 0) {
         this.isorter.column = sorter.field;
         this.isorter.order = "ascend" == sorter.order ? "asc" : "desc"
@@ -346,6 +403,8 @@ export const ListMixin = {
       let url = getFileAccessHttpUrl(text)
       window.open(url);
     },
-  }
+  },
+
+
 
 }
