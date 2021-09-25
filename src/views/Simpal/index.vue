@@ -179,11 +179,6 @@ export default {
           }
         },
         {
-          title: '员工姓名',
-          align: 'center',
-          dataIndex: 'employeeName'
-        },
-        {
           title: '员工编号',
           align: 'center',
           dataIndex: 'employeeId'
@@ -221,9 +216,9 @@ export default {
       importExcelUrl: `${window._CONFIG['domianURL']}/test/jeecgDemo/importExcel`,
       // 需要修改默认排序方式的请重新isorter
       url: {
-        list: "/test/jeecgDemo/list",
-        delete: "/test/jeecgDemo/delete",
-        deleteBatch: "/test/jeecgDemo/deleteBatch",
+        list: "/test/yhHealthCert/list",
+        delete: "/test/yhHealthCert/delete",
+        deleteBatch: "/test/yhHealthCert/deleteBatch",
         exportXlsUrl: "/test/jeecgDemo/exportXls"
       },
     }

@@ -196,6 +196,7 @@ export const ListMixin = {
 
     //搜索
     searchQuery() {
+      console.log("搜索");
       this.loadData(1);
     },
 
