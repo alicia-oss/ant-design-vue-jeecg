@@ -5,6 +5,7 @@ import FileList from '@comp/yh_components/tools/file/FileList'
 import { uuid } from '@tinymce/tinymce-vue/lib/es2015/Utils'
 import { copyObj } from 'codemirror/src/util/misc'
 import { httpAction } from '@api/manage'
+import upload from 'ant-design-vue/lib/vc-upload/src/request'
 
 export const ModalMixin = {
   data(){
@@ -38,7 +39,10 @@ export const ModalMixin = {
     add () {
       this.edit({});
       let myData = new Date();
-      this.model.uploadDate = myData.toLocaleDateString();
+      // this.model.uploadDate = myData.toLocaleDateString();
+      // var time1 = new Date().Format("yyyy-MM-dd");
+      // var time2 = new Date().Format("yyyy-MM-dd HH:mm:ss")
+      this.model.uploadDate = myData.Format("yyyy-MM-dd");
       this.model.uploadUserId = this.$store.getters.userInfo.realname;
     },
     edit (record) {

@@ -48,14 +48,12 @@
             <text-border title="基本信息">
               <a-form-model ref="formAdd"  :label-col="labelCol" :wrapper-col="wrapperCol"  :model="model" :rules="validatorRules">
 
-                <a-form-model-item label="员工编号" required prop="employeeId" hasFeedback>
+                <a-form-model-item label="员工姓名" required prop="employeeId" hasFeedback>
                   <a-auto-complete
                     :data-source="inputData.employeeId"
-                    @change="handleComplete"
                     placeholder="请输入员工编号"
                     v-model="model.employeeId"
                   ></a-auto-complete>
-
                 </a-form-model-item>
 
                 <a-form-model-item label="部门"  prop="apartment" hasFeedback >
@@ -76,11 +74,7 @@
                 </a-form-model-item>
 
                 <a-form-model-item label="发证机关"  prop="issuingAuthority" hasFeedback >
-                  <a-select placeholder="请输入发证机关" v-model="model.issuingAuthority">
-                    <a-select-option v-for="item in inputData.issuingAuthority" :value="item">
-                      {{item}}
-                    </a-select-option>
-                  </a-select>
+                  <a-input v-model="model.issuingAuthority"    placeholder="请输入发证机关"/>
                 </a-form-model-item>
 
                 <a-form-model-item label="上传人"  prop="uploadUserId" hasFeedback >
@@ -160,16 +154,15 @@ export default {
   mixins:[ModalMixin],
   data () {
     return {
-
       inputData: {
-        employeeId:["张三-0441","王五-0442","赵四-0443"],
+        employeeId:["0441","0442","0443"],
         apartment:["测试部门01","测试部门02","测试部门03","测试部门04"],
+
       },
 
       validatorRules:{},
-
       url: {
-        add: "/test/jeecgDemo/add",
+        add: "/test/yhHealthCert/add",
         edit: "/test/jeecgDemo/edit",
       },
     }
@@ -177,12 +170,6 @@ export default {
 
   methods: {
 
-    handleComplete(){
-      let tempName = this.model.employeeName;
-      let temp = this.model.employeeName.split("-");
-      this.model.employeeName = temp[0];
-      this.model.employeeId = temp[1];
-    },
 
   }
 }

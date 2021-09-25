@@ -30,7 +30,7 @@
       <a-form-model-item label="评审结果说明"  style="text-align: left" prop="emergencyPlanName" hasFeedback>
         <a-textarea :read-only="!submitAble"
           placeholder="请输入评审结果说明"
-          :auto-size="{ minRows: 4, maxRows: 8 }"
+          :auto-size="{ minRows: 2, maxRows: 8 }"
           v-model="resultDescription"
         />
       </a-form-model-item>
@@ -40,19 +40,19 @@
   <a-col :span="6">
     <div class="button-group" v-show="submitAble">
       <div class="item">
-        <a-button style="height:80px;width: 80px; ">
+        <a-button style="width: 80%; height: 40px;  ">
            重置
         </a-button>
       </div>
 
         <div class="item">
-          <a-button style="height:80px;width: 80px; ">
+          <a-button style="width: 80%;height: 40px; ">
             取消
           </a-button>
         </div>
 
         <div class="item">
-          <a-button type="primary" style="height:80px;width: 80px; ">
+          <a-button type="primary" style="width: 80%; height: 40px;">
             完成
           </a-button>
         </div>

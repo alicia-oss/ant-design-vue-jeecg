@@ -3,22 +3,24 @@
     <!--     查询区域 -->
     <div class="table-page-search-wrapper">
       <a-row :gutter="30">
-        <a-col :span="18">
+        <a-col :span="17">
           <a-form layout="inline" @keyup.enter.native="searchQuery">
+
+            <!--              添加查询框-->
             <a-row :gutter="30">
-              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+              <a-col :xl="queryCol.xl" :lg="queryCol.lg" :md="queryCol.md" :sm="queryCol.sm">
                 <a-form-item label="员工编号">
                   <j-input placeholder="请输入名称模糊查询" v-model="queryParam.employeeId"></j-input>
                 </a-form-item>
               </a-col>
 
-              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+              <a-col :xl="queryCol.xl" :lg="queryCol.lg" :md="queryCol.md" :sm="queryCol.sm">
                 <a-form-item label="证书编号">
                   <j-input placeholder="请输入名称模糊查询" v-model="queryParam.certNum"></j-input>
                 </a-form-item>
               </a-col>
 
-              <a-col :xl="8" :lg="9" :md="10" :sm="24">
+              <a-col :xl="queryCol.xl" :lg="queryCol.lg" :md="queryCol.md" :sm="queryCol.sm">
                 <a-form-item label="部门">
                   <j-input placeholder="请输入名称模糊查询" v-model="queryParam.apartment"></j-input>
                 </a-form-item>
@@ -27,7 +29,7 @@
 
               <template v-if="toggleSearchStatus">
 
-                <a-col :xl="8" :lg="9" :md="10" :sm="24">
+                <a-col :xl="queryCol.xl" :lg="queryCol.lg" :md="queryCol.md" :sm="queryCol.sm">
                   <a-form-item label="签发日期">
                     <a-range-picker v-model="queryParam.issueDate"
                                     format="YYYY-MM-DD"
@@ -39,12 +41,14 @@
               </template>
 
             </a-row>
+            <!--            完-->
+
           </a-form>
         </a-col>
 
-        <a-col :span="6">
+        <a-col :span="7">
            <span style="float: left;overflow: hidden;" class="table-page-search-submitButtons">
-            <a-col :xl="8" :lg="9" :md="10" :sm="24">
+            <a-col :xl="queryCol.xl" :lg="queryCol.lg" :md="queryCol.md" :sm="queryCol.sm">
               <a-button type="primary" @click="searchQuery" icon="search">查询</a-button>
               <a-button @click="searchReset" icon="reload" style="margin-left: 8px">重置</a-button>
               <a @click="handleToggleSearch" style="margin-left: 8px">
@@ -83,6 +87,20 @@
         <span style="float:right;">
           <a @click="loadData()"><a-icon type="sync" />刷新</a>
           <a-divider type="vertical" />
+            <a-popover title="自定义列" trigger="click" placement="leftBottom">
+            <template slot="content">
+              <a-checkbox-group @change="onColSettingsChange" v-model="settingColumns" :defaultValue="settingColumns">
+                <a-row style="width: 400px">
+                  <template v-for="(item,index) in defColumns">
+                    <template v-if="item.key!='rowIndex'&& item.dataIndex!='action'">
+                        <a-col :span="12"><a-checkbox :value="item.dataIndex"><j-ellipsis :value="item.title" :length="10"></j-ellipsis></a-checkbox></a-col>
+                    </template>
+                  </template>
+                </a-row>
+              </a-checkbox-group>
+            </template>
+            <a><a-icon type="setting" />设置</a>
+          </a-popover>
 
         </span>
       </div>
@@ -129,7 +147,6 @@
     </div>
 
     <modal ref="modalForm" @ok="modalFormOk"></modal>
-    <check-modal ref="checkModal"></check-modal>
 
 
   </a-card>
@@ -139,16 +156,18 @@
 
 import { ListMixin } from '@comp/yh_components/simpleList/ListMixin'
 import Modal from './childComponents/Modal'
+import JInput from '@comp/jeecg/JInput'
 import { copyObj } from 'codemirror/src/util/misc'
 import { initDictOptions } from '@comp/dict/JDictSelectUtil'
+import Vue from 'vue'
 
 export default {
   name: 'index.vue',
-  mixins:[ListMixin],
-  data(){
-    return{
-      // 默认列
-      columns: [
+  mixins: [ListMixin],
+  data() {
+    return {
+      // 列修改
+      defColumns: [
         {
           title: '#',
           dataIndex: '',
@@ -158,11 +177,6 @@ export default {
           customRender: function(t, r, index) {
             return parseInt(index) + 1
           }
-        },
-        {
-          title: '员工姓名',
-          align: 'center',
-          dataIndex: 'employeeName'
         },
         {
           title: '员工编号',
@@ -196,19 +210,24 @@ export default {
           }
         }
       ],
-
+      columns: [],
+      settingColumns: [],
+      //导入接口url
+      importExcelUrl: `${window._CONFIG['domianURL']}/test/jeecgDemo/importExcel`,
+      // 需要修改默认排序方式的请重新isorter
       url: {
-        list: "/test/jeecgDemo/list",
-        delete: "/test/jeecgDemo/delete",
-        deleteBatch: "/test/jeecgDemo/deleteBatch",
+        list: "/test/yhHealthCert/list",
+        delete: "/test/yhHealthCert/delete",
+        deleteBatch: "/test/yhHealthCert/deleteBatch",
         exportXlsUrl: "/test/jeecgDemo/exportXls"
       },
     }
   },
-  components:{
+  components: {
+    JInput,
     Modal,
   },
-  methods:{
+  methods: {
     // initDictConfig() {
     //   console.log("--我才是真的方法!--")
     //   //初始化字典 - 性别  根据自己的需要去拿
@@ -219,43 +238,41 @@ export default {
     //   });
     // },
 
-    handleEdit(record){
+    handleEdit(record) {
       this.$refs.modalForm.edit(record);
       this.$refs.modalForm.method = "edit";
       this.$refs.modalForm.disableSubmit = false;
       this.$refs.modalForm.title = "编辑船员服务簿";
     },
 
-    handleAdd(){
+    handleAdd() {
       this.$refs.modalForm.add();
       this.$refs.modalForm.method = "add";
       this.$refs.modalForm.disableSubmit = false;
       this.$refs.modalForm.title = "新增船员服务簿";
     },
 
-    handleDetail(record){
+    handleDetail(record) {
       this.$refs.modalForm.method = "check";
       this.$refs.modalForm.edit(record);
       this.$refs.modalForm.disableSubmit = true;
       this.$refs.modalForm.title = "查看船员服务簿";
     },
 
-    //查询参数需要自己设计，去上面的查询框里面改，调用方法如下
+    //查询参数需要自己设计，去上面的查询框里面改，举例如下
     // onBirthdayChange: function (value, dateString) {
     //   // console.log(dateString[0],dateString[1]);
     //   this.queryParam.birthday_begin=dateString[0];
     //   this.queryParam.birthday_end=dateString[1];
     // },
-    onIssueDateChange: function (value, dateString) {
-      // console.log(dateString[0],dateString[1]);
-      this.queryParam.issueDate_begin=dateString[0];
-      this.queryParam.birthday_end=dateString[1];
+    onIssueDateChange: function(value, dateString) {
+      this.queryParam.issueDate_begin = dateString[0];
+      this.queryParam.birthday_end = dateString[1];
     },
 
 
 
-
-  }
+  },
 
 }
 </script>
