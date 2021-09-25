@@ -23,13 +23,26 @@
       :data-source="dataSource"
       :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
       @change="handleTableChange">
-      <span slot="action" slot-scope="record" >
-          <a @click="handleEdit(record)">修改</a>
+        <span slot="action" slot-scope="text, record">
+          <a @click="()=>handleCheak(record)">详情</a>
+                 <a-divider type="vertical"/>
+          <a @click="handleEdit(record)">编辑</a>
+
           <a-divider type="vertical"/>
-         <a @click="handleDelete(record.proficiencyCertSubId)">删除</a>
-     </span>
+          <a-dropdown>
+            <a class="ant-dropdown-link">更多 <a-icon type="down"/></a>
+            <a-menu slot="overlay">
+              <a-menu-item>
+                <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.serviceBookId)">
+                  <a>删除</a>
+                </a-popconfirm>
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+        </span>
     </a-table>
 
+    <check-modal ref="checkModal"></check-modal>
     <sub-table-modal ref="subModal" @ok="modalFormOk"></sub-table-modal>
   </div>
 
@@ -37,12 +50,14 @@
 
 <script>
 import SubTableModal from './childComponents/SubTableModal'
+import CheckModal from './CheckModal'
 import { copyObj } from 'codemirror/src/util/misc'
 
 export default {
   name: 'SubTable',
   components:{
-    SubTableModal
+    SubTableModal,
+    CheckModal
   },
   props:{
     addContain:{
@@ -115,6 +130,12 @@ export default {
   methods:{
     handleTableChange(){
 
+    },
+
+    handleCheak(){
+      this.$refs.checkModal.check(record);
+      this.$refs.checkModal.title = "查看资历信息";
+      this.$refs.checkModal.confirmLoading = false;
     },
 
     onSelectChange(selectedRowKeys, selectionRows) {

@@ -114,16 +114,17 @@
         <!--        </div>-->
         <!--        <a-icon slot="filterIcon" type='setting' :style="{ fontSize:'16px',color:  '#108ee9' }" />-->
         <span slot="isReleased" slot-scope="isReleased,record">
-      <a-popconfirm v-if="record.isReleased==false" title="确定发布吗?" @confirm="onChange(record)" @cancel="onCancel(record)">
+          <approval ref="approval" @Approval="Approval" v-bind:record="record"></approval>
+<!--      <a-popconfirm v-if="record.isReleased==false" title="确定发布吗?" @confirm="onChange(record)" @cancel="onCancel(record)">-->
 
-            <!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-            <a-switch :checked="record.isReleased" checked-children="" un-checked-children="" default-unchecked/>
-            </a-popconfirm>
-            <a-popconfirm v-if="record.isReleased==true" title="确定取消发布吗?" @confirm="onChange(record)" @cancel="onCancel(record)">
+<!--            &lt;!&ndash;            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>&ndash;&gt;-->
+<!--            <a-switch :checked="record.isReleased" checked-children="" un-checked-children="" default-unchecked/>-->
+<!--            </a-popconfirm>-->
+<!--            <a-popconfirm v-if="record.isReleased==true" title="确定取消发布吗?" @confirm="onChange(record)" @cancel="onCancel(record)">-->
 
-              <!--            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>-->
-              <a-switch  :checked="record.isReleased" checked-children="" un-checked-children="" default-unchecked/>
-            </a-popconfirm>
+<!--              &lt;!&ndash;            <a-input  placeholder="请输入发证机关"  v-model="model.issuingAuthority"/>&ndash;&gt;-->
+<!--              <a-switch  :checked="record.isReleased" checked-children="" un-checked-children="" default-unchecked/>-->
+<!--            </a-popconfirm>-->
     </span>
         <span slot="action" slot-scope="text, record">
           <a @click="()=>handleCheak(record)" style="margin-right: 8px">详情 </a>
@@ -172,6 +173,7 @@ import {copyObj} from "codemirror/src/util/misc";
 import Modal from "./childComponents/Modal";
 import CheckModal from "./childComponents/CheckModal";
 import '@/assets/less/TableExpand.less';
+import Approval from '../../../../components/yh_components/tools/approval/Approval'
 export default {
   name: "TableList",
   components: {
@@ -319,9 +321,19 @@ export default {
 
   components:{
     Modal,
-    CheckModal
+    CheckModal,
+    Approval
   },
   methods: {
+    Approval(record){
+      const dataSource = [...this.dataSource];
+      const target = dataSource.find(item => item.id === record.id);
+      if (target) {
+        copyObj(record,target);
+        this.dataSource = dataSource;
+        console.log(this.dataSource);
+      }
+    },
     onCancel(record){
 
     },
